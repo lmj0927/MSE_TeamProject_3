@@ -1,16 +1,6 @@
 using UnityEngine;
 
-public class IMovable : MonoBehaviour
+public interface IMovable
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    void Move(Vector3 worldDirection, float speed, float deltaTime);
 }
