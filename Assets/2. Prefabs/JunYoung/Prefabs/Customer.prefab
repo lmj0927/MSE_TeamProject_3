@@ -613,7 +613,7 @@ GameObject:
   - component: {fileID: 2735275070133679139}
   - component: {fileID: 2128392320924670161}
   m_Layer: 0
-  m_Name: Character_8d9656
+  m_Name: Customer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -674,8 +674,8 @@ MonoBehaviour:
   body: {fileID: 6605180280564623764}
   faces:
   - {fileID: 2800000, guid: 9d2056dcf837a4c4ab662ffd4e65d641, type: 3}
-  - {fileID: 2800000, guid: 193bf5ce06d0c964da2635b288c3421f, type: 3}
   - {fileID: 2800000, guid: fac5a081943222b4ab3b8bcc324d1044, type: 3}
+  - {fileID: 2800000, guid: 193bf5ce06d0c964da2635b288c3421f, type: 3}
 --- !u!54 &6594590663753695708
 Rigidbody:
   m_ObjectHideFlags: 0
