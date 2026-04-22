@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Customer : MonoBehaviour
+public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요함
 {
     public enum cState { Entering, GoingSeat, Sitting, Leaving }
 
@@ -18,6 +18,7 @@ public class Customer : MonoBehaviour
     private Transform destination;
     private NavMeshAgent agent;
     private Animator anim;
+    private Renderer rd;
 
     private int seatNum = -1;
 
@@ -36,6 +37,7 @@ public class Customer : MonoBehaviour
 
     // Event for CustomerManger to check Customer leaving
     public Action<int> OnMealFinished;
+    public Action<GameObject> OnSleep;
 
     private cState current = cState.Entering;
     private bool arriveHandled = false;
@@ -45,6 +47,7 @@ public class Customer : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
+        rd = body.GetComponent<Renderer>();
     }
     private void Start()
     {
@@ -102,11 +105,16 @@ public class Customer : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        OnMealFinished = null;
+        OnSleep = null;
+    }
+
     // Basic Functions:
     private void RandomColor()
     {
         Color randomC = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
-        Renderer rd = body.GetComponent<Renderer>();
 
         rd.materials[0].SetColor("_BaseColor", randomC);
     }
@@ -128,18 +136,15 @@ public class Customer : MonoBehaviour
     // 0 is happy (default)
     // 1 is uncomfortable
     // 2 is angry
-    void SetFace(int type)
+    private void SetFace(int type)
     {
         type = Mathf.Abs(type);
         int idx = faces.Length > type ? type : 0;
         
-        Renderer rd = body.GetComponent<Renderer>();
-
-
         rd.materials[1].SetTexture("_BaseMap", faces[idx]);
     }
 
-    void AssignSeat(int idx)
+    public void AssignSeat(int idx)
     {
         seatNum = idx;
     }
@@ -171,7 +176,8 @@ public class Customer : MonoBehaviour
                 Sit();
                 break;
             case cState.Leaving:
-                Destroy(gameObject);
+                Reset();
+                gameObject.SetActive(false);
                 break;
         }
     }
@@ -217,7 +223,7 @@ public class Customer : MonoBehaviour
     }
 
     // temp parameter
-    void getFood(int served)
+    public void getFood(int served)
     {
         isWaiting = false;
 
@@ -235,7 +241,7 @@ public class Customer : MonoBehaviour
         isEating = true;
     }
 
-    void setPath(Transform pos, cState state)
+    public void setPath(Transform pos, cState state)
     {
         current = state;
         arriveHandled = false;
@@ -249,6 +255,25 @@ public class Customer : MonoBehaviour
         }
     }
 
-  
+    public void Reset()
+    {
+        RandomColor();
+        int ran = UnityEngine.Random.Range(0, 3);
+        SetHat(ran);
+        SetFace(0);
+
+        seatTimer = 60.0f;
+        isBored = false;
+        isAngry = false;
+        mealTimer = 10.0f;
+        isWaiting = false;
+        isEating = false;
+
+        current = cState.Entering;
+        arriveHandled = false;
+        alreadyStand = false;
+
+        OnSleep?.Invoke(gameObject);
+    }
 
 }
