@@ -7,84 +7,102 @@ public class CustomerManager : MonoBehaviour
     [SerializeField]
     private GameObject customer;
     [SerializeField]
-    private Transform outside;
+    private Transform outsideParent;
+
+    private Queue<GameObject> pool = new Queue<GameObject>();
+
     [SerializeField]
     private Transform[] waitingPoint;
-    [SerializeField]
-    private GameObject[] chairs;
-    private bool[] useState;    // Each chair's use state
-    private Queue<GameObject> pool = new Queue<GameObject>();
-    private GameObject[] customers;
-    private List<GameObject> waiting = new List<GameObject>();
+    private bool[] kioskState;      // Each kiosk's use state
+    private GameObject[] kCustomers;
 
-    private int count = 0;
-    private float spawnTimer = 10.0f;
-    private float spawnTerm;
-    private bool isLatest = true;
+    [SerializeField]
+    private Transform chairParent;
+    private Transform[] chairs;
+    private bool[] useState;    // Each chair's use state
+    private GameObject[] customers;
+
+    [SerializeField]
+    private Transform trashBin;
+
+    private float spawnTimer = 0;
+    private float spawnTerm = 3.0f;
     private void Awake()
     {
+        kioskState = new bool[waitingPoint.Length];
+        kCustomers = new GameObject[waitingPoint.Length];
+
+        chairs = new Transform[chairParent.transform.childCount];
+
+        for (int i = 0; i < chairs.Length; i++)
+        {
+            chairs[i] = chairParent.GetChild(i);
+        }
         useState = new bool[chairs.Length];
         customers = new GameObject[chairs.Length];
-        spawnTerm = spawnTimer;
-    }
-    void Start()
-    {
-        
     }
 
     void Update()
     {
-        if (waiting.Count < waitingPoint.Length)
+        int emptyK = GetEmptyKiosk();
+
+        if (emptyK != -1)
         {
             spawnTimer -= Time.deltaTime;
 
-            if (spawnTimer <= 0 && waiting.Count < waitingPoint.Length)
+            if (spawnTimer <= 0)
             {
                 spawnTimer = spawnTerm;
                 GameObject c = GetCustomer();
-                waiting.Add(c);
 
-                Enter(waiting.Count - 1);
-                isLatest = false;
+                kioskState[emptyK] = true;
+                kCustomers[emptyK] = c;
+
+                c.GetComponent<Customer>().setPath(Customer.cState.Entering, waitingPoint[emptyK]);
             }
+        }
 
-            if (!isLatest)
+        for (int i = 0; i < waitingPoint.Length; i++)
+        {
+            if (kioskState[i] && kCustomers[i] != null)
             {
-                for (int i = 0; i < chairs.Length; i++)
+                Customer customer = kCustomers[i].GetComponent<Customer>();
+
+                if (customer.IsReady())
                 {
-                    if (!useState[i] && waiting.Count > 0)
+                    int emptyC = GetEmptyChair();
+
+                    if (emptyC != -1)
                     {
-                        GameObject c = waiting[0];
-                        waiting.RemoveAt(0);
+                        useState[emptyC] = true;
+                        customers[emptyC] = kCustomers[i];
 
-                        Customer customer = c.GetComponent<Customer>();
-                        customer.setPath(chairs[i].transform, Customer.cState.GoingSeat);
-                        useState[i] = true;
-                        customers[i] = c;
-
+                        customer.AssignSeat(emptyC);
                         customer.OnMealFinished += HandleGetout;
-                        customer.AssignSeat(i);
-                        count++;
-                    }
-                }
+                        customer.setPath(Customer.cState.GoingSeat, chairs[emptyC]);
 
-                if (waiting.Count!= 0)
-                {
-                    for (int n = 0; n < waiting.Count; n++)
-                    {
-                        Enter(n);
+                        kioskState[i] = false;
+                        kCustomers[i] = null;
                     }
+                    
                 }
-
-                isLatest = true;
             }
         }
     }
 
+    private Transform GetOutside()
+    {
+        int ran = UnityEngine.Random.Range(0, outsideParent.childCount);
+
+        return outsideParent.GetChild(ran);
+        
+    }
     private GameObject GetCustomer()
     {
 
         GameObject c;
+
+        Transform outside = GetOutside();
 
         if (pool.Count == 0)
         {
@@ -102,23 +120,39 @@ public class CustomerManager : MonoBehaviour
         return c;
     }
 
-    private void Enter(int idx)
+    private int GetEmptyKiosk()
     {
-        GameObject c = waiting[idx];
-        c.GetComponent<Customer>().setPath(waitingPoint[idx], Customer.cState.Entering);
+        for (int i = 0; i < waitingPoint.Length; i++)
+        {
+            if (!kioskState[i]) return i;
+        }
+        return -1;
     }
 
+
+    private int GetEmptyChair()
+    {
+        for (int i = 0; i < chairs.Length; i++)
+        {
+            if (!useState[i]) return i;
+        }
+        return -1;
+    }
     private void HandleGetout(int idx)
     {
+        if (customers[idx] == null) return;
+
         useState[idx] = false;
         GameObject c = customers[idx];
         Customer customer = c.GetComponent<Customer>();
         customer.OnMealFinished -= HandleGetout;
-        customer.setPath(outside, Customer.cState.Leaving);
+
+        Transform outside = GetOutside();
+
+        if (customer.HasEaten()) customer.setPath(Customer.cState.GoingTrash, trashBin, outside);
+        else customer.setPath(Customer.cState.Leaving, outside);
 
         customers[idx] = null;
-        count--;
-        isLatest = false;
     }
 
     private void AddToPool(GameObject c) {
