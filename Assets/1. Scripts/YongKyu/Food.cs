@@ -1,8 +1,10 @@
 using UnityEngine;
 
+namespace yg {
 public class Food : MonoBehaviour
 {
     
-    public string foodName;
-    public Sprite sprite;
+    public FoodSO so;
+}
+
 }
