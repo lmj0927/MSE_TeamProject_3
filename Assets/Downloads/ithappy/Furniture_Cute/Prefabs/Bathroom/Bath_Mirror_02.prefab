@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 12d47edfe86f0b5498842c7b96281c1f, type: 3}
@@ -51,11 +52,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 12d47edfe86f0b5498842c7b96281c1f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 919132149155446097, guid: 12d47edfe86f0b5498842c7b96281c1f, type: 3}
       propertyPath: m_Name
       value: Bath_Mirror_02
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 12d47edfe86f0b5498842c7b96281c1f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6904767436171233132}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 12d47edfe86f0b5498842c7b96281c1f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7550502799033925846}
   m_SourcePrefab: {fileID: 100100000, guid: 12d47edfe86f0b5498842c7b96281c1f, type: 3}
 --- !u!4 &1721299017406110707 stripped
 Transform:
@@ -75,9 +89,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2065068631846814025}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 5318879734815148258, guid: 12d47edfe86f0b5498842c7b96281c1f, type: 3}
@@ -86,8 +108,21 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1721299017406110707}
     m_Modifications:
+    - target: {fileID: 7106511750545862698, guid: 5fd0bdf690692474e9410f821da4f008, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7106511750545862698, guid: 5fd0bdf690692474e9410f821da4f008, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 61cefa60c20de5b4ca7dbe28bf931006, type: 2}
+    - target: {fileID: 7106511750545862698, guid: 5fd0bdf690692474e9410f821da4f008, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e5ddc15233b4d884a9c87647eeeadcd1, type: 2}
     - target: {fileID: 8274319872384764741, guid: 5fd0bdf690692474e9410f821da4f008, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -137,4 +172,12 @@ PrefabInstance:
       value: Bath_Mirror_02_Door
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5fd0bdf690692474e9410f821da4f008, type: 3}
+--- !u!4 &6904767436171233132 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8274319872384764741, guid: 5fd0bdf690692474e9410f821da4f008, type: 3}
+  m_PrefabInstance: {fileID: 3244530668366515241}
+  m_PrefabAsset: {fileID: 0}

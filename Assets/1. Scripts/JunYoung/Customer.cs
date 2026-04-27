@@ -45,6 +45,7 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
     private cState current = cState.Entering;
     private bool arriveHandled = false;
     private bool alreadyDeciding = false;
+    private bool alreadySit = false;
     private bool alreadyStand = false;
 
     private Transform exit;
@@ -238,16 +239,25 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
 
     private void Sit()
     {
-        agent.enabled = false;
-        
-        transform.rotation = Quaternion.LookRotation(destination.forward);
+        if (alreadySit) return;
 
-        transform.position = destination.GetChild(0).position + (-transform.forward * 0.1f);
+        alreadySit = true;
+        StartCoroutine("SitRoutine");
+    }
+
+    IEnumerator SitRoutine()
+    {
+        agent.enabled = false;
+        transform.rotation = Quaternion.LookRotation(destination.forward);
+        transform.position += transform.forward * 0.15f;
         destination.position += (-destination.forward * dragChair);
 
         anim.SetTrigger("sit");
         current = cState.Sitting;
         isWaiting = true;
+
+        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length*0.3f);
+        transform.position = destination.GetChild(0).position + (-transform.forward * 0.1f);
     }
 
     private void Stand()
@@ -335,6 +345,7 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
         current = cState.Entering;
         arriveHandled = false;
         alreadyDeciding = false;
+        alreadySit = false;
         alreadyStand = false;
         agent.stoppingDistance = 0.3f;
 

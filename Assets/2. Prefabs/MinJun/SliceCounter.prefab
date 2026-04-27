@@ -432,6 +432,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cutting_board_01
       objectReference: {fileID: 0}
+    - target: {fileID: 1589674487277351742, guid: 92f1cdb86bcf23c4b908c76ec982ac1f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
