@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 8327773512918447327}
     m_Modifications:
     - target: {fileID: 5050973563718028917, guid: ea79b8a59e2c9e44da6cf839c78b2d11, type: 3}
@@ -55,15 +56,32 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bed_03_Shelf_02
       objectReference: {fileID: 0}
+    - target: {fileID: 6220462214723319066, guid: ea79b8a59e2c9e44da6cf839c78b2d11, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea79b8a59e2c9e44da6cf839c78b2d11, type: 3}
+--- !u!4 &5895706905234164514 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5050973563718028917, guid: ea79b8a59e2c9e44da6cf839c78b2d11, type: 3}
+  m_PrefabInstance: {fileID: 1714019332318659927}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8267905323723312013
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 8327773512918447327}
     m_Modifications:
+    - target: {fileID: 7446598031106449328, guid: 33bfc4f535e6d9444871e4fb4d677eba, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 8582890743379977439, guid: 33bfc4f535e6d9444871e4fb4d677eba, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -113,12 +131,21 @@ PrefabInstance:
       value: Bed_03_Shelf_03
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 33bfc4f535e6d9444871e4fb4d677eba, type: 3}
+--- !u!4 &405620551138160466 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8582890743379977439, guid: 33bfc4f535e6d9444871e4fb4d677eba, type: 3}
+  m_PrefabInstance: {fileID: 8267905323723312013}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8365586521265558324
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 556ab001eef509349839ac6122aa3227, type: 3}
@@ -165,11 +192,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 556ab001eef509349839ac6122aa3227, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 919132149155446097, guid: 556ab001eef509349839ac6122aa3227, type: 3}
       propertyPath: m_Name
       value: Bed_03
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 556ab001eef509349839ac6122aa3227, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 20483331161212160}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 556ab001eef509349839ac6122aa3227, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5895706905234164514}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 556ab001eef509349839ac6122aa3227, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 405620551138160466}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 556ab001eef509349839ac6122aa3227, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2931454902515474754}
   m_SourcePrefab: {fileID: 100100000, guid: 556ab001eef509349839ac6122aa3227, type: 3}
 --- !u!4 &8327773512918447327 stripped
 Transform:
@@ -189,9 +235,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8708239086832938597}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 5967059766647266923, guid: 556ab001eef509349839ac6122aa3227, type: 3}
@@ -200,8 +254,13 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 8327773512918447327}
     m_Modifications:
+    - target: {fileID: 7772922550471232414, guid: 481f6f576f6bf5c4da5b636bed969c81, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 8132950691419892299, guid: 481f6f576f6bf5c4da5b636bed969c81, type: 3}
       propertyPath: m_Name
       value: Bed_03_Shelf_01
@@ -251,4 +310,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 481f6f576f6bf5c4da5b636bed969c81, type: 3}
+--- !u!4 &20483331161212160 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8905264892486480113, guid: 481f6f576f6bf5c4da5b636bed969c81, type: 3}
+  m_PrefabInstance: {fileID: 8925323331084203505}
+  m_PrefabAsset: {fileID: 0}

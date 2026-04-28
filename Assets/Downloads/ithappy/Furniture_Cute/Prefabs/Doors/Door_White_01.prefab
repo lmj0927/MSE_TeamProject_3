@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2327502328723644396}
     m_Modifications:
     - target: {fileID: 252949017211233385, guid: d712f86251188c84db5fccf085f3a1ff, type: 3}
@@ -55,13 +56,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door_White_01_Handle
       objectReference: {fileID: 0}
+    - target: {fileID: 1425823687155064582, guid: d712f86251188c84db5fccf085f3a1ff, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d712f86251188c84db5fccf085f3a1ff, type: 3}
+--- !u!4 &373182124772195782 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 252949017211233385, guid: d712f86251188c84db5fccf085f3a1ff, type: 3}
+  m_PrefabInstance: {fileID: 481718997284985263}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2866060075813500935
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 16a24b97ae0e50240a0f5637544fdaec, type: 3}
@@ -108,11 +122,28 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 16a24b97ae0e50240a0f5637544fdaec, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
+    - target: {fileID: -7511558181221131132, guid: 16a24b97ae0e50240a0f5637544fdaec, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7d66b01894bbc8f479f0fd8d4afe4cc0, type: 2}
     - target: {fileID: 919132149155446097, guid: 16a24b97ae0e50240a0f5637544fdaec, type: 3}
       propertyPath: m_Name
       value: Door_White_01
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 16a24b97ae0e50240a0f5637544fdaec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 373182124772195782}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 16a24b97ae0e50240a0f5637544fdaec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -101657656489199427}
   m_SourcePrefab: {fileID: 100100000, guid: 16a24b97ae0e50240a0f5637544fdaec, type: 3}
 --- !u!4 &2327502328723644396 stripped
 Transform:
@@ -132,9 +163,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3100486063664645462}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 6811590659058865150, guid: 16a24b97ae0e50240a0f5637544fdaec, type: 3}

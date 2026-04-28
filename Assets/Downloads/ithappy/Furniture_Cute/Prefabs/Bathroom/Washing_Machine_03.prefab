@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
@@ -51,11 +52,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 919132149155446097, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
       propertyPath: m_Name
       value: Washing_Machine_03
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3661833020217244519}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 636240073102118639}
   m_SourcePrefab: {fileID: 100100000, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
 --- !u!4 &1727328696645804124 stripped
 Transform:
@@ -75,9 +89,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2068107569936284390}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 2312897471769213443, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
@@ -86,6 +108,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1727328696645804124}
     m_Modifications:
     - target: {fileID: 2616078321785626950, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
@@ -136,5 +159,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Washing_Machine_03_Door
       objectReference: {fileID: 0}
+    - target: {fileID: 3748403927792359977, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
+--- !u!4 &3661833020217244519 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2616078321785626950, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
+  m_PrefabInstance: {fileID: 1630123726844058145}
+  m_PrefabAsset: {fileID: 0}

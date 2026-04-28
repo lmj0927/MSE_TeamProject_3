@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 836f705d2ebfc3342b23d5066b544a62, type: 3}
@@ -51,11 +52,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 836f705d2ebfc3342b23d5066b544a62, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 919132149155446097, guid: 836f705d2ebfc3342b23d5066b544a62, type: 3}
       propertyPath: m_Name
       value: TV_Stand_03
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 836f705d2ebfc3342b23d5066b544a62, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6714055851684588307}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 836f705d2ebfc3342b23d5066b544a62, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 503072796524577387}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 836f705d2ebfc3342b23d5066b544a62, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -1082269316330873193}
   m_SourcePrefab: {fileID: 100100000, guid: 836f705d2ebfc3342b23d5066b544a62, type: 3}
 --- !u!1 &2564858822747063171 stripped
 GameObject:
@@ -70,9 +87,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2564858822747063171}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -951737418743284796, guid: 836f705d2ebfc3342b23d5066b544a62, type: 3}
@@ -86,6 +111,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2941946967576402233}
     m_Modifications:
     - target: {fileID: 5003666200049584880, guid: ea525cf8cde71814b8daa69817ecc7dd, type: 3}
@@ -136,15 +162,32 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6805057328043928357, guid: ea525cf8cde71814b8daa69817ecc7dd, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea525cf8cde71814b8daa69817ecc7dd, type: 3}
+--- !u!4 &503072796524577387 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5637177739156246602, guid: ea525cf8cde71814b8daa69817ecc7dd, type: 3}
+  m_PrefabInstance: {fileID: 5242191350902247969}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7623569674687910098
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2941946967576402233}
     m_Modifications:
+    - target: {fileID: 2642046038044803246, guid: b763cdc2f02483048b3637982c1225cd, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 3810399341290224577, guid: b763cdc2f02483048b3637982c1225cd, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -194,4 +237,12 @@ PrefabInstance:
       value: TV_Stand_03_Shelf_01
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b763cdc2f02483048b3637982c1225cd, type: 3}
+--- !u!4 &6714055851684588307 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3810399341290224577, guid: b763cdc2f02483048b3637982c1225cd, type: 3}
+  m_PrefabInstance: {fileID: 7623569674687910098}
+  m_PrefabAsset: {fileID: 0}

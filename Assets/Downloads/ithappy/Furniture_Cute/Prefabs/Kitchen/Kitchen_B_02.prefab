@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: f664ac10606bb7c4eb0b6b5e98611cb8, type: 3}
@@ -51,11 +52,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: f664ac10606bb7c4eb0b6b5e98611cb8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 919132149155446097, guid: f664ac10606bb7c4eb0b6b5e98611cb8, type: 3}
       propertyPath: m_Name
       value: Kitchen_B_02
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: f664ac10606bb7c4eb0b6b5e98611cb8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4560106605075953534}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f664ac10606bb7c4eb0b6b5e98611cb8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9063309215817683977}
   m_SourcePrefab: {fileID: 100100000, guid: f664ac10606bb7c4eb0b6b5e98611cb8, type: 3}
 --- !u!4 &4002299113615159704 stripped
 Transform:
@@ -75,9 +89,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4377733558527339298}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 7753666009807067428, guid: f664ac10606bb7c4eb0b6b5e98611cb8, type: 3}
@@ -86,6 +108,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4002299113615159704}
     m_Modifications:
     - target: {fileID: 258308068528920657, guid: 924ae3c13cca3064a8322c57ab075764, type: 3}
@@ -136,5 +159,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1771407386316585348, guid: 924ae3c13cca3064a8322c57ab075764, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 924ae3c13cca3064a8322c57ab075764, type: 3}
+--- !u!4 &4560106605075953534 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 639055387738817259, guid: 924ae3c13cca3064a8322c57ab075764, type: 3}
+  m_PrefabInstance: {fileID: 4005566724812191125}
+  m_PrefabAsset: {fileID: 0}
