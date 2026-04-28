@@ -1326,6 +1326,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GrillCounter
       objectReference: {fileID: 0}
+    - target: {fileID: 8559624025101886117, guid: 89deccfaea19d074c849ee25a428f664, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
