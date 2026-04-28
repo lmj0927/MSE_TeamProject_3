@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: cda19b1b66bac3e45bcbfea54ac57c9d, type: 3}
@@ -51,11 +52,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: cda19b1b66bac3e45bcbfea54ac57c9d, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 919132149155446097, guid: cda19b1b66bac3e45bcbfea54ac57c9d, type: 3}
       propertyPath: m_Name
       value: ShoeCabinet_01
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: cda19b1b66bac3e45bcbfea54ac57c9d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5366388001030929833}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: cda19b1b66bac3e45bcbfea54ac57c9d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3207811434747931287}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cda19b1b66bac3e45bcbfea54ac57c9d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5891759576263418458}
   m_SourcePrefab: {fileID: 100100000, guid: cda19b1b66bac3e45bcbfea54ac57c9d, type: 3}
 --- !u!4 &374369431923265025 stripped
 Transform:
@@ -75,9 +92,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1043101936779089083}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -6874656304854604926, guid: cda19b1b66bac3e45bcbfea54ac57c9d, type: 3}
@@ -86,6 +111,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 374369431923265025}
     m_Modifications:
     - target: {fileID: 52027753762872824, guid: 30a81ae12d0db3840af2d6291f7e070d, type: 3}
@@ -136,15 +162,32 @@ PrefabInstance:
       propertyPath: m_Name
       value: ShoeCabinet_01_Door_01
       objectReference: {fileID: 0}
+    - target: {fileID: 1221594989916628631, guid: 30a81ae12d0db3840af2d6291f7e070d, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30a81ae12d0db3840af2d6291f7e070d, type: 3}
+--- !u!4 &5366388001030929833 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 52027753762872824, guid: 30a81ae12d0db3840af2d6291f7e070d, type: 3}
+  m_PrefabInstance: {fileID: 5386845577271222353}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8908051352920515378
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 374369431923265025}
     m_Modifications:
+    - target: {fileID: 5138751071489503946, guid: 5a653dac3d48d6145a4693515102dc82, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 6276801834138323365, guid: 5a653dac3d48d6145a4693515102dc82, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -194,4 +237,12 @@ PrefabInstance:
       value: ShoeCabinet_01_Door_02
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a653dac3d48d6145a4693515102dc82, type: 3}
+--- !u!4 &3207811434747931287 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6276801834138323365, guid: 5a653dac3d48d6145a4693515102dc82, type: 3}
+  m_PrefabInstance: {fileID: 8908051352920515378}
+  m_PrefabAsset: {fileID: 0}

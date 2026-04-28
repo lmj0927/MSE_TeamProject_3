@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4395545359618818734}
     m_Modifications:
     - target: {fileID: 2816127094408823313, guid: 8c29b7b8cc9f3be4885fa0ac95d94671, type: 3}
@@ -59,13 +60,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4329112475891459012, guid: 8c29b7b8cc9f3be4885fa0ac95d94671, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c29b7b8cc9f3be4885fa0ac95d94671, type: 3}
+--- !u!4 &4271557134922219772 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3197331437647239339, guid: 8c29b7b8cc9f3be4885fa0ac95d94671, type: 3}
+  m_PrefabInstance: {fileID: 1664267622376806487}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2820580442217869776
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4395545359618818734}
     m_Modifications:
     - target: {fileID: 7406774455620962824, guid: 55fba6fa14df81f4386b39c7f1e9ac82, type: 3}
@@ -116,13 +130,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Closet_10_Door_01
       objectReference: {fileID: 0}
+    - target: {fileID: 8539118202358493543, guid: 55fba6fa14df81f4386b39c7f1e9ac82, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 55fba6fa14df81f4386b39c7f1e9ac82, type: 3}
+--- !u!4 &4750893983842368472 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7406774455620962824, guid: 55fba6fa14df81f4386b39c7f1e9ac82, type: 3}
+  m_PrefabInstance: {fileID: 2820580442217869776}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4218364639602222405
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 5a4dac39c000dbc478aa80f0ecd3a2a0, type: 3}
@@ -169,11 +196,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 5a4dac39c000dbc478aa80f0ecd3a2a0, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 919132149155446097, guid: 5a4dac39c000dbc478aa80f0ecd3a2a0, type: 3}
       propertyPath: m_Name
       value: Closet_10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5a4dac39c000dbc478aa80f0ecd3a2a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4750893983842368472}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5a4dac39c000dbc478aa80f0ecd3a2a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5831416002158271665}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5a4dac39c000dbc478aa80f0ecd3a2a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4271557134922219772}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5a4dac39c000dbc478aa80f0ecd3a2a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -7230510203044916023}
   m_SourcePrefab: {fileID: 100100000, guid: 5a4dac39c000dbc478aa80f0ecd3a2a0, type: 3}
 --- !u!1 &3912446770403219476 stripped
 GameObject:
@@ -188,9 +234,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3912446770403219476}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -6614715158844257491, guid: 5a4dac39c000dbc478aa80f0ecd3a2a0, type: 3}
@@ -204,8 +258,13 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4395545359618818734}
     m_Modifications:
+    - target: {fileID: 109915954979983875, guid: 03e0a6198049f2e4eba7800b0d4e4316, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 1282772892209457516, guid: 03e0a6198049f2e4eba7800b0d4e4316, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -255,4 +314,12 @@ PrefabInstance:
       value: Closet_10_Door_02
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03e0a6198049f2e4eba7800b0d4e4316, type: 3}
+--- !u!4 &5831416002158271665 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1282772892209457516, guid: 03e0a6198049f2e4eba7800b0d4e4316, type: 3}
+  m_PrefabInstance: {fileID: 4692762713435747805}
+  m_PrefabAsset: {fileID: 0}

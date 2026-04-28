@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 3b9166cbd5710db41a7b20b456255e0a, type: 3}
@@ -56,6 +57,12 @@ PrefabInstance:
       value: Fridge_07_Shelf_01
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3b9166cbd5710db41a7b20b456255e0a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2164193311458734275}
   m_SourcePrefab: {fileID: 100100000, guid: 3b9166cbd5710db41a7b20b456255e0a, type: 3}
 --- !u!1 &1685053505937891422 stripped
 GameObject:
@@ -70,9 +77,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1685053505937891422}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5318585722322597842, guid: 3b9166cbd5710db41a7b20b456255e0a, type: 3}

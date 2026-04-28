@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 6186971825201189988}
     m_Modifications:
     - target: {fileID: 2408009004876334359, guid: ddab240b7407ed043a4ee6908bae6d5a, type: 3}
@@ -55,13 +56,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4209189028181255362, guid: ddab240b7407ed043a4ee6908bae6d5a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ddab240b7407ed043a4ee6908bae6d5a, type: 3}
+--- !u!4 &2530762532743068413 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3035751338490781613, guid: ddab240b7407ed043a4ee6908bae6d5a, type: 3}
+  m_PrefabInstance: {fileID: 666027929195275600}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1359734131412000531
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 6186971825201189988}
     m_Modifications:
     - target: {fileID: 2487022700436028524, guid: e5c29ee41cdaf3a44a8d3108159c34c7, type: 3}
@@ -112,15 +126,32 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kitchen_C_10_Shelf_01
       objectReference: {fileID: 0}
+    - target: {fileID: 3659316691873924867, guid: e5c29ee41cdaf3a44a8d3108159c34c7, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5c29ee41cdaf3a44a8d3108159c34c7, type: 3}
+--- !u!4 &3484962599321936767 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2487022700436028524, guid: e5c29ee41cdaf3a44a8d3108159c34c7, type: 3}
+  m_PrefabInstance: {fileID: 1359734131412000531}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2538644038169323433
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 6186971825201189988}
     m_Modifications:
+    - target: {fileID: 530929722203087871, guid: 29f294bd94cb5814aa6d7a49ae771a6f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 1663254433645156496, guid: 29f294bd94cb5814aa6d7a49ae771a6f, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -170,12 +201,21 @@ PrefabInstance:
       value: Kitchen_C_10_Door_02
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 29f294bd94cb5814aa6d7a49ae771a6f, type: 3}
+--- !u!4 &3759945303847714617 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1663254433645156496, guid: 29f294bd94cb5814aa6d7a49ae771a6f, type: 3}
+  m_PrefabInstance: {fileID: 2538644038169323433}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5932986068709864335
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 743db3d8e40e9c84cae94bdc476479a5, type: 3}
@@ -222,11 +262,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 743db3d8e40e9c84cae94bdc476479a5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 919132149155446097, guid: 743db3d8e40e9c84cae94bdc476479a5, type: 3}
       propertyPath: m_Name
       value: Kitchen_C_10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 743db3d8e40e9c84cae94bdc476479a5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2530762532743068413}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 743db3d8e40e9c84cae94bdc476479a5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3759945303847714617}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 743db3d8e40e9c84cae94bdc476479a5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3484962599321936767}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 743db3d8e40e9c84cae94bdc476479a5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7210502777841462334}
   m_SourcePrefab: {fileID: 100100000, guid: 743db3d8e40e9c84cae94bdc476479a5, type: 3}
 --- !u!4 &6186971825201189988 stripped
 Transform:
@@ -246,9 +305,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6816016293658349278}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -587971759166334664, guid: 743db3d8e40e9c84cae94bdc476479a5, type: 3}

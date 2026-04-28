@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/unity,visualstudio,visualstudiocode,macos,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=unity,visualstudio,visualstudiocode,macos,windows
 
+*.lscache
+*.slnx
+
 ### macOS ###
 # General
 .DS_Store
@@ -538,3 +541,8 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/unity,visualstudio,visualstudiocode,macos,windows
+# Auto-generated scenes by play mode tests
+/[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# Unused Assets Pack
+/[Aa]ssets/Downloads/Pack_FREE_PartyCharacters/
