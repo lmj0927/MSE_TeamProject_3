@@ -20,6 +20,10 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
     private Renderer rd;
     private Material[] mat;
 
+    private Vector2 seatRange;
+    private Vector2 mealRange;
+    private Vector2 speedRange;
+
     private int seatNum = -1;
     private float dragChair = 0.25f;
 
@@ -40,7 +44,7 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
 
     // Event for CustomerManger to check Customer leaving
     public Action<int> OnMealFinished;
-    public Action<GameObject> OnSleep;
+    public Action<Customer> OnSleep;
 
     private cState current = cState.Entering;
     private bool arriveHandled = false;
@@ -55,10 +59,6 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
         anim = GetComponent<Animator>();
         rd = body.GetComponent<Renderer>();
         mat = rd.materials;
-    }
-    private void Start()
-    {
-        InitializeStats();
     }
 
     private void Update()
@@ -126,14 +126,14 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
         SetFace(0);
 
         // Random Timer
-        seatTimer = UnityEngine.Random.Range(45.0f, 75.0f);
-        boring = seatTimer * 0.5f; 
+        seatTimer = UnityEngine.Random.Range(seatRange.x, seatRange.y);
+        boring = seatTimer * 0.5f;
         angry = seatTimer * 0.15f;
-        mealTimer = UnityEngine.Random.Range(8.0f, 15.0f);
 
-        //Random Speed
-        if (agent != null) agent.speed = UnityEngine.Random.Range(2.5f, 3.5f);
-        
+        mealTimer = UnityEngine.Random.Range(mealRange.x, mealRange.y);
+
+        // Random Speed
+        if (agent != null) agent.speed = UnityEngine.Random.Range(speedRange.x, speedRange.y);
         if (anim != null) anim.speed = UnityEngine.Random.Range(0.9f, 1.15f);
     }
     private void RandomColor()
@@ -280,6 +280,13 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
         OnMealFinished?.Invoke(seatNum);
     }
 
+    public void SetRanges(Vector2 seat, Vector2 meal, Vector2 speed)
+    {
+        seatRange = seat;
+        mealRange = meal;
+        speedRange = speed;
+        InitializeStats();
+    }
     // temp parameter
     public void getFood(int served)
     {
@@ -321,7 +328,7 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
         }
     }
 
-    public void Reset()
+    private void Reset()
     {
         InitializeStats();
 
@@ -338,7 +345,7 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
         alreadyStand = false;
         agent.stoppingDistance = 0.3f;
 
-        OnSleep?.Invoke(gameObject);
+        OnSleep?.Invoke(this);
     }
 
 }

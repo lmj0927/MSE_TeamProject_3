@@ -6,31 +6,42 @@ public class CustomerManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject customer;
+
+    [Tooltip("patience tiemr range")]
+    [SerializeField] private Vector2 seatTimerRange = new Vector2(45f, 75f);
+
+    [Tooltip("meal timer range")]
+    [SerializeField] private Vector2 mealTimerRange = new Vector2(8f, 15f);
+
+    [Tooltip("walk speed range")]
+    [SerializeField] private Vector2 walkSpeedRange = new Vector2(2.5f, 3.5f);
+
     [SerializeField]
     private Transform outsideParent;
 
-    private Queue<GameObject> pool = new Queue<GameObject>();
+    private Queue<Customer> pool = new Queue<Customer>();
 
     [SerializeField]
     private Transform[] waitingPoint;
     private bool[] kioskState;      // Each kiosk's use state
-    private GameObject[] kCustomers;
+    private Customer[] kCustomers;
 
     [SerializeField]
     private Transform chairParent;
     private Transform[] chairs;
     private bool[] useState;    // Each chair's use state
-    private GameObject[] customers;
+    private Customer[] customers;
 
     [SerializeField]
     private Transform trashBin;
+
 
     private float spawnTimer = 0;
     private float spawnTerm = 3.0f;
     private void Awake()
     {
         kioskState = new bool[waitingPoint.Length];
-        kCustomers = new GameObject[waitingPoint.Length];
+        kCustomers = new Customer[waitingPoint.Length];
 
         chairs = new Transform[chairParent.transform.childCount];
 
@@ -39,7 +50,7 @@ public class CustomerManager : MonoBehaviour
             chairs[i] = chairParent.GetChild(i);
         }
         useState = new bool[chairs.Length];
-        customers = new GameObject[chairs.Length];
+        customers = new Customer[chairs.Length];
     }
 
     void Update()
@@ -53,12 +64,12 @@ public class CustomerManager : MonoBehaviour
             if (spawnTimer <= 0)
             {
                 spawnTimer = spawnTerm;
-                GameObject c = GetCustomer();
+                Customer c = GetCustomer();
 
                 kioskState[emptyK] = true;
                 kCustomers[emptyK] = c;
 
-                c.GetComponent<Customer>().setPath(Customer.cState.Entering, waitingPoint[emptyK]);
+                c.setPath(Customer.cState.Entering, waitingPoint[emptyK]);
             }
         }
 
@@ -66,9 +77,9 @@ public class CustomerManager : MonoBehaviour
         {
             if (kioskState[i] && kCustomers[i] != null)
             {
-                Customer customer = kCustomers[i].GetComponent<Customer>();
+                Customer c = kCustomers[i];
 
-                if (customer.IsReady())
+                if (c.IsReady())
                 {
                     int emptyC = GetEmptyChair();
 
@@ -77,9 +88,9 @@ public class CustomerManager : MonoBehaviour
                         useState[emptyC] = true;
                         customers[emptyC] = kCustomers[i];
 
-                        customer.AssignSeat(emptyC);
-                        customer.OnMealFinished += HandleGetout;
-                        customer.setPath(Customer.cState.GoingSeat, chairs[emptyC]);
+                        c.AssignSeat(emptyC);
+                        c.OnMealFinished += HandleGetout;
+                        c.setPath(Customer.cState.GoingSeat, chairs[emptyC]);
 
                         kioskState[i] = false;
                         kCustomers[i] = null;
@@ -97,17 +108,18 @@ public class CustomerManager : MonoBehaviour
         return outsideParent.GetChild(ran);
         
     }
-    private GameObject GetCustomer()
+    private Customer GetCustomer()
     {
 
-        GameObject c;
+        Customer c;
 
         Transform outside = GetOutside();
 
         if (pool.Count == 0)
         {
-            c = Instantiate(customer, outside.position, outside.rotation);
-            c.GetComponent<Customer>().OnSleep += AddToPool;
+            c = Instantiate(customer, outside.position, outside.rotation).GetComponent<Customer>();
+            c.OnSleep += AddToPool;
+            c.SetRanges(seatTimerRange, mealTimerRange, walkSpeedRange);
             return c;
         }
 
@@ -115,7 +127,7 @@ public class CustomerManager : MonoBehaviour
         c.transform.position = outside.position;
         c.transform.rotation = outside.rotation;
 
-        c.SetActive(true);
+        c.gameObject.SetActive(true);
 
         return c;
     }
@@ -143,19 +155,18 @@ public class CustomerManager : MonoBehaviour
         if (customers[idx] == null) return;
 
         useState[idx] = false;
-        GameObject c = customers[idx];
-        Customer customer = c.GetComponent<Customer>();
-        customer.OnMealFinished -= HandleGetout;
+        Customer c = customers[idx];
+        c.OnMealFinished -= HandleGetout;
 
         Transform outside = GetOutside();
 
-        if (customer.HasEaten()) customer.setPath(Customer.cState.GoingTrash, trashBin, outside);
-        else customer.setPath(Customer.cState.Leaving, outside);
+        if (c.HasEaten()) c.setPath(Customer.cState.GoingTrash, trashBin, outside);
+        else c.setPath(Customer.cState.Leaving, outside);
 
         customers[idx] = null;
     }
 
-    private void AddToPool(GameObject c) {
+    private void AddToPool(Customer c) {
         pool.Enqueue(c);
     }
 }

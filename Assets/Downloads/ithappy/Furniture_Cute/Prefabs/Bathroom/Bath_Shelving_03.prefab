@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: aafa0279e78fd0244a84f393f240bb65, type: 3}
@@ -51,11 +52,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: aafa0279e78fd0244a84f393f240bb65, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 919132149155446097, guid: aafa0279e78fd0244a84f393f240bb65, type: 3}
       propertyPath: m_Name
       value: Bath_Shelving_03
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: aafa0279e78fd0244a84f393f240bb65, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6446088684298617877}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: aafa0279e78fd0244a84f393f240bb65, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2555253066661650549}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: aafa0279e78fd0244a84f393f240bb65, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 256265307290359454}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: aafa0279e78fd0244a84f393f240bb65, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -4186702361493148402}
   m_SourcePrefab: {fileID: 100100000, guid: aafa0279e78fd0244a84f393f240bb65, type: 3}
 --- !u!4 &1282123367596918786 stripped
 Transform:
@@ -75,9 +95,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1909760182186398392}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 7641127817326045163, guid: aafa0279e78fd0244a84f393f240bb65, type: 3}
@@ -86,8 +114,13 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1282123367596918786}
     m_Modifications:
+    - target: {fileID: 6959863738374164985, guid: e31103c00e716df4b962093dff8d0772, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 61cefa60c20de5b4ca7dbe28bf931006, type: 2}
     - target: {fileID: 8132739984973490838, guid: e31103c00e716df4b962093dff8d0772, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -137,14 +170,27 @@ PrefabInstance:
       value: Bath_Shelving_03_Drawer_01
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e31103c00e716df4b962093dff8d0772, type: 3}
+--- !u!4 &6446088684298617877 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8132739984973490838, guid: e31103c00e716df4b962093dff8d0772, type: 3}
+  m_PrefabInstance: {fileID: 3001737577313939075}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3585387780560120979
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1282123367596918786}
     m_Modifications:
+    - target: {fileID: 215296248742705033, guid: 69e32342a4b6bf74aa4ca17e31210f9a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 61cefa60c20de5b4ca7dbe28bf931006, type: 2}
     - target: {fileID: 1348773183814601958, guid: 69e32342a4b6bf74aa4ca17e31210f9a, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -194,14 +240,27 @@ PrefabInstance:
       value: Bath_Shelving_03_Drawer_02
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 69e32342a4b6bf74aa4ca17e31210f9a, type: 3}
+--- !u!4 &2555253066661650549 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1348773183814601958, guid: 69e32342a4b6bf74aa4ca17e31210f9a, type: 3}
+  m_PrefabInstance: {fileID: 3585387780560120979}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6417595959736993042
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1282123367596918786}
     m_Modifications:
+    - target: {fileID: 5389298758775777507, guid: 0691aed38c247b24f83e169fbc0daa54, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 61cefa60c20de5b4ca7dbe28bf931006, type: 2}
     - target: {fileID: 5893627356788492598, guid: 0691aed38c247b24f83e169fbc0daa54, type: 3}
       propertyPath: m_Name
       value: Bath_Shelving_03_Drawer_03
@@ -251,4 +310,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0691aed38c247b24f83e169fbc0daa54, type: 3}
+--- !u!4 &256265307290359454 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6521650374835131276, guid: 0691aed38c247b24f83e169fbc0daa54, type: 3}
+  m_PrefabInstance: {fileID: 6417595959736993042}
+  m_PrefabAsset: {fileID: 0}
