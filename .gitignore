@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/unity,visualstudio,visualstudiocode,macos,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=unity,visualstudio,visualstudiocode,macos,windows
 
+*.lscache
+*.slnx
+
 ### macOS ###
 # General
 .DS_Store
