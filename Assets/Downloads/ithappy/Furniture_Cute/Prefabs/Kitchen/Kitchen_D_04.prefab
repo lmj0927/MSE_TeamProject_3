@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 346e701226ebafb409b124afde1f6c2a, type: 3}
@@ -51,11 +52,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 346e701226ebafb409b124afde1f6c2a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 919132149155446097, guid: 346e701226ebafb409b124afde1f6c2a, type: 3}
       propertyPath: m_Name
       value: Kitchen_D_04
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 346e701226ebafb409b124afde1f6c2a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4953154553960834357}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 346e701226ebafb409b124afde1f6c2a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5311485603239914425}
   m_SourcePrefab: {fileID: 100100000, guid: 346e701226ebafb409b124afde1f6c2a, type: 3}
 --- !u!4 &1219769156386159366 stripped
 Transform:
@@ -75,9 +89,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1992470346840646076}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -8566860737190980094, guid: 346e701226ebafb409b124afde1f6c2a, type: 3}
@@ -86,8 +108,13 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1219769156386159366}
     m_Modifications:
+    - target: {fileID: 7980448272319901464, guid: 1f542167ff5c35b4586a9d80b806376f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 8484996222232186573, guid: 1f542167ff5c35b4586a9d80b806376f, type: 3}
       propertyPath: m_Name
       value: Kitchen_D_04_Door
@@ -137,4 +164,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f542167ff5c35b4586a9d80b806376f, type: 3}
+--- !u!4 &4953154553960834357 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9118403548451574903, guid: 1f542167ff5c35b4586a9d80b806376f, type: 3}
+  m_PrefabInstance: {fileID: 4194593316017254722}
+  m_PrefabAsset: {fileID: 0}

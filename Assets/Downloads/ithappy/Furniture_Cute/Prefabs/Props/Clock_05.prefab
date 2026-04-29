@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 10b9300b31804a74c96984bf57613c58, type: 3}
@@ -51,11 +52,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 10b9300b31804a74c96984bf57613c58, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 919132149155446097, guid: 10b9300b31804a74c96984bf57613c58, type: 3}
       propertyPath: m_Name
       value: Clock_05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 10b9300b31804a74c96984bf57613c58, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1920584303596813191}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 10b9300b31804a74c96984bf57613c58, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8948551946744846432}
   m_SourcePrefab: {fileID: 100100000, guid: 10b9300b31804a74c96984bf57613c58, type: 3}
 --- !u!4 &410299266220546229 stripped
 Transform:
@@ -75,9 +89,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1079313249739833871}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -1561227218507924353, guid: 10b9300b31804a74c96984bf57613c58, type: 3}
@@ -86,8 +108,13 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 410299266220546229}
     m_Modifications:
+    - target: {fileID: 4933328426547307095, guid: 7e6bcb3d8b06fc24891dbedcb91c88ed, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 6070175875858405688, guid: 7e6bcb3d8b06fc24891dbedcb91c88ed, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -137,4 +164,12 @@ PrefabInstance:
       value: Clock_05_Door
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e6bcb3d8b06fc24891dbedcb91c88ed, type: 3}
+--- !u!4 &1920584303596813191 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6070175875858405688, guid: 7e6bcb3d8b06fc24891dbedcb91c88ed, type: 3}
+  m_PrefabInstance: {fileID: 5664070326699139775}
+  m_PrefabAsset: {fileID: 0}

@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4044898501849443080}
     m_Modifications:
     - target: {fileID: 158620193197640419, guid: b167d58653d8722479239ec3324725d3, type: 3}
@@ -55,13 +56,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fridge_06_Door_01
       objectReference: {fileID: 0}
+    - target: {fileID: 1330994993369723276, guid: b167d58653d8722479239ec3324725d3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b167d58653d8722479239ec3324725d3, type: 3}
+--- !u!4 &1132062169782227028 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 158620193197640419, guid: b167d58653d8722479239ec3324725d3, type: 3}
+  m_PrefabInstance: {fileID: 974585881270213303}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4587167720029785315
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 22d44ded5c46a7e4db81bafee6e28d61, type: 3}
@@ -108,11 +122,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 22d44ded5c46a7e4db81bafee6e28d61, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     - target: {fileID: 919132149155446097, guid: 22d44ded5c46a7e4db81bafee6e28d61, type: 3}
       propertyPath: m_Name
       value: Fridge_06
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 22d44ded5c46a7e4db81bafee6e28d61, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1132062169782227028}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 22d44ded5c46a7e4db81bafee6e28d61, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2627700331219916692}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 22d44ded5c46a7e4db81bafee6e28d61, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5978735185164418381}
   m_SourcePrefab: {fileID: 100100000, guid: 22d44ded5c46a7e4db81bafee6e28d61, type: 3}
 --- !u!1 &3704647668477112754 stripped
 GameObject:
@@ -127,9 +157,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3704647668477112754}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 5311659783524256721, guid: 22d44ded5c46a7e4db81bafee6e28d61, type: 3}
@@ -143,6 +181,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4044898501849443080}
     m_Modifications:
     - target: {fileID: 6995453223600302039, guid: def4c8aa09a655e4cbc8fc4e822bab33, type: 3}
@@ -193,5 +232,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fridge_06_Door_02
       objectReference: {fileID: 0}
+    - target: {fileID: 8169524742417636536, guid: def4c8aa09a655e4cbc8fc4e822bab33, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0046dfe26127ba24d8a77ecd11831fef, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: def4c8aa09a655e4cbc8fc4e822bab33, type: 3}
+--- !u!4 &2627700331219916692 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6995453223600302039, guid: def4c8aa09a655e4cbc8fc4e822bab33, type: 3}
+  m_PrefabInstance: {fileID: 5000016086733992003}
+  m_PrefabAsset: {fileID: 0}
