@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b69725272f37440bfb817b33c77a5f58, type: 3}
-  m_Name: Bread
+  m_Name: SlicedLettuce
   m_EditorClassIdentifier: Assembly-CSharp::FoodSO
-  foodName: Bread
-  sprite: {fileID: 0}
+  foodName: SlicedLettuce
+  sprite: {fileID: 4596691420503330492, guid: be7ecd9bfd2ad44069db9a7c24cde461, type: 3}

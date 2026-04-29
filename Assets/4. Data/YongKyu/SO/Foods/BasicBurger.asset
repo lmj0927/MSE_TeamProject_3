@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92d527cadb10f4e99aedfd1d154147e3, type: 3}
-  m_Name: FireBeef
-  m_EditorClassIdentifier: Assembly-CSharp::RecipeSO
-  result: {fileID: 0}
-  ingredients: []
+  m_Script: {fileID: 11500000, guid: b69725272f37440bfb817b33c77a5f58, type: 3}
+  m_Name: BasicBurger
+  m_EditorClassIdentifier: Assembly-CSharp::FoodSO
+  foodName: BasicBurger
+  sprite: {fileID: 4706460075730594061, guid: 9b2277a85deba4d7e9f5a97a15e7b74d, type: 3}

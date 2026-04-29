@@ -415,8 +415,10 @@ MonoBehaviour:
   assembleRecipes:
   - {fileID: 11400000, guid: c2daf7a725f2141f6b7b8dd8670f85bf, type: 2}
   - {fileID: 11400000, guid: 6f00ebea1879e4974b21352e9baaf329, type: 2}
-  fireRecipes: []
-  sliceRecipes: []
+  fireRecipes:
+  - {fileID: 11400000, guid: df066a4f617134f5ca5093364f1ce026, type: 2}
+  sliceRecipes:
+  - {fileID: 11400000, guid: 2d8883842888d4e3a88538c247e47af4, type: 2}
   trashFood: {fileID: 11400000, guid: 509d46e9af02c47a1b5000f361bf8252, type: 2}
   debugRecipes:
   - {fileID: 11400000, guid: 394a1f53939274e1792ab9d209e5ccf5, type: 2}
