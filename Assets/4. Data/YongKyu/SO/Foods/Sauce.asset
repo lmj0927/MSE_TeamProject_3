@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Sauce
   m_EditorClassIdentifier: Assembly-CSharp::FoodSO
   foodName: Sauce
-  sprite: {fileID: 0}
+  prefab: {fileID: 5862168548408083788, guid: b9d9ea2140ee54e178bb35a3140e6cd6, type: 3}
+  sprite: {fileID: 21300000, guid: 44da0b12de08942f7a1c68d58f379bf9, type: 3}

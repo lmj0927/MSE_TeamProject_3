@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: RawBeef
   m_EditorClassIdentifier: Assembly-CSharp::FoodSO
   foodName: RawBeef
-  sprite: {fileID: 1902271098695974524, guid: de224e1a1e7024f778539107f7ed3186, type: 3}
+  prefab: {fileID: 6808599801469802662, guid: ee75b4735101e4724913d19b08fb7edf, type: 3}
+  sprite: {fileID: 21300000, guid: 417add041de444a5d9bd006fc5cb951a, type: 3}

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Lettuce
   m_EditorClassIdentifier: Assembly-CSharp::FoodSO
   foodName: Lettuce
-  sprite: {fileID: 3284953982482233977, guid: fc5f5013a27dc471094e3a632789c69e, type: 3}
+  prefab: {fileID: 3284953982482233977, guid: fc5f5013a27dc471094e3a632789c69e, type: 3}
+  sprite: {fileID: 21300000, guid: 968b2fb96be3347aca179e8f5828d7e8, type: 3}

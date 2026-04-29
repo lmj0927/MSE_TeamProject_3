@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Bread
   m_EditorClassIdentifier: Assembly-CSharp::FoodSO
   foodName: Bread
-  sprite: {fileID: 5569612086867529233, guid: 11423418d96d4456f8e567763fdcaebb, type: 3}
+  prefab: {fileID: 5569612086867529233, guid: 11423418d96d4456f8e567763fdcaebb, type: 3}
+  sprite: {fileID: 21300000, guid: abd936177230d4d8091ae74a24f0d1ef, type: 3}
