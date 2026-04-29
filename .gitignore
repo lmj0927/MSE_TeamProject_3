@@ -544,5 +544,6 @@ FodyWeavers.xsd
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
 
-# Unused Assets Pack
-/[Aa]ssets/Downloads/Pack_FREE_PartyCharacters/
+# Third-party / local-only asset packs (not committed)
+/[Aa]ssets/FREE/
+/[Aa]ssets/FREE.meta
