@@ -546,4 +546,7 @@ FodyWeavers.xsd
 
 # Unused Assets Pack
 /[Aa]ssets/Downloads/Pack_FREE_PartyCharacters/
+# Third-party / local-only asset packs (not committed)
+/[Aa]ssets/FREE/
+/[Aa]ssets/FREE.meta
 /[Aa]ssets/Downloads/Toony Kitchen Ingredients Free*

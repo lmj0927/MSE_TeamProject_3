@@ -45,7 +45,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2ccdc477e840ba47a544e2fea4ba170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  customer: {fileID: 5818676082942201579, guid: 5ddb42764212839478d512c0afb12cfd, type: 3}
+  customer: {fileID: 3466173328236988086, guid: c285271debe6df14794d28a84dde7632, type: 3}
+  seatTimerRange: {x: 45, y: 75}
+  mealTimerRange: {x: 8, y: 15}
+  walkSpeedRange: {x: 2.5, y: 3.5}
   outsideParent: {fileID: 0}
   waitingPoint:
   - {fileID: 0}
@@ -55,6 +58,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   chairParent: {fileID: 0}
+  trashBin: {fileID: 0}
 --- !u!114 &4777158231579040248
 MonoBehaviour:
   m_ObjectHideFlags: 0
