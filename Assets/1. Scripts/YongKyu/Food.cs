@@ -4,7 +4,7 @@ namespace yg {
 public class Food : MonoBehaviour
 {
     
-    public FoodSO so;
+    private FoodSO data;
 }
 
 }

@@ -93,13 +93,16 @@ public class RecipeManager : MonoBehaviour
 
         foreach(RecipeSO recipe in recipes)
         {
+            // early skip: the number of the ingredients should be same
+            if(recipe.Ingredients.Count != ingredients.Count) continue;
+
             bool recFind = true;
-            foreach(FoodSO recipeIng in recipe.ingredients)
+            foreach(FoodSO recipeIng in recipe.Ingredients)
             {
                 bool ingFind = false;
                 foreach(FoodSO queryIng in ingredients)
                 {
-                    ingFind = recipeIng.foodName.Equals(queryIng.foodName);
+                    ingFind = recipeIng.FoodName.Equals(queryIng.FoodName);
                     if(ingFind) break;
                 }
                 if(!ingFind) {
@@ -107,7 +110,7 @@ public class RecipeManager : MonoBehaviour
                     break;
                 }
             }
-            if(recFind) return recipe.result;
+            if(recFind) return recipe.Result;
         }
         
         return trashFood;
@@ -122,8 +125,8 @@ public class RecipeManager : MonoBehaviour
     public void LogRandomAssembleRecipe()
     {
         RecipeSO r = GiveRandomAssembleRecipe();
-        string log = "How to make " + r.result.foodName + "? ";
-        foreach(FoodSO f in r.ingredients) log += f.foodName + ", ";
+        string log = "How to make " + r.Result.FoodName + "? ";
+        foreach(FoodSO f in r.Ingredients) log += f.FoodName + ", ";
         Debug.Log(log);
     }
 
@@ -133,9 +136,9 @@ public class RecipeManager : MonoBehaviour
     public void LogCookAssemble()
     {
         string log = "Ingredient: ";
-        foreach(FoodSO f in debugRecipes) log += f.foodName + ", ";
+        foreach(FoodSO f in debugRecipes) log += f.FoodName + ", ";
         Debug.Log(log);
         FoodSO res = Cook(debugRecipes, RecipeType.Assemble);
-        Debug.Log("Cook result: " + res.foodName);
+        Debug.Log("Cook result: " + res.FoodName);
     }
 }
