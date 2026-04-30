@@ -2,21 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor;
 
-public class RecipeManager : MonoBehaviour
+public class RecipeManager : Singleton<RecipeManager>
 {
-
-
-    /* Singleton */
-    private static RecipeManager _instance;
-    public  static RecipeManager instance
-    {
-        get
-        {
-            if(_instance == null) _instance = new RecipeManager();
-            return _instance;
-        }
-    }
-
 
     /* RecipeManager */
 
