@@ -11,8 +11,11 @@ public class SliceCounter : ACounter
 
     private void Awake()
     {
-        progressBar.gameObject.SetActive(false);
-        progressBar.SetProgress(0f);
+        if (progressBar != null)
+        {
+            progressBar.gameObject.SetActive(false);
+            progressBar.SetProgress(0f);
+        }
     }
 
     public override void Interact(Player player)
@@ -21,7 +24,8 @@ public class SliceCounter : ACounter
         {
             AddFood(player.RemoveFood());
             isSlicing = true;
-            progressBar.gameObject.SetActive(true);
+            if (progressBar != null)
+                progressBar.gameObject.SetActive(true);
             return;
         }
         else if (CanRemoveFood(player) && !isSlicing)
@@ -32,13 +36,17 @@ public class SliceCounter : ACounter
         else if (isSlicing)
         {
             currentSliceCount++;
-            progressBar.SetProgress((float)currentSliceCount / sliceCount);
+            if (progressBar != null)
+                progressBar.SetProgress((float)currentSliceCount / sliceCount);
             if (currentSliceCount >= sliceCount)
             {
                 isSlicing = false;
                 currentSliceCount = 0;
-                progressBar.gameObject.SetActive(false);
-                progressBar.SetProgress(0f);
+                if (progressBar != null)
+                {
+                    progressBar.gameObject.SetActive(false);
+                    progressBar.SetProgress(0f);
+                }
                 // TODO : Spawn Sliced Food
             }
         }

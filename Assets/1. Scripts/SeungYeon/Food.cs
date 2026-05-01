@@ -1,10 +1,17 @@
 using UnityEngine;
 
-namespace Sy
+namespace sy
 {
-    public abstract class Food : MonoBehaviour
+ 
+    public class Food : MonoBehaviour
     {
-        // Food 공통 데이터/행동은 추후 여기에 확장
+        [SerializeField] private FoodSO data;
+
+        public FoodSO Data => data;
+
+        public void SetData(FoodSO so)
+        {
+            data = so;
+        }
     }
 }
-
