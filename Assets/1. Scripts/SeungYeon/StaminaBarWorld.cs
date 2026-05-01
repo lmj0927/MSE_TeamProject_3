@@ -10,15 +10,20 @@ public class StaminaBarWorld : MonoBehaviour
     [SerializeField] private bool billboardToCamera = true;
     [SerializeField] private bool hideWhenFull = false;
 
-    [Header("Colors")]
+    [Header("Prefab UI")]
+    [SerializeField] private GameObject progressBarPrefab;
+
+    [Header("Colors (built-in UI only)")]
     [SerializeField] private Color backgroundColor = new Color(0f, 0f, 0f, 0.6f);
     [SerializeField] private Color fillColor = new Color(0.2f, 0.9f, 0.3f, 0.95f);
 
-    [Header("Runtime UI (auto-created if empty)")]
+    [Header("Runtime UI (built-in fallback)")]
     [SerializeField] private Canvas worldCanvas;
     [SerializeField] private Image fillImage;
 
     private Camera _cam;
+    private GameObject _barRoot;
+    private ProgressBar _progressBar;
 
     private void Awake()
     {
@@ -27,13 +32,43 @@ public class StaminaBarWorld : MonoBehaviour
 
         _cam = Camera.main;
 
-        if (worldCanvas == null || fillImage == null)
+        if (progressBarPrefab != null)
+            CreateFromPrefab();
+        else if (worldCanvas == null || fillImage == null)
             CreateUiIfNeeded();
+    }
+
+    private void CreateFromPrefab()
+    {
+        _barRoot = Instantiate(progressBarPrefab, transform);
+        _barRoot.transform.localPosition = worldOffset;
+        _barRoot.transform.localRotation = Quaternion.identity;
+        _barRoot.transform.localScale = Vector3.one * Mathf.Max(0.0001f, worldScale);
+
+        _progressBar = _barRoot.GetComponentInChildren<ProgressBar>();
     }
 
     private void LateUpdate()
     {
-        if (stamina == null || worldCanvas == null || fillImage == null)
+        if (stamina == null)
+            return;
+
+        float t = stamina.Normalized;
+
+        if (_progressBar != null)
+        {
+            if (_barRoot != null)
+            {
+                _barRoot.transform.localPosition = worldOffset;
+                if (hideWhenFull)
+                    _barRoot.SetActive(t < 0.999f);
+            }
+
+            _progressBar.SetProgress(t);
+            return;
+        }
+
+        if (worldCanvas == null || fillImage == null)
             return;
 
         worldCanvas.transform.position = transform.position + worldOffset;
@@ -47,7 +82,6 @@ public class StaminaBarWorld : MonoBehaviour
                 worldCanvas.transform.rotation = Quaternion.LookRotation(_cam.transform.position - worldCanvas.transform.position, Vector3.up);
         }
 
-        float t = stamina.Normalized;
         fillImage.fillAmount = t;
 
         if (hideWhenFull)
@@ -81,7 +115,6 @@ public class StaminaBarWorld : MonoBehaviour
             );
         }
 
-        // Background
         var bgGo = new GameObject("Background");
         bgGo.transform.SetParent(canvasGo.transform, worldPositionStays: false);
         var bgRect = bgGo.AddComponent<RectTransform>();
@@ -94,7 +127,6 @@ public class StaminaBarWorld : MonoBehaviour
         bgImage.sprite = uiSprite;
         bgImage.color = backgroundColor;
 
-        // Fill
         var fillGo = new GameObject("Fill");
         fillGo.transform.SetParent(bgGo.transform, worldPositionStays: false);
         var fillRect = fillGo.AddComponent<RectTransform>();
@@ -112,4 +144,3 @@ public class StaminaBarWorld : MonoBehaviour
         fillImage.fillAmount = stamina != null ? stamina.Normalized : 1f;
     }
 }
-

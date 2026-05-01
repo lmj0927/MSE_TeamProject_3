@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -11,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public float turnSpeed = 15f;
 
     Vector3 moveVec;
-    
+
     [Header("Animation")]
     [SerializeField] private Animator animator;
     [SerializeField] private string isMovingParam = "isMoving";
@@ -20,10 +18,12 @@ public class PlayerMovement : MonoBehaviour
     [Header("Stamina")]
     [SerializeField] private Stamina stamina;
 
-    Rigidbody2D rigid;
+    Rigidbody rb;
+    float cachedSpeed;
 
     private void Start()
     {
+        rb = GetComponent<Rigidbody>();
         if (animator == null)
             animator = GetComponentInChildren<Animator>();
         if (stamina == null)
@@ -48,20 +48,29 @@ public class PlayerMovement : MonoBehaviour
             stamina.RegenWhileIdle(Time.deltaTime);
 
         bool isRunning = canRun;
-        float currentSpeed = speed * (isRunning ? runMultiplier : 1f);
+        cachedSpeed = speed * (isRunning ? runMultiplier : 1f);
 
         if (animator != null)
         {
             animator.SetBool(isMovingParam, isMoving);
             animator.SetBool(isRunningParam, isRunning);
         }
+    }
 
-        transform.position += moveVec * currentSpeed * Time.deltaTime;
+    private void FixedUpdate()
+    {
+        if (rb == null)
+            return;
 
-        if (isMoving)
+        Vector3 v = rb.linearVelocity;
+        v.x = moveVec.x * cachedSpeed;
+        v.z = moveVec.z * cachedSpeed;
+        rb.linearVelocity = v;
+
+        if (moveVec.sqrMagnitude > 0.0001f)
         {
             var targetRot = Quaternion.LookRotation(moveVec, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
+            rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRot, turnSpeed * Time.fixedDeltaTime));
         }
     }
 }
