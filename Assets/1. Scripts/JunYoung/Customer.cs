@@ -1,18 +1,26 @@
+using minjun;
 using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요함
+public class Customer : MonoBehaviour, IInteractable
 {
     public enum cState { Entering, GoingSeat, Sitting, GoingTrash, Leaving }
 
     [SerializeField]
     private GameObject hat;
     [SerializeField]
+    private GameObject glasses;
+    [SerializeField]
+    private GameObject mouth;
+    [SerializeField]
     private GameObject body;
     [SerializeField]
     private Texture2D[] faces;
+    [SerializeField]
+    private ProgressBar patienceBar;
+    private StateChanger patienceColor;
 
     private Transform destination;
     private NavMeshAgent agent;
@@ -20,7 +28,7 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
     private Renderer rd;
     private Material[] mat;
 
-    private Vector2 seatRange;
+    private Vector2 sitRange;
     private Vector2 mealRange;
     private Vector2 speedRange;
 
@@ -29,7 +37,8 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
 
     private bool isDecided = false;
     private bool isWaiting = false;
-    private float seatTimer = 60.0f;
+    private float sitTimer = 60.0f;
+    private float maxSit;
     private float boring = 30.0f;
     private bool isBored = false; 
     private float angry = 10.0f;
@@ -39,8 +48,7 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
     private bool hasEaten = false;
     private float mealTimer = 10.0f;
 
-    // temp variable
-    private int food = 0;
+    private Food food;
 
     // Event for CustomerManger to check Customer leaving
     public Action<int> OnMealFinished;
@@ -59,6 +67,11 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
         anim = GetComponent<Animator>();
         rd = body.GetComponent<Renderer>();
         mat = rd.materials;
+
+        if (patienceBar != null)
+        {
+            patienceColor = patienceBar.GetComponent<StateChanger>();
+        }
     }
 
     private void Update()
@@ -73,25 +86,32 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
         // Waiting Food
         if (isWaiting)
         {
-            seatTimer -= Time.deltaTime;
+            sitTimer -= Time.deltaTime;
 
-            if (seatTimer <= 0 )
+            if (patienceBar != null)
+            {
+                patienceBar.SetProgress(sitTimer / maxSit);
+            }
+
+            if (sitTimer <= 0 )
             {
                 SetFace(2);
                 isWaiting = false;
                 Stand();
 
-            } else if (!isAngry && seatTimer <= angry)
+            } else if (!isAngry && sitTimer <= angry)
             {
                 isAngry = true;
                 SetFace(2);
                 anim.SetTrigger("angry");
+                patienceColor.SetColorState(2);
             }
-            else if (!isAngry && !isBored && seatTimer <= boring)
+            else if (!isAngry && !isBored && sitTimer <= boring)
             {
                 isBored = true;
                 SetFace(1);
                 anim.SetTrigger("boring");
+                patienceColor.SetColorState(1);
             }
 
         }
@@ -122,20 +142,46 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
     {
         // Random Appearance
         RandomColor();
-        SetHat(UnityEngine.Random.Range(0, 3));
+        int hatType = UnityEngine.Random.Range(0, hat.transform.childCount + 1);
+        int glassesType = UnityEngine.Random.Range(0, glasses.transform.childCount + 1);
+        int mouthType = UnityEngine.Random.Range(0, mouth.transform.childCount + 1);
+        SetCostume(hatType, glassesType, mouthType);
         SetFace(0);
 
         // Random Timer
-        seatTimer = UnityEngine.Random.Range(seatRange.x, seatRange.y);
-        boring = seatTimer * 0.5f;
-        angry = seatTimer * 0.15f;
+        sitTimer = UnityEngine.Random.Range(sitRange.x, sitRange.y);
+        maxSit = sitTimer;
+        boring = sitTimer * 0.6f;
+        angry = sitTimer * 0.25f;
+
+        if (patienceBar != null)
+        {
+            patienceBar.SetProgress(1f);
+            patienceBar.gameObject.SetActive(false);
+        }
+        patienceColor?.SetColorState(0);
 
         mealTimer = UnityEngine.Random.Range(mealRange.x, mealRange.y);
 
         // Random Speed
         if (agent != null) agent.speed = UnityEngine.Random.Range(speedRange.x, speedRange.y);
         if (anim != null) anim.speed = UnityEngine.Random.Range(0.9f, 1.15f);
+
+        food = null;
+        isDecided = false;
+        isBored = false;
+        isAngry = false;
+        isWaiting = false;
+        isEating = false;
+        hasEaten = false;
+
+        current = cState.Entering;
+        arriveHandled = false;
+        alreadyDeciding = false;
+        alreadyStand = false;
+        agent.stoppingDistance = 0.3f;
     }
+
     private void RandomColor()
     {
         Color randomC = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
@@ -143,16 +189,48 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
         mat[0].SetColor("_BaseColor", randomC);
     }
 
+    // h = Hat type
     // 0 is nothing
     // 1 is fedora
     // 2 is party hat
-    private void SetHat(int type)
-    {
-        int max = hat.transform.childCount;
+    // 3 is clown hat
+    // 4 is advebture hat
+    // 5 is bunny hat
 
-        for (int i = 0; i < max; i++)
+    // g = Glasses type
+    // 0 is nothing
+    // 1 is fedora
+    // 2 is party hat
+    // 3 is clown nose
+
+    // m = Mouth type
+    // 0 is nothing
+    // 1 is mustache_1
+    // 2 is mustache_2
+    // 3 is pacifier
+    private void SetCostume(int h, int g, int m)
+    {
+        int hMax = hat.transform.childCount;
+
+        for (int i = 0; i < hMax; i++)
         {
-            hat.transform.GetChild(i).gameObject.SetActive(i == (type-1));
+            hat.transform.GetChild(i).gameObject.SetActive(i == (h-1));
+
+        }
+
+        int gMax = glasses.transform.childCount;
+
+        for (int i = 0; i < gMax; i++)
+        {
+            glasses.transform.GetChild(i).gameObject.SetActive(i == (g - 1));
+
+        }
+
+        int mMax = mouth.transform.childCount;
+
+        for (int i = 0; i < mMax; i++)
+        {
+            mouth.transform.GetChild(i).gameObject.SetActive(i == (m - 1));
 
         }
     }
@@ -204,7 +282,7 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
                 setPath(cState.Leaving, exit);
                 break;
             case cState.Leaving:
-                Reset();
+                OnSleep?.Invoke(this);
                 gameObject.SetActive(false);
                 break;
         }
@@ -215,7 +293,7 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
         if (alreadyDeciding) return;
 
         alreadyDeciding = true;
-        StartCoroutine("DecideRoutine");
+        StartCoroutine(DecideRoutine());
     }
 
     IEnumerator DecideRoutine()
@@ -247,51 +325,25 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
 
         anim.SetTrigger("sit");
         current = cState.Sitting;
-        isWaiting = true;
+
+        StartCoroutine(SitRoutine());
     }
 
-    private void Stand()
-    {
-        if (alreadyStand) return;
-
-        alreadyStand = true;
-        StartCoroutine("StandRoutine");
-        
-    }
-
-    IEnumerator StandRoutine()
+    IEnumerator SitRoutine()
     {
         yield return new WaitForSeconds(0.1f);
-        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("wrong"))   // Default Stand Scenario
-        {
-            anim.SetTrigger("stand");
+        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length * 0.9f);
 
-            while (!anim.GetCurrentAnimatorStateInfo(0).IsName("stand")) yield return null;
-
-            yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
-        } else yield return new WaitForSeconds(1.0f);   // Patience Stand Scenario (Controlled by AnimController)
-
-        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-        destination.position += (destination.forward * dragChair);
-        current = cState.Leaving;
-
-        agent.enabled = true;
-
-        OnMealFinished?.Invoke(seatNum);
+        isWaiting = true;
+        if (patienceBar != null) patienceBar.gameObject.SetActive(true);
     }
 
-    public void SetRanges(Vector2 seat, Vector2 meal, Vector2 speed)
+    private void getFood(Food served)
     {
-        seatRange = seat;
-        mealRange = meal;
-        speedRange = speed;
-        InitializeStats();
-    }
-    // temp parameter
-    public void getFood(int served)
-    {
+        if (patienceBar != null) patienceBar.gameObject.SetActive(false);
         isWaiting = false;
 
+        // Food 스크립트 확정 후, 수정 필요
         if (food != served)
         {
             SetFace(2);
@@ -305,6 +357,54 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
         anim.SetTrigger("correct");
         isEating = true;
         agent.stoppingDistance = 1.5f;
+    }
+
+    private void Stand()
+    {
+        if (alreadyStand) return;
+
+        if (patienceBar != null) patienceBar.gameObject.SetActive(false);
+
+        alreadyStand = true;
+        StartCoroutine(StandRoutine());
+        
+    }
+
+    IEnumerator StandRoutine()
+    {
+        yield return new WaitForSeconds(0.1f);
+        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("wrong"))   // Default Stand Scenario
+        {
+            anim.SetTrigger("stand");
+            yield return new WaitForSeconds(0.1f);
+
+            yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length *0.4f);
+        } else yield return new WaitForSeconds(1.0f);   // Patience Stand Scenario (Controlled by AnimController)
+
+        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+        destination.position += (destination.forward * dragChair);
+        current = cState.Leaving;
+
+        agent.enabled = true;
+
+        OnMealFinished?.Invoke(seatNum);
+    }
+
+    public bool SetOrder(Food order)
+    {
+        // Trash food 조건 추가 필요
+        if (order == null) return false;
+
+        food = order;
+        return true;
+    }
+    public void SetRanges(Vector2 sit, Vector2 meal, Vector2 speed)
+    {
+        sitRange = sit;
+        mealRange = meal;
+        speedRange = speed;
+
+        InitializeStats();
     }
 
     public bool HasEaten() => hasEaten;
@@ -328,24 +428,13 @@ public class Customer : MonoBehaviour       // Food 및 레시피 완성되면 수정 필요
         }
     }
 
-    private void Reset()
+    public void Interact(Player player)
     {
-        InitializeStats();
+        if (!isWaiting) return;
+        if (!player.HasFood()) return;
 
-        isDecided = false;
-        isBored = false;
-        isAngry = false;
-        isWaiting = false;
-        isEating = false;
-        hasEaten = false;
+        Food served = player.RemoveFood();
+        getFood(served);
 
-        current = cState.Entering;
-        arriveHandled = false;
-        alreadyDeciding = false;
-        alreadyStand = false;
-        agent.stoppingDistance = 0.3f;
-
-        OnSleep?.Invoke(this);
     }
-
 }

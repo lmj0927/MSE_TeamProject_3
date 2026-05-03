@@ -8,7 +8,7 @@ public class CustomerManager : MonoBehaviour
     private GameObject customer;
 
     [Tooltip("patience tiemr range")]
-    [SerializeField] private Vector2 seatTimerRange = new Vector2(45f, 75f);
+    [SerializeField] private Vector2 sitTimerRange = new Vector2(45f, 75f);
 
     [Tooltip("meal timer range")]
     [SerializeField] private Vector2 mealTimerRange = new Vector2(8f, 15f);
@@ -37,6 +37,7 @@ public class CustomerManager : MonoBehaviour
 
 
     private float spawnTimer = 0;
+    [SerializeField]
     private float spawnTerm = 3.0f;
     private void Awake()
     {
@@ -119,7 +120,7 @@ public class CustomerManager : MonoBehaviour
         {
             c = Instantiate(customer, outside.position, outside.rotation).GetComponent<Customer>();
             c.OnSleep += AddToPool;
-            c.SetRanges(seatTimerRange, mealTimerRange, walkSpeedRange);
+            c.SetRanges(sitTimerRange, mealTimerRange, walkSpeedRange);
             return c;
         }
 
@@ -128,7 +129,7 @@ public class CustomerManager : MonoBehaviour
         c.transform.rotation = outside.rotation;
 
         c.gameObject.SetActive(true);
-
+        c.SetRanges(sitTimerRange, mealTimerRange, walkSpeedRange);
         return c;
     }
 
