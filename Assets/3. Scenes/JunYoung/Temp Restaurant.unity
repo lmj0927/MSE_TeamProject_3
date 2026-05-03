@@ -3891,7 +3891,7 @@ PrefabInstance:
     - target: {fileID: 2652328840234719614, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
       propertyPath: customer
       value: 
-      objectReference: {fileID: 5818676082942201579, guid: 5ddb42764212839478d512c0afb12cfd, type: 3}
+      objectReference: {fileID: 3466173328236988086, guid: c285271debe6df14794d28a84dde7632, type: 3}
     - target: {fileID: 2652328840234719614, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
       propertyPath: trashBin
       value: 

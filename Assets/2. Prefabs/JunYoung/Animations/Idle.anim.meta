@@ -1,15 +1,8 @@
 fileFormatVersion: 2
-guid: 518f9953383c00c4c84dce417dbaeafc
+guid: ba2306537b1e77b46a9a481f12f9507d
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 7400000
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 342650
-  packageName: FREE - Party Game Characters
-  packageVersion: 1.1
-  assetPath: Assets/Downloads/Pack_FREE_PartyCharacters/Animations/Idle.anim
-  uploadId: 825602
