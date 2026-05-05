@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
-using minjun;
 using UnityEngine.UI;
 using System;
 using UnityEngine.EventSystems;
 
 public class IngredientPopupUI : BasePopupUI
 {
-    [SerializeField] private List<Food> ingredients;
+    [SerializeField] private List<FoodSO> ingredients;
     [SerializeField] private List<IngredientButton> ingredientButtons;
 
     public Action<Food> OnIngredientSelected;
@@ -31,9 +30,9 @@ public class IngredientPopupUI : BasePopupUI
         }
     }
 
-    private void OnIngredientButtonClick(Food food)
+    private void OnIngredientButtonClick(FoodSO food)
     {
-        var instantiatedFood = Instantiate(food);
+        var instantiatedFood = food.CreateFood();
         OnIngredientSelected?.Invoke(instantiatedFood);
         Hide();
     }

@@ -1,11 +1,10 @@
 using UnityEngine;
-using minjun;
 using System.Collections.Generic;
 
 public class RefrigeratorCounter : ACounter
 {
     [SerializeField] private IngredientPopupUI ingredientPopupUI;
-    private Player interactPlayer;
+    private PlayerController interactPlayer;
 
     void Start()
     {
@@ -21,7 +20,7 @@ public class RefrigeratorCounter : ACounter
         }
     }
 
-    public override void Interact(Player player)
+    public override void Interact(PlayerController player)
     {
         if (!player.HasFood())
         {

@@ -1,12 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
-using minjun;
 
 public class TestCounters : MonoBehaviour
 {
     [SerializeField] private List<ACounter> counters;
-    [SerializeField] private Player player;
-    [SerializeField] private Food food;
+    [SerializeField] private PlayerController player;
+    [SerializeField] private Food food; 
 
     private void Start()
     {

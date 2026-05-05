@@ -1,5 +1,5 @@
 using UnityEngine;
-using sy;
+//using sy;
 
 public class PlayerController : MonoBehaviour
 {

@@ -1,5 +1,4 @@
 using UnityEngine;
-using minjun;
 
 /// <summary>
 /// E 키로 주변 <see cref="IInteractable"/> (MinJun 카운터 등)과 상호작용합니다.
@@ -7,7 +6,7 @@ using minjun;
 public class PlayerInteractInput : MonoBehaviour
 {
     [SerializeField] private KeyCode interactKey = KeyCode.E;
-    [SerializeField] private Player counterPlayer;
+    [SerializeField] private PlayerController counterPlayer;
     [SerializeField] private float interactRadius = 2.5f;
     [SerializeField] private float probeHeight = 0.85f;
     [SerializeField] [Range(-1f, 1f)] private float minForwardDot = 0.15f;
@@ -16,7 +15,7 @@ public class PlayerInteractInput : MonoBehaviour
     private void Awake()
     {
         if (counterPlayer == null)
-            counterPlayer = GetComponent<Player>();
+            counterPlayer = GetComponent<PlayerController>();
     }
 
     private void Update()
@@ -30,7 +29,7 @@ public class PlayerInteractInput : MonoBehaviour
     public void TryInteract()
     {
         if (counterPlayer == null)
-            counterPlayer = GetComponent<Player>();
+            counterPlayer = GetComponent<PlayerController>();
         if (counterPlayer == null)
             return;
 

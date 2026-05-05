@@ -1,5 +1,4 @@
 using UnityEngine;
-using minjun;
 
 public class SliceCounter : ACounter
 {
@@ -8,6 +7,7 @@ public class SliceCounter : ACounter
 
     private bool isSlicing = false;
     private int currentSliceCount = 0;
+    private RecipeSO recipe;
 
     private void Awake()
     {
@@ -18,14 +18,19 @@ public class SliceCounter : ACounter
         }
     }
 
-    public override void Interact(Player player)
+    public override void Interact(PlayerController player)
     {
         if (CanAddFood(player))
         {
             AddFood(player.RemoveFood());
-            isSlicing = true;
-            if (progressBar != null)
-                progressBar.gameObject.SetActive(true);
+            recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Slice);
+            if (recipe != null)
+            {
+                sliceCount = recipe.Value;
+                isSlicing = true;
+                if (progressBar != null)
+                    progressBar.gameObject.SetActive(true);
+            }
             return;
         }
         else if (CanRemoveFood(player) && !isSlicing)
@@ -47,7 +52,10 @@ public class SliceCounter : ACounter
                     progressBar.gameObject.SetActive(false);
                     progressBar.SetProgress(0f);
                 }
-                // TODO : Spawn Sliced Food
+                var food = RemoveFood();
+                Destroy(food.gameObject);
+                AddFood(recipe.Result.CreateFood());
+                recipe = null;
             }
         }
     }

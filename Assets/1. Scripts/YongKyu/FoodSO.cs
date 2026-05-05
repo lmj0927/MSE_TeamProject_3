@@ -13,4 +13,12 @@ public class FoodSO : ScriptableObject
     public GameObject Prefab => prefab;
     public Sprite Sprite => sprite;
 
+    public Food CreateFood()
+    {
+        var food = Instantiate(prefab);
+        food.AddComponent<Food>();
+        food.GetComponent<Food>().SetData(this);
+        return food.GetComponent<Food>();
+    }
+
 }

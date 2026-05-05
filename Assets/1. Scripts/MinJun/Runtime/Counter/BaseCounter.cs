@@ -1,9 +1,8 @@
-using minjun;
 using UnityEngine;
 
 public class BaseCounter : ACounter
 {
-    public override void Interact(Player player)
+    public override void Interact(PlayerController player)
     {
         if (CanAddFood(player))
         {

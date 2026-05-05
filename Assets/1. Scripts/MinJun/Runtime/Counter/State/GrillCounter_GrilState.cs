@@ -20,6 +20,7 @@ public class GrillCounter_GrillState : BaseState<GrillCounter>
         controller.SetGrillProgress(elapsedTime / controller.GrillTime);
         if (elapsedTime >= controller.GrillTime)
         {
+            controller.AddResultFood(controller.resultFood);
             controller.SetState(controller.BurnState);
         }
     }
@@ -27,7 +28,6 @@ public class GrillCounter_GrillState : BaseState<GrillCounter>
     public override void Exit()
     {
         elapsedTime = 0f;
-        //TODO : Grill Food Spawn
     }
 
 }

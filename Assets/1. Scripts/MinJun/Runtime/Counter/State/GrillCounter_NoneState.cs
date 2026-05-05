@@ -8,6 +8,7 @@ public class GrillCounter_NoneState : BaseState<GrillCounter>
 
     public override void Enter()
     {
+        controller.resultFood = null;
         controller.HideGrillProgress();
         controller.SetGrillProgress(0f);
         controller.SetBurnProgress(0f);
