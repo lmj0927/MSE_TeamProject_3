@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Reflection;
-using minjun;
 
 public class TestBootstrap : MonoBehaviour
 {

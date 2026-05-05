@@ -1,6 +1,4 @@
 using UnityEngine;
-using minjun;
-using System.Collections;
 using DG.Tweening;
 
 public class BasePopupUI : MonoBehaviour, IBaseUI

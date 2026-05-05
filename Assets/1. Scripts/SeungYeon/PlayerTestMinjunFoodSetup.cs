@@ -1,5 +1,4 @@
 using UnityEngine;
-using minjun;
 
 
 public class PlayerTestMinjunFoodSetup : MonoBehaviour
@@ -8,7 +7,7 @@ public class PlayerTestMinjunFoodSetup : MonoBehaviour
 
     private void Start()
     {
-        var player = FindFirstObjectByType<Player>();
+        var player = FindFirstObjectByType<PlayerController>();
         if (player == null || player.HasFood())
             return;
 

@@ -1,10 +1,10 @@
+using Mono.Cecil.Cil;
 using UnityEngine;
-using minjun;
 using UnityEngine.Serialization;
 
 public class GrillCounter : ACounter
 {
-    [SerializeField] private float grillTime;
+    private float grillTime;
     [SerializeField] private float burnTime;
     [FormerlySerializedAs("grilProgressBar")]
     [SerializeField] private RadialProgressBar grillProgressBar;
@@ -18,6 +18,8 @@ public class GrillCounter : ACounter
     public float BurnTime => burnTime;
 
     private StateMachine stateMachine;
+
+    public FoodSO resultFood;
 
     private void Awake()
     {
@@ -40,12 +42,18 @@ public class GrillCounter : ACounter
         stateMachine.ChangeState(NoneState);
     }
 
-    public override void Interact(Player player)
+    public override void Interact(PlayerController player)
     {
         if (CanAddFood(player))
         {
             AddFood(player.RemoveFood());
-            SetState(GrillState);
+            var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Fire);
+            if (recipe != null)
+            {
+                grillTime = recipe.Value;
+                resultFood = recipe.Result;
+                SetState(GrillState);
+            }
         }
         else if (CanRemoveFood(player))
         {
@@ -97,5 +105,13 @@ public class GrillCounter : ACounter
         }
 
         burnProgressBar.SetProgress(normalizedValue);
+    }
+
+    public void AddResultFood(FoodSO resultFood)
+    {
+        if (resultFood == null) return;
+        var food = RemoveFood();
+        Destroy(food.gameObject);
+        AddFood(resultFood.CreateFood());
     }
 }

@@ -1,4 +1,3 @@
-using minjun;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -302,7 +301,7 @@ public class Customer : MonoBehaviour, IInteractable
         transform.rotation = Quaternion.LookRotation(destination.forward);
 
         yield return new WaitForSeconds(UnityEngine.Random.Range(1, 6));
-        // ÁÖ¹® °áÁ¤ ±â´É ±¸Çö ÇÊ¿ä
+        // ï¿½Ö¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
 
         isDecided = true;
         agent.enabled = true;
@@ -343,7 +342,7 @@ public class Customer : MonoBehaviour, IInteractable
         if (patienceBar != null) patienceBar.gameObject.SetActive(false);
         isWaiting = false;
 
-        // Food ½ºÅ©¸³Æ® È®Á¤ ÈÄ, ¼öÁ¤ ÇÊ¿ä
+        // Food ï¿½ï¿½Å©ï¿½ï¿½Æ® È®ï¿½ï¿½ ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
         if (food != served)
         {
             SetFace(2);
@@ -392,7 +391,7 @@ public class Customer : MonoBehaviour, IInteractable
 
     public bool SetOrder(Food order)
     {
-        // Trash food Á¶°Ç Ãß°¡ ÇÊ¿ä
+        // Trash food ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½Ê¿ï¿½
         if (order == null) return false;
 
         food = order;
@@ -428,13 +427,13 @@ public class Customer : MonoBehaviour, IInteractable
         }
     }
 
-    public void Interact(Player player)
+    public void Interact(PlayerController player)
     {
         if (!isWaiting) return;
         if (!player.HasFood()) return;
 
         Food served = player.RemoveFood();
         getFood(served);
-
+        Destroy(served.gameObject);
     }
 }

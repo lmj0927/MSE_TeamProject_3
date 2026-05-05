@@ -17,5 +17,5 @@ public class RecipeSO : ScriptableObject
 
     public FoodSO Result => result;
     public List<FoodSO> Ingredients => ingredients;
-    public int Value => Value;
+    public int Value => value;
 }

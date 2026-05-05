@@ -154,6 +154,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SliceCounter
   foodPoint: {fileID: 2461633508383189703}
+  sliceCount: 5
+  progressBar: {fileID: 6988603572045264521}
 --- !u!1 &2795608010820608868
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,6 +425,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 0.003
       objectReference: {fileID: 0}
+    - target: {fileID: 2112832389691350208, guid: 394eb3f5123d79944a7eadf0c01e5ead, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.003
+      objectReference: {fileID: 0}
     - target: {fileID: 7455581297955045524, guid: 394eb3f5123d79944a7eadf0c01e5ead, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -517,6 +523,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7455581297955045524, guid: 394eb3f5123d79944a7eadf0c01e5ead, type: 3}
   m_PrefabInstance: {fileID: 6047532027693769091}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6988603572045264521 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3679906802569615114, guid: 394eb3f5123d79944a7eadf0c01e5ead, type: 3}
+  m_PrefabInstance: {fileID: 6047532027693769091}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69928ee173a4f0e46be21d9418db72cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProgressBar
 --- !u!1001 &7457793898638986585
 PrefabInstance:
   m_ObjectHideFlags: 0

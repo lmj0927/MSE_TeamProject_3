@@ -1,5 +1,4 @@
 using UnityEngine;
-using minjun;
 
 /// <summary>
 /// Player test scene: grants the nearest loose <see cref="Food"/> to <see cref="Player"/> on play,
@@ -11,7 +10,7 @@ public class PlayerTestSetup : MonoBehaviour
 
     private void Start()
     {
-        var player = FindFirstObjectByType<Player>();
+        var player = FindFirstObjectByType<PlayerController>();
         if (player == null || player.HasFood())
             return;
 

@@ -55,7 +55,7 @@ public class RecipeManager : Singleton<RecipeManager>
     /// The resulting FoodSO if a matching recipe is found; otherwise, trashFood. 
     /// If type is invalid, null will be returned.
     /// </returns>
-    public FoodSO Cook(List<FoodSO> ingredients, RecipeType type)
+    public RecipeSO Cook(List<FoodSO> ingredients, RecipeType type)
     {
         List<RecipeSO> recipes;
         switch(type)
@@ -97,13 +97,16 @@ public class RecipeManager : Singleton<RecipeManager>
                     break;
                 }
             }
-            if(recFind) return recipe.Result;
+            if(recFind) return recipe;
         }
         
-        return trashFood;
+        return null;
     }
 
-
+    public FoodSO GetTrashFood()
+    {
+        return trashFood;
+    }
 
 
     /* Debug */
@@ -125,7 +128,7 @@ public class RecipeManager : Singleton<RecipeManager>
         string log = "Ingredient: ";
         foreach(FoodSO f in debugRecipes) log += f.FoodName + ", ";
         Debug.Log(log);
-        FoodSO res = Cook(debugRecipes, RecipeType.Assemble);
-        Debug.Log("Cook result: " + res.FoodName);
+        RecipeSO res = Cook(debugRecipes, RecipeType.Assemble);
+        Debug.Log("Cook result: " + res.Result.FoodName);
     }
 }
