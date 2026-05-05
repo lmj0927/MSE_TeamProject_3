@@ -434,6 +434,6 @@ public class Customer : MonoBehaviour, IInteractable
 
         Food served = player.RemoveFood();
         getFood(served);
-
+        Destroy(served.gameObject);
     }
 }
