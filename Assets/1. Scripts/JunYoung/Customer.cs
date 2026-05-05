@@ -47,7 +47,9 @@ public class Customer : MonoBehaviour, IInteractable
     private bool hasEaten = false;
     private float mealTimer = 10.0f;
 
-    private Food food;
+    [SerializeField]
+    private String order;
+
 
     // Event for CustomerManger to check Customer leaving
     public Action<int> OnMealFinished;
@@ -166,7 +168,7 @@ public class Customer : MonoBehaviour, IInteractable
         if (agent != null) agent.speed = UnityEngine.Random.Range(speedRange.x, speedRange.y);
         if (anim != null) anim.speed = UnityEngine.Random.Range(0.9f, 1.15f);
 
-        food = null;
+        order = RecipeManager.Instance.GiveRandomAssembleRecipe().Result.FoodName;
         isDecided = false;
         isBored = false;
         isAngry = false;
@@ -301,7 +303,6 @@ public class Customer : MonoBehaviour, IInteractable
         transform.rotation = Quaternion.LookRotation(destination.forward);
 
         yield return new WaitForSeconds(UnityEngine.Random.Range(1, 6));
-        // �ֹ� ���� ��� ���� �ʿ�
 
         isDecided = true;
         agent.enabled = true;
@@ -342,8 +343,7 @@ public class Customer : MonoBehaviour, IInteractable
         if (patienceBar != null) patienceBar.gameObject.SetActive(false);
         isWaiting = false;
 
-        // Food ��ũ��Ʈ Ȯ�� ��, ���� �ʿ�
-        if (food != served)
+        if (!served.Data.FoodName.Equals(order))
         {
             SetFace(2);
             anim.SetTrigger("wrong");
@@ -389,12 +389,12 @@ public class Customer : MonoBehaviour, IInteractable
         OnMealFinished?.Invoke(seatNum);
     }
 
-    public bool SetOrder(Food order)
+    public bool SetOrder(FoodSO f)
     {
-        // Trash food ���� �߰� �ʿ�
-        if (order == null) return false;
+        if (f == null) return false;
 
-        food = order;
+       
+        order = f.FoodName;
         return true;
     }
     public void SetRanges(Vector2 sit, Vector2 meal, Vector2 speed)
@@ -434,6 +434,6 @@ public class Customer : MonoBehaviour, IInteractable
 
         Food served = player.RemoveFood();
         getFood(served);
-        Destroy(served.gameObject);
+        Destroy(served.gameObject);     // Mismatch with Customer logic
     }
 }
