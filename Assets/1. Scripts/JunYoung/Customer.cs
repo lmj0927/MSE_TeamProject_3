@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Customer : MonoBehaviour, IInteractable
 {
@@ -47,6 +48,8 @@ public class Customer : MonoBehaviour, IInteractable
     private bool hasEaten = false;
     private float mealTimer = 10.0f;
 
+    [SerializeField]
+    private Image orderImg;
     [SerializeField]
     private String order;
 
@@ -169,6 +172,7 @@ public class Customer : MonoBehaviour, IInteractable
         if (anim != null) anim.speed = UnityEngine.Random.Range(0.9f, 1.15f);
 
         order = RecipeManager.Instance.GiveRandomAssembleRecipe().Result.FoodName;
+        orderImg.sprite = RecipeManager.Instance.GiveRandomAssembleRecipe().Result.Sprite;
         isDecided = false;
         isBored = false;
         isAngry = false;
