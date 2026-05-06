@@ -704,7 +704,7 @@ GameObject:
   - component: {fileID: 4302188035444649721}
   - component: {fileID: 2499997439427639372}
   - component: {fileID: 7808646108136600535}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: RadialProgressBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
