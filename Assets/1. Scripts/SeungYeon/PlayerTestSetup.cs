@@ -1,9 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Player test scene: grants the nearest loose <see cref="Food"/> to <see cref="Player"/> on play,
-/// so SliceCounter can receive food via E without wiring sy.Food.
-/// </summary>
 public class PlayerTestSetup : MonoBehaviour
 {
     [SerializeField] private float searchRadius = 12f;
@@ -12,7 +8,7 @@ public class PlayerTestSetup : MonoBehaviour
 
     private void Start()
     {
-        // NOTE: Food 테스트 로직은 일단 비활성화(주석 처리)합니다.
+        // Food 주석 처리
         // var player = FindFirstObjectByType<PlayerController>();
         // if (player == null || player.HasFood())
         //     return;

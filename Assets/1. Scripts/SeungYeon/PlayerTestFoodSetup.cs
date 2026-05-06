@@ -9,7 +9,7 @@ public class PlayerTestFoodSetup : MonoBehaviour
 
     private void Start()
     {
-        // NOTE: Food 테스트 로직은 일단 비활성화(주석 처리)합니다.
+        // Food 테스트 주석처리
         // var player = FindFirstObjectByType<PlayerController>();
         // if (player == null || player.HasFood())
         //     return;

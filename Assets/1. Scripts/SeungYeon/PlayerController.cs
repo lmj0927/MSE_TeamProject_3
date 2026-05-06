@@ -3,11 +3,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Food")]
     [SerializeField] private global::Food heldFood;
     [SerializeField] private Transform holdAnchor;
-
-    [Header("자동 줍기 (AddFood 무인자)")]
     [SerializeField] private float pickupRadius = 1.25f;
     [SerializeField] private Vector3 pickupProbeOffset = new Vector3(0f, 0.5f, 0f);
     [SerializeField] private LayerMask pickupLayers = ~0;

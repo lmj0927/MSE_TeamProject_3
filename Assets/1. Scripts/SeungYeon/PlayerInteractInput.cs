@@ -1,8 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// E 키로 주변 <see cref="IInteractable"/> (MinJun 카운터 등)과 상호작용합니다.
-/// </summary>
 public class PlayerInteractInput : MonoBehaviour
 {
     [SerializeField] private KeyCode interactKey = KeyCode.E;
