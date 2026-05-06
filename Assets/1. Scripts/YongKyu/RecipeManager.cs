@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor;
+using Unity.VisualScripting;
 
 public class RecipeManager : Singleton<RecipeManager>
 {
@@ -16,6 +17,8 @@ public class RecipeManager : Singleton<RecipeManager>
 
     [SerializeField]
     FoodSO trashFood;
+
+    private List<FoodSO> copyIng = new List<FoodSO>();
 
     /// <summary>
     /// Returns a randomly selected assemble recipe from the assembleRecipes list.
@@ -80,24 +83,70 @@ public class RecipeManager : Singleton<RecipeManager>
 
         foreach(RecipeSO recipe in recipes)
         {
-            // early skip: the number of the ingredients should be same
-            if(recipe.Ingredients.Count != ingredients.Count) continue;
+            bool recFind = false;
 
-            bool recFind = true;
-            foreach(FoodSO recipeIng in recipe.Ingredients)
+            if (recipe.Ingredients.Count == ingredients.Count)
             {
-                bool ingFind = false;
-                foreach(FoodSO queryIng in ingredients)
+                copyIng.Clear();
+                copyIng.AddRange(ingredients);
+
+                recFind = true;
+
+                foreach (FoodSO recipeIng in recipe.Ingredients)
                 {
-                    ingFind = recipeIng.FoodName.Equals(queryIng.FoodName);
-                    if(ingFind) break;
-                }
-                if(!ingFind) {
-                    recFind = false;
-                    break;
+                    bool ingFind = false;
+                    for (int i = 0; i < copyIng.Count; i++)
+                    {
+                        ingFind = recipeIng.FoodName.Equals(copyIng[i].FoodName);
+                        if (ingFind)
+                        {
+                            copyIng.RemoveAt(i);
+                            break;
+                        }
+                    }
+                    if (!ingFind)
+                    {
+                        recFind = false;
+                        break;
+                    }
                 }
             }
+
+            if (!recFind && recipe.Complements != null)
+            {
+                foreach (RecipeSO complement in recipe.Complements)
+                {
+                    if (complement.Ingredients.Count != ingredients.Count) continue;
+
+                    copyIng.Clear();
+                    copyIng.AddRange(ingredients);
+
+                    recFind = true;
+
+                    foreach (FoodSO compleIng in complement.Ingredients)
+                    {
+                        bool ingFind = false;
+                        for (int i = 0; i < copyIng.Count; i++)
+                        {
+                            ingFind = compleIng.FoodName.Equals(copyIng[i].FoodName);
+                            if (ingFind)
+                            {
+                                copyIng.RemoveAt(i);
+                                break;
+                            }
+                        }
+                        if (!ingFind)
+                        {
+                            recFind = false;
+                            break;
+                        }
+                    }
+
+                    if (recFind) break;
+                }
+            }   
             if(recFind) return recipe;
+
         }
         
         return null;

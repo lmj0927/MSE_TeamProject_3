@@ -27,6 +27,8 @@ public abstract class ACounter : MonoBehaviour, IInteractable
 
     protected Food RemoveFood()
     {
+        if (foods.Count == 0) return null;
+
         var temp = foods.Last();
         foods.Remove(temp);
         return temp;

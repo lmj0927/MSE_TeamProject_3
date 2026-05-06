@@ -1,11 +1,13 @@
 using UnityEngine;
-using System.Collections.Generic;
-
+using DG.Tweening;
 public class RefrigeratorCounter : ACounter
 {
     [SerializeField] private IngredientPopupUI ingredientPopupUI;
     private PlayerController interactPlayer;
 
+    [SerializeField] private GameObject[] hinges;
+    [SerializeField] private float openAngle = 40f;
+    [SerializeField] private float doorAnimDuration = 0.5f;
     void Start()
     {
         ingredientPopupUI.OnIngredientSelected += OnIngredientSelected;
@@ -15,7 +17,12 @@ public class RefrigeratorCounter : ACounter
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // TODO : player unfreeze
+            if (interactPlayer != null)
+            {
+                interactPlayer.GetComponent<PlayerMovement>().IsInteracting(false);
+                interactPlayer = null;
+            }
+            SetDoors(false);
             ingredientPopupUI.Hide();
         }
     }
@@ -25,7 +32,8 @@ public class RefrigeratorCounter : ACounter
         if (!player.HasFood())
         {
             interactPlayer = player;
-            // TODO : player freeze
+            interactPlayer.GetComponent<PlayerMovement>().IsInteracting(true);
+            SetDoors(true);
             ingredientPopupUI.Show();
         }
     }
@@ -34,6 +42,19 @@ public class RefrigeratorCounter : ACounter
     {
         if(food != null)
             interactPlayer.AddFood(food);
-        // TODO : player unfreeze
+        interactPlayer.GetComponent<PlayerMovement>().IsInteracting(false);
+        interactPlayer = null;
+        SetDoors(false);
+
+    }
+    private void SetDoors(bool isOpen)
+    {
+        float targetAngle = isOpen ? openAngle : 0f;
+
+        hinges[0].transform.DOLocalRotate(new Vector3(0, targetAngle, 0), doorAnimDuration)
+            .SetEase(Ease.OutQuad);
+
+        hinges[1].transform.DOLocalRotate(new Vector3(0, -targetAngle, 0), doorAnimDuration)
+            .SetEase(Ease.OutQuad);
     }
 }

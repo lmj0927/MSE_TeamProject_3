@@ -21,7 +21,9 @@ public class CookingCounter : ACounter
             }
             else
             {
-                player.AddFood(RemoveFood());
+                var temp = RemoveFood();
+                
+                if (temp != null) player.AddFood(temp);
             }
         }
     }
