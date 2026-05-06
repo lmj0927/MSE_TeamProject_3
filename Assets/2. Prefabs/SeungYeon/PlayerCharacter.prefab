@@ -281,13 +281,10 @@ GameObject:
   m_Component:
   - component: {fileID: 7878907109454767918}
   - component: {fileID: 8282934495381888136}
-  - component: {fileID: 689181438407003707}
-  - component: {fileID: 9217301325718930885}
   - component: {fileID: 3933328607663820012}
   - component: {fileID: 6997029081968611822}
   - component: {fileID: 9182736455463728190}
   - component: {fileID: 5544332211008899011}
-  - component: {fileID: 378551980468317575}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Untagged
@@ -335,56 +332,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!54 &689181438407003707
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3578915641806844254}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
---- !u!136 &9217301325718930885
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3578915641806844254}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.477
-  m_Height: 3.049
-  m_Direction: 1
-  m_Center: {x: 0, y: 1.5245, z: -0.008}
 --- !u!114 &3933328607663820012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -401,6 +348,8 @@ MonoBehaviour:
   speed: 3
   runMultiplier: 1.8
   turnSpeed: 15
+  gravity: -9.81
+  groundedStickVelocity: -2
   animator: {fileID: 8282934495381888136}
   isMovingParam: isMoving
   isRunningParam: isRunning
@@ -451,7 +400,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteractInput
   interactKey: 101
-  counterPlayer: {fileID: 378551980468317575}
+  counterPlayer: {fileID: 0}
   interactRadius: 2.5
   probeHeight: 0.85
   minForwardDot: 0.15
@@ -459,25 +408,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   useInternalInput: 1
---- !u!114 &378551980468317575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3578915641806844254}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77a3dc3dff9d68b47944a73e030f0766, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  heldFood: {fileID: 0}
-  holdAnchor: {fileID: 0}
-  pickupRadius: 1.25
-  pickupProbeOffset: {x: 0, y: 0.5, z: 0}
-  pickupLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!1 &3716138564575122740
 GameObject:
   m_ObjectHideFlags: 0

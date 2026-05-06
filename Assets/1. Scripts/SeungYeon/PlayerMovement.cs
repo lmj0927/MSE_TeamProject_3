@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
     float hAxis;
@@ -9,6 +10,8 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 3;
     public float runMultiplier = 1.8f;
     public float turnSpeed = 15f;
+    [SerializeField] private float gravity = -9.81f;
+    [SerializeField] private float groundedStickVelocity = -2f;
 
     Vector3 moveVec;
 
@@ -20,7 +23,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Stamina")]
     [SerializeField] private Stamina stamina;
 
-    Rigidbody rb;
+    CharacterController cc;
+    float yVelocity;
     float cachedSpeed;
 
     public void SetUseInternalInput(bool enabled) => useInternalInput = enabled;
@@ -32,9 +36,15 @@ public class PlayerMovement : MonoBehaviour
         this.runHeld = runHeld;
     }
 
-    private void Start()
+    private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        cc = GetComponent<CharacterController>();
+        cc.skinWidth = Mathf.Min(cc.skinWidth, 0.03f);
+        cc.stepOffset = 0f;
+
+        if (Mathf.Abs(cc.center.y) < 0.0001f)
+            cc.center = new Vector3(cc.center.x, cc.height * 0.5f, cc.center.z);
+
         if (animator == null)
             animator = GetComponentInChildren<Animator>();
         if (stamina == null)
@@ -70,22 +80,23 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool(isMovingParam, isMoving);
             animator.SetBool(isRunningParam, isRunning);
         }
-    }
 
-    private void FixedUpdate()
-    {
-        if (rb == null)
+        if (cc == null)
             return;
 
-        Vector3 v = rb.linearVelocity;
-        v.x = moveVec.x * cachedSpeed;
-        v.z = moveVec.z * cachedSpeed;
-        rb.linearVelocity = v;
+        if (cc.isGrounded)
+            yVelocity = groundedStickVelocity;
+        else
+            yVelocity += gravity * Time.deltaTime;
+
+        var move = moveVec * cachedSpeed;
+        move.y = yVelocity;
+        cc.Move(move * Time.deltaTime);
 
         if (moveVec.sqrMagnitude > 0.0001f)
         {
             var targetRot = Quaternion.LookRotation(moveVec, Vector3.up);
-            rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRot, turnSpeed * Time.fixedDeltaTime));
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
         }
     }
 }

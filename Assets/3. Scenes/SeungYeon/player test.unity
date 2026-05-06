@@ -195,17 +195,19 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 3
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 378551980468317575, guid: 76ec5873b1886a0419285207ec2c15f5, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3578915641806844254, guid: 76ec5873b1886a0419285207ec2c15f5, type: 3}
-      insertIndex: 4
+      insertIndex: 2
       addedObject: {fileID: 625862919}
     - targetCorrespondingSourceObject: {fileID: 3578915641806844254, guid: 76ec5873b1886a0419285207ec2c15f5, type: 3}
-      insertIndex: 5
+      insertIndex: 3
       addedObject: {fileID: 625862922}
+    - targetCorrespondingSourceObject: {fileID: 3578915641806844254, guid: 76ec5873b1886a0419285207ec2c15f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 662412219}
   m_SourcePrefab: {fileID: 100100000, guid: 76ec5873b1886a0419285207ec2c15f5, type: 3}
 --- !u!1 &625862918 stripped
 GameObject:
@@ -226,7 +228,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   hat: {fileID: 662412211}
   body: {fileID: 1134117983}
-  anim: {fileID: 662412212}
   movement: {fileID: 625862921}
   controller: {fileID: 625862922}
   interactInput: {fileID: 625862920}
@@ -281,11 +282,31 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5536268897511487785, guid: 76ec5873b1886a0419285207ec2c15f5, type: 3}
   m_PrefabInstance: {fileID: 625862917}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &662412212 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 8282934495381888136, guid: 76ec5873b1886a0419285207ec2c15f5, type: 3}
-  m_PrefabInstance: {fileID: 625862917}
+--- !u!143 &662412219
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625862918}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1134117983 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 396689401654730804, guid: 76ec5873b1886a0419285207ec2c15f5, type: 3}
@@ -761,15 +782,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3059133200188521201, guid: d7169323377b5d34590020402a5d5124, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.15
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3059133200188521201, guid: d7169323377b5d34590020402a5d5124, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.12
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3059133200188521201, guid: d7169323377b5d34590020402a5d5124, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.62
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4683730721790535139, guid: d7169323377b5d34590020402a5d5124, type: 3}
       propertyPath: m_Name
@@ -825,6 +846,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerTestSetup
   searchRadius: 12
+  spawnFallbackFoodIfNoneFound: 1
+  fallbackFoodData: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
