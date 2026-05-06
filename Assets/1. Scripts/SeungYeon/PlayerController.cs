@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
 
     private void AttachHeldFood(Food food)
     {
-        food.transform.SetParent(holdAnchor, false);
+        food.transform.SetParent(holdAnchor, true);
         food.transform.localPosition = Vector3.zero;
         food.transform.localRotation = Quaternion.identity;
 
