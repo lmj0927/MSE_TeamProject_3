@@ -282,6 +282,8 @@ GameObject:
   - component: {fileID: 7878907109454767918}
   - component: {fileID: 8282934495381888136}
   - component: {fileID: 3933328607663820012}
+  - component: {fileID: 1234567890123456789}
+  - component: {fileID: 1234567890123456790}
   - component: {fileID: 6997029081968611822}
   - component: {fileID: 9182736455463728190}
   - component: {fileID: 5544332211008899011}
@@ -349,11 +351,55 @@ MonoBehaviour:
   runMultiplier: 1.8
   turnSpeed: 15
   gravity: -9.81
-  groundedStickVelocity: -2
   animator: {fileID: 8282934495381888136}
   isMovingParam: isMoving
   isRunningParam: isRunning
+  isCarryingParam: isCarrying
   stamina: {fileID: 6997029081968611822}
+--- !u!114 &1234567890123456789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3578915641806844254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77a3dc3dff9d68b47944a73e030f0766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  heldFood: {fileID: 0}
+  holdAnchor: {fileID: 0}
+  pickupRadius: 1.25
+  pickupProbeOffset: {x: 0, y: 0.5, z: 0}
+  pickupLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!143 &1234567890123456790
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3578915641806844254}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2.81
+  m_Radius: 0.54
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1.38, z: 0}
 --- !u!114 &6997029081968611822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -400,7 +446,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteractInput
   interactKey: 101
-  counterPlayer: {fileID: 0}
+  counterPlayer: {fileID: 1234567890123456789}
   interactRadius: 2.5
   probeHeight: 0.85
   minForwardDot: 0.15

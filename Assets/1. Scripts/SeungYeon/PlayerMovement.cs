@@ -6,26 +6,29 @@ public class PlayerMovement : MonoBehaviour
     float hAxis;
     float vAxis;
     bool runHeld;
+
     [SerializeField] private bool useInternalInput = true;
-    public float speed = 3;
-    public float runMultiplier = 1.8f;
-    public float turnSpeed = 15f;
+    [SerializeField] private float speed = 3f;
+    [SerializeField] private float runMultiplier = 1.8f;
+    [SerializeField] private float turnSpeed = 15f;
     [SerializeField] private float gravity = -9.81f;
-    [SerializeField] private float groundedStickVelocity = -2f;
 
     Vector3 moveVec;
+    Vector3 velocity;
 
     [Header("Animation")]
     [SerializeField] private Animator animator;
     [SerializeField] private string isMovingParam = "isMoving";
     [SerializeField] private string isRunningParam = "isRunning";
+    [SerializeField] private string isCarryingParam = "isCarrying";
 
     [Header("Stamina")]
     [SerializeField] private Stamina stamina;
 
-    CharacterController cc;
-    float yVelocity;
+    CharacterController controller;
+    PlayerController playerController;
     float cachedSpeed;
+    bool isInteracting;
 
     public void SetUseInternalInput(bool enabled) => useInternalInput = enabled;
 
@@ -38,22 +41,24 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
-        cc = GetComponent<CharacterController>();
-        cc.skinWidth = Mathf.Min(cc.skinWidth, 0.03f);
-        cc.stepOffset = 0f;
+        controller = GetComponent<CharacterController>();
+        controller.skinWidth = Mathf.Min(controller.skinWidth, 0.03f);
+        controller.stepOffset = 0f;
 
-        if (Mathf.Abs(cc.center.y) < 0.0001f)
-            cc.center = new Vector3(cc.center.x, cc.height * 0.5f, cc.center.z);
+        if (Mathf.Abs(controller.center.y) < 0.0001f)
+            controller.center = new Vector3(controller.center.x, controller.height * 0.5f, controller.center.z);
 
         if (animator == null)
             animator = GetComponentInChildren<Animator>();
         if (stamina == null)
             stamina = GetComponent<Stamina>();
+
+        playerController = GetComponent<PlayerController>();
     }
 
     private void Update()
     {
-        if (useInternalInput)
+        if (useInternalInput && !isInteracting)
         {
             hAxis = Input.GetAxisRaw("Horizontal");
             vAxis = Input.GetAxisRaw("Vertical");
@@ -69,34 +74,43 @@ public class PlayerMovement : MonoBehaviour
         if (wantsRun && stamina != null)
             canRun = stamina.TryDrainForRunning(Time.deltaTime);
 
-        if (!isMoving && stamina != null)
-            stamina.RegenWhileIdle(Time.deltaTime);
+        bool isCarrying = playerController != null && playerController.HasFood();
+
+        if (!wantsRun && stamina != null)
+        {
+            float weight = 1f;
+            if (isMoving) weight = 0.4f;
+            if (isCarrying) weight *= 0.85f;
+            stamina.RegenWhileIdle(Time.deltaTime * weight);
+        }
 
         bool isRunning = canRun;
         cachedSpeed = speed * (isRunning ? runMultiplier : 1f);
 
         if (animator != null)
         {
+            animator.SetBool(isCarryingParam, isCarrying);
             animator.SetBool(isMovingParam, isMoving);
             animator.SetBool(isRunningParam, isRunning);
         }
-
-        if (cc == null)
-            return;
-
-        if (cc.isGrounded)
-            yVelocity = groundedStickVelocity;
-        else
-            yVelocity += gravity * Time.deltaTime;
-
-        var move = moveVec * cachedSpeed;
-        move.y = yVelocity;
-        cc.Move(move * Time.deltaTime);
 
         if (moveVec.sqrMagnitude > 0.0001f)
         {
             var targetRot = Quaternion.LookRotation(moveVec, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
         }
+
+        var moveVelocity = moveVec * cachedSpeed;
+
+        if (controller.isGrounded && velocity.y < 0f)
+            velocity.y = -2f;
+
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move((moveVelocity + velocity) * Time.deltaTime);
+    }
+
+    public void SetInteracting(bool flag)
+    {
+        isInteracting = flag;
     }
 }
