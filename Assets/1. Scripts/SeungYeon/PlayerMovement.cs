@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private string isMovingParam = "isMoving";
     [SerializeField] private string isRunningParam = "isRunning";
     [SerializeField] private string isCarryingParam = "isCarrying";
+    bool hasCarryingParam;
 
     [Header("Stamina")]
     [SerializeField] private Stamina stamina;
@@ -54,6 +55,18 @@ public class PlayerMovement : MonoBehaviour
             stamina = GetComponent<Stamina>();
 
         playerController = GetComponent<PlayerController>();
+
+        if (animator != null)
+        {
+            foreach (var p in animator.parameters)
+            {
+                if (p.type == AnimatorControllerParameterType.Bool && p.name == isCarryingParam)
+                {
+                    hasCarryingParam = true;
+                    break;
+                }
+            }
+        }
     }
 
     private void Update()
@@ -66,6 +79,11 @@ public class PlayerMovement : MonoBehaviour
         }
 
         moveVec = new Vector3(hAxis, 0, vAxis).normalized;
+        if (isInteracting)
+        {
+            moveVec = Vector3.zero;
+            runHeld = false;
+        }
 
         bool isMoving = moveVec.sqrMagnitude > 0.0001f;
         bool wantsRun = isMoving && runHeld;
@@ -89,7 +107,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (animator != null)
         {
-            animator.SetBool(isCarryingParam, isCarrying);
+            if (hasCarryingParam)
+                animator.SetBool(isCarryingParam, isCarrying);
             animator.SetBool(isMovingParam, isMoving);
             animator.SetBool(isRunningParam, isRunning);
         }

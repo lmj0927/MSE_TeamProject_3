@@ -282,8 +282,8 @@ GameObject:
   - component: {fileID: 7878907109454767918}
   - component: {fileID: 8282934495381888136}
   - component: {fileID: 3933328607663820012}
-  - component: {fileID: 1234567890123456789}
-  - component: {fileID: 1234567890123456790}
+  - component: {fileID: 378551980468317575}
+  - component: {fileID: 2968983783835136228}
   - component: {fileID: 6997029081968611822}
   - component: {fileID: 9182736455463728190}
   - component: {fileID: 5544332211008899011}
@@ -356,7 +356,7 @@ MonoBehaviour:
   isRunningParam: isRunning
   isCarryingParam: isCarrying
   stamina: {fileID: 6997029081968611822}
---- !u!114 &1234567890123456789
+--- !u!114 &378551980468317575
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -375,7 +375,7 @@ MonoBehaviour:
   pickupLayers:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!143 &1234567890123456790
+--- !u!143 &2968983783835136228
 CharacterController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -446,7 +446,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteractInput
   interactKey: 101
-  counterPlayer: {fileID: 1234567890123456789}
+  counterPlayer: {fileID: 378551980468317575}
   interactRadius: 2.5
   probeHeight: 0.85
   minForwardDot: 0.15
