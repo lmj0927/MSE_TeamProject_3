@@ -88,9 +88,9 @@ public class PlayerMovement : MonoBehaviour
         bool isMoving = moveVec.sqrMagnitude > 0.0001f;
         bool wantsRun = isMoving && runHeld;
 
-        bool canRun = wantsRun;
-        if (wantsRun && stamina != null)
-            canRun = stamina.TryDrainForRunning(Time.deltaTime);
+            bool canRun = wantsRun;
+            if (wantsRun && stamina != null)
+                canRun = stamina.TryDrainForRunning(Time.deltaTime);
 
         bool isCarrying = playerController != null && playerController.HasFood();
 
@@ -102,8 +102,11 @@ public class PlayerMovement : MonoBehaviour
             stamina.RegenWhileIdle(Time.deltaTime * weight);
         }
 
-        bool isRunning = canRun;
-        cachedSpeed = speed * (isRunning ? runMultiplier : 1f);
+            if (!wantsRun && stamina != null)
+            {
+                float weight = 1f;
+                if (isMoving) weight = 0.4f;
+                if (isCarrying) weight *= 0.85f;
 
         if (animator != null)
         {
@@ -113,7 +116,23 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool(isRunningParam, isRunning);
         }
 
-        if (moveVec.sqrMagnitude > 0.0001f)
+            if (isMoving)
+            {
+                var targetRot = Quaternion.LookRotation(moveVec, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
+            }
+
+            Vector3 moveVelocity = moveVec * cachedSpeed;
+
+            if (controller.isGrounded && velocity.y < 0)
+            {
+                velocity.y = -2f;
+            }
+            velocity.y += gravity * Time.deltaTime;
+
+            controller.Move((moveVelocity + velocity) * Time.deltaTime);
+        }
+        else
         {
             var targetRot = Quaternion.LookRotation(moveVec, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
@@ -126,6 +145,11 @@ public class PlayerMovement : MonoBehaviour
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move((moveVelocity + velocity) * Time.deltaTime);
+    }
+
+    public void SetInteracting(bool flag)
+    {
+        isInteracting = flag;
     }
 
     public void SetInteracting(bool flag)

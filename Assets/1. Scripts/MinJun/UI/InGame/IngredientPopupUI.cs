@@ -11,15 +11,36 @@ public class IngredientPopupUI : BasePopupUI
 
     public Action<Food> OnIngredientSelected;
 
+    private GameObject lastSelected;
+
     protected override void Awake()
     {
         base.Awake();
         Initialize();
     }
 
+    private void Update()
+    {
+        if (EventSystem.current == null) return;
+
+        if (EventSystem.current.currentSelectedGameObject != null)
+        {
+            lastSelected = EventSystem.current.currentSelectedGameObject;
+        }
+        else if (lastSelected != null)
+        {
+            EventSystem.current.SetSelectedGameObject(lastSelected);
+        }
+    }
+
     protected override void OnShow()
     {
-        EventSystem.current.SetSelectedGameObject(ingredientButtons[0].gameObject);
+        if (ingredientButtons.Count > 0)
+        {
+            lastSelected = ingredientButtons[0].gameObject;
+            EventSystem.current.SetSelectedGameObject(lastSelected);
+        }
+        
     }
 
     public void Initialize()

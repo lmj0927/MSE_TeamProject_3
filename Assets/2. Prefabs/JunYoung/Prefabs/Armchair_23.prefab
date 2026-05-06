@@ -31,6 +31,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7611255679503315039}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9066705606723707408
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6222146773703094537}
+  m_Layer: 0
+  m_Name: Table
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6222146773703094537
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9066705606723707408}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.000000089406946, y: 0.727, z: 0.6967777}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7611255679503315039}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &7938198849716574132
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -105,6 +136,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: cfb43019c7717ee45b471d5bc08067df, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4259071849340996773}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: cfb43019c7717ee45b471d5bc08067df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6222146773703094537}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cfb43019c7717ee45b471d5bc08067df, type: 3}
       insertIndex: -1
