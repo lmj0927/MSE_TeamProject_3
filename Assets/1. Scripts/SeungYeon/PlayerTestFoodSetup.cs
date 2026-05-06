@@ -1,10 +1,7 @@
 using UnityEngine;
 
-/// <summary>
-/// Player test scene: grants the nearest loose <see cref="Food"/> to <see cref="Player"/> on play,
-/// so SliceCounter can receive food via E without wiring sy.Food.
-/// </summary>
-public class PlayerTestSetup : MonoBehaviour
+
+public class PlayerTestFoodSetup : MonoBehaviour
 {
     [SerializeField] private float searchRadius = 12f;
     [SerializeField] private bool spawnFallbackFoodIfNoneFound = true;

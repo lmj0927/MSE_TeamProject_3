@@ -281,9 +281,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7878907109454767918}
   - component: {fileID: 8282934495381888136}
-  - component: {fileID: 3933328607663820012}
   - component: {fileID: 689181438407003707}
   - component: {fileID: 9217301325718930885}
+  - component: {fileID: 3933328607663820012}
   - component: {fileID: 6997029081968611822}
   - component: {fileID: 9182736455463728190}
   - component: {fileID: 5544332211008899011}
@@ -335,25 +335,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3933328607663820012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3578915641806844254}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3993b7072af430e4792852179f091197, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  speed: 3
-  runMultiplier: 1.8
-  turnSpeed: 15
-  animator: {fileID: 8282934495381888136}
-  isMovingParam: isMoving
-  isRunningParam: isRunning
-  stamina: {fileID: 6997029081968611822}
 --- !u!54 &689181438407003707
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -404,6 +385,26 @@ CapsuleCollider:
   m_Height: 3.049
   m_Direction: 1
   m_Center: {x: 0, y: 1.5245, z: -0.008}
+--- !u!114 &3933328607663820012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3578915641806844254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3993b7072af430e4792852179f091197, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  useInternalInput: 1
+  speed: 3
+  runMultiplier: 1.8
+  turnSpeed: 15
+  animator: {fileID: 8282934495381888136}
+  isMovingParam: isMoving
+  isRunningParam: isRunning
+  stamina: {fileID: 6997029081968611822}
 --- !u!114 &6997029081968611822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -457,6 +458,7 @@ MonoBehaviour:
   interactLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+  useInternalInput: 1
 --- !u!114 &378551980468317575
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,6 +4,8 @@ public class PlayerMovement : MonoBehaviour
 {
     float hAxis;
     float vAxis;
+    bool runHeld;
+    [SerializeField] private bool useInternalInput = true;
     public float speed = 3;
     public float runMultiplier = 1.8f;
     public float turnSpeed = 15f;
@@ -21,6 +23,15 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody rb;
     float cachedSpeed;
 
+    public void SetUseInternalInput(bool enabled) => useInternalInput = enabled;
+
+    public void SetMoveInput(float horizontal, float vertical, bool runHeld)
+    {
+        hAxis = horizontal;
+        vAxis = vertical;
+        this.runHeld = runHeld;
+    }
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -32,13 +43,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        hAxis = Input.GetAxisRaw("Horizontal");
-        vAxis = Input.GetAxisRaw("Vertical");
+        if (useInternalInput)
+        {
+            hAxis = Input.GetAxisRaw("Horizontal");
+            vAxis = Input.GetAxisRaw("Vertical");
+            runHeld = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        }
 
         moveVec = new Vector3(hAxis, 0, vAxis).normalized;
 
         bool isMoving = moveVec.sqrMagnitude > 0.0001f;
-        bool wantsRun = isMoving && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
+        bool wantsRun = isMoving && runHeld;
 
         bool canRun = wantsRun;
         if (wantsRun && stamina != null)
