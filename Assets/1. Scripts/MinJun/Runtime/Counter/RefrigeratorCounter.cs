@@ -19,7 +19,7 @@ public class RefrigeratorCounter : ACounter
         {
             if (interactPlayer != null)
             {
-                interactPlayer.GetComponent<PlayerMovement>().IsInteracting(false);
+                interactPlayer.GetComponent<PlayerMovement>().SetInteracting(false);
                 interactPlayer = null;
             }
             SetDoors(false);
@@ -32,7 +32,7 @@ public class RefrigeratorCounter : ACounter
         if (!player.HasFood())
         {
             interactPlayer = player;
-            interactPlayer.GetComponent<PlayerMovement>().IsInteracting(true);
+            interactPlayer.GetComponent<PlayerMovement>().SetInteracting(true);
             SetDoors(true);
             ingredientPopupUI.Show();
         }
@@ -42,7 +42,7 @@ public class RefrigeratorCounter : ACounter
     {
         if(food != null)
             interactPlayer.AddFood(food);
-        interactPlayer.GetComponent<PlayerMovement>().IsInteracting(false);
+        interactPlayer.GetComponent<PlayerMovement>().SetInteracting(false);
         interactPlayer = null;
         SetDoors(false);
 

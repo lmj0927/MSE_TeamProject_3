@@ -4,11 +4,11 @@ public class PlayerMovement : MonoBehaviour
 {
     float hAxis;
     float vAxis;
-    public float speed = 3;
-    public float runMultiplier = 1.8f;
-    public float turnSpeed = 15f;
+    [SerializeField] private float speed = 3;
+    [SerializeField] private float runMultiplier = 1.8f;
+    [SerializeField] private float turnSpeed = 15f;
 
-    public float gravity = -9.81f;
+    [SerializeField] private float gravity = -9.81f;
 
     Vector3 moveVec;
     Vector3 velocity;
@@ -109,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void IsInteracting(bool flag)
+    public void SetInteracting(bool flag)
     {
         isInteracting = flag;
     }
