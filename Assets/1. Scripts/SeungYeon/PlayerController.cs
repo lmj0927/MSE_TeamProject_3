@@ -3,16 +3,13 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Food")]
-    [SerializeField] private Food heldFood;
+    [SerializeField] private global::Food heldFood;
     [SerializeField] private Transform holdAnchor;
-
-    [Header("자동 줍기 (AddFood 무인자)")]
     [SerializeField] private float pickupRadius = 1.25f;
     [SerializeField] private Vector3 pickupProbeOffset = new Vector3(0f, 0.5f, 0f);
     [SerializeField] private LayerMask pickupLayers = ~0;
 
-    public Food HeldFood => heldFood;
+    public global::Food HeldFood => heldFood;
     public bool HasFood() => heldFood != null;
 
     private void Awake()
@@ -21,7 +18,7 @@ public class PlayerController : MonoBehaviour
             holdAnchor = transform;
     }
 
-    public bool AddFood(Food food)
+    public bool AddFood(global::Food food)
     {
         if (food == null || heldFood != null)
             return false;
@@ -44,7 +41,7 @@ public class PlayerController : MonoBehaviour
         return found != null && AddFood(found);
     }
 
-    public Food RemoveFood()
+    public global::Food RemoveFood()
     {
         var removed = heldFood;
         if (removed == null)
@@ -55,7 +52,7 @@ public class PlayerController : MonoBehaviour
         return removed;
     }
 
-    private void AttachHeldFood(Food food)
+    private void AttachHeldFood(global::Food food)
     {
         food.transform.SetParent(holdAnchor, true);
         food.transform.localPosition = Vector3.zero;
@@ -72,7 +69,7 @@ public class PlayerController : MonoBehaviour
             col.enabled = false;
     }
 
-    private void DetachHeldFood(Food food)
+    private void DetachHeldFood(global::Food food)
     {
         food.transform.SetParent(null, true);
 
@@ -83,12 +80,12 @@ public class PlayerController : MonoBehaviour
             col.enabled = true;
     }
 
-    private Food FindNearestPickupableFood()
+    private global::Food FindNearestPickupableFood()
     {
         var center = transform.position + pickupProbeOffset;
         var cols = Physics.OverlapSphere(center, pickupRadius, pickupLayers, QueryTriggerInteraction.Collide);
 
-        Food best = null;
+        global::Food best = null;
         float bestSqr = float.MaxValue;
 
         foreach (var col in cols)
@@ -96,7 +93,7 @@ public class PlayerController : MonoBehaviour
             if (col == null)
                 continue;
 
-            var food = col.GetComponentInParent<Food>();
+            var food = col.GetComponentInParent<global::Food>();
             if (food == null)
                 continue;
 

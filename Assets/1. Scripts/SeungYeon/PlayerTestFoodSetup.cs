@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class PlayerTestSetup : MonoBehaviour
+
+public class PlayerTestFoodSetup : MonoBehaviour
 {
     [SerializeField] private float searchRadius = 12f;
     [SerializeField] private bool spawnFallbackFoodIfNoneFound = true;
@@ -8,7 +9,7 @@ public class PlayerTestSetup : MonoBehaviour
 
     private void Start()
     {
-        // Food 주석 처리
+        // Food 테스트 주석처리
         // var player = FindFirstObjectByType<PlayerController>();
         // if (player == null || player.HasFood())
         //     return;

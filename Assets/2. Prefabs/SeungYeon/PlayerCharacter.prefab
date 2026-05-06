@@ -313,11 +313,11 @@ GameObject:
   - component: {fileID: 7878907109454767918}
   - component: {fileID: 8282934495381888136}
   - component: {fileID: 3933328607663820012}
+  - component: {fileID: 378551980468317575}
+  - component: {fileID: 2968983783835136228}
   - component: {fileID: 6997029081968611822}
   - component: {fileID: 9182736455463728190}
   - component: {fileID: 5544332211008899011}
-  - component: {fileID: 378551980468317575}
-  - component: {fileID: 2968983783835136228}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Untagged
@@ -378,6 +378,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3993b7072af430e4792852179f091197, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  useInternalInput: 1
   speed: 3
   runMultiplier: 1.8
   turnSpeed: 15
@@ -387,6 +388,50 @@ MonoBehaviour:
   isRunningParam: isRunning
   isCarryingParam: isCarrying
   stamina: {fileID: 6997029081968611822}
+--- !u!114 &378551980468317575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3578915641806844254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77a3dc3dff9d68b47944a73e030f0766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  heldFood: {fileID: 0}
+  holdAnchor: {fileID: 0}
+  pickupRadius: 1.25
+  pickupProbeOffset: {x: 0, y: 0.5, z: 0}
+  pickupLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!143 &2968983783835136228
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3578915641806844254}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2.81
+  m_Radius: 0.54
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1.38, z: 0}
 --- !u!114 &6997029081968611822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -440,50 +485,7 @@ MonoBehaviour:
   interactLayers:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &378551980468317575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3578915641806844254}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77a3dc3dff9d68b47944a73e030f0766, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  heldFood: {fileID: 0}
-  holdAnchor: {fileID: 3449412138190446544}
-  pickupRadius: 1.25
-  pickupProbeOffset: {x: 0, y: 0.5, z: 0}
-  pickupLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!143 &2968983783835136228
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3578915641806844254}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2.81
-  m_Radius: 0.54
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1.38, z: 0}
+  useInternalInput: 1
 --- !u!1 &3716138564575122740
 GameObject:
   m_ObjectHideFlags: 0

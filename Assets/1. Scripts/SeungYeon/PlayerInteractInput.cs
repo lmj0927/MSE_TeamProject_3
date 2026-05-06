@@ -1,8 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// E 키로 주변 <see cref="IInteractable"/> (MinJun 카운터 등)과 상호작용합니다.
-/// </summary>
 public class PlayerInteractInput : MonoBehaviour
 {
     [SerializeField] private KeyCode interactKey = KeyCode.E;
@@ -11,6 +8,7 @@ public class PlayerInteractInput : MonoBehaviour
     [SerializeField] private float probeHeight = 0.85f;
     [SerializeField] [Range(-1f, 1f)] private float minForwardDot = 0.15f;
     [SerializeField] private LayerMask interactLayers = ~0;
+    [SerializeField] private bool useInternalInput = true;
 
     private void Awake()
     {
@@ -20,11 +18,13 @@ public class PlayerInteractInput : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(interactKey))
+        if (useInternalInput && Input.GetKeyDown(interactKey))
             TryInteract();
     }
 
     public void Interact() => TryInteract();
+
+    public void SetUseInternalInput(bool enabled) => useInternalInput = enabled;
 
     public void TryInteract()
     {
