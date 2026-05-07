@@ -4139,7 +4139,7 @@ PrefabInstance:
       objectReference: {fileID: 218685235}
     - target: {fileID: 2652328840234719614, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
       propertyPath: spawnTerm
-      value: 15
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2652328840234719614, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
       propertyPath: chairParent
@@ -4151,11 +4151,11 @@ PrefabInstance:
       objectReference: {fileID: 1922629506}
     - target: {fileID: 2652328840234719614, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
       propertyPath: sitTimerRange.x
-      value: 50
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 2652328840234719614, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
       propertyPath: sitTimerRange.y
-      value: 80
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 2652328840234719614, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
       propertyPath: walkSpeedRange.x
