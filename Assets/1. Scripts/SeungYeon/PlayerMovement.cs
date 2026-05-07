@@ -8,8 +8,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float runMultiplier = 1.8f;
     [SerializeField] private float turnSpeed = 15f;
 
-    [SerializeField] private float gravity = -9.81f;
-
+    private float gravity = -9.81f;
+    [SerializeField] private PlayerController controller;
     Vector3 moveVec;
     Vector3 velocity;
 
@@ -22,13 +22,13 @@ public class PlayerMovement : MonoBehaviour
     [Header("Stamina")]
     [SerializeField] private Stamina stamina;
 
-    CharacterController controller;
+    CharacterController playerController;
     float cachedSpeed;
     bool isInteracting = false;
 
     private void Start()
     {
-        controller = GetComponent<CharacterController>();
+        playerController = GetComponent<CharacterController>();
 
         if (animator == null)
             animator = GetComponentInChildren<Animator>();
@@ -81,13 +81,13 @@ public class PlayerMovement : MonoBehaviour
 
             Vector3 moveVelocity = moveVec * cachedSpeed;
 
-            if (controller.isGrounded && velocity.y < 0)
+            if (playerController.isGrounded && velocity.y < 0)
             {
                 velocity.y = -2f;
             }
             velocity.y += gravity * Time.deltaTime;
 
-            controller.Move((moveVelocity + velocity) * Time.deltaTime);
+            playerController.Move((moveVelocity + velocity) * Time.deltaTime);
         }
         else
         {
@@ -100,12 +100,12 @@ public class PlayerMovement : MonoBehaviour
                 animator.SetBool(isRunningParam, false);
             }
 
-            if (controller.isGrounded && velocity.y < 0)
+            if (playerController.isGrounded && velocity.y < 0)
             {
                 velocity.y = -2f;
             }
             velocity.y += gravity * Time.deltaTime;
-            controller.Move(velocity * Time.deltaTime);
+            playerController.Move(velocity * Time.deltaTime);
         }
     }
 
