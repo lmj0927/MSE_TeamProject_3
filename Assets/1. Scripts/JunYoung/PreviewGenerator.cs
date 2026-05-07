@@ -53,7 +53,6 @@ public class PreviewGenerator
         keyLight.cullingMask = 1 << PreviewLayer;
         keyLightObject.transform.rotation = Quaternion.Euler(30f, cameraObject.transform.eulerAngles.y - 30f, 0f);
 
-        // 6. 렌더링 및 촬영
         RenderTexture renderTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.ARGB32);
         renderTexture.antiAliasing = 8; 
 
@@ -93,7 +92,7 @@ public class PreviewGenerator
             string filePath = Path.Combine(folderPath, $"{liveObject.name}_{timeStamp}.png");
 
             File.WriteAllBytes(filePath, bytes);
-            Debug.Log($"<color=cyan>[증명사진 찰칵!]</color> 사진 저장 완료: {filePath}");
+            Debug.Log($"<color=cyan>[Captured]</color> Saved as Png: {filePath}");
         }
 
         Rect rect = new Rect(0, 0, width, height);

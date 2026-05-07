@@ -101,6 +101,7 @@ GameObject:
   - component: {fileID: 8573766178817522061}
   - component: {fileID: 8551174331158628995}
   - component: {fileID: 1322540571555899699}
+  - component: {fileID: -766925328800300278}
   m_Layer: 0
   m_Name: beer
   m_TagString: Untagged
@@ -182,6 +183,28 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &-766925328800300278
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5862168548408083788}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 7431596311278034049, guid: 91df35a72a67e466d905077197f21139, type: 3}
 --- !u!1 &7081990746153059635
 GameObject:
   m_ObjectHideFlags: 0

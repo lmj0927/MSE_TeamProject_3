@@ -6,11 +6,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Food heldFood;
     [SerializeField] private Transform holdAnchor;
 
-    [Header("자동 줍기 (AddFood 무인자)")]
-    [SerializeField] private float pickupRadius = 1.25f;
-    [SerializeField] private Vector3 pickupProbeOffset = new Vector3(0f, 0.5f, 0f);
-    [SerializeField] private LayerMask pickupLayers = ~0;
-
     public Food HeldFood => heldFood;
     public bool HasFood() => heldFood != null;
 
@@ -34,15 +29,6 @@ public class PlayerController : MonoBehaviour
         return true;
     }
 
-    public bool AddFood()
-    {
-        if (heldFood != null)
-            return false;
-
-        var found = FindNearestPickupableFood();
-        return found != null && AddFood(found);
-    }
-
     public Food RemoveFood()
     {
         var removed = heldFood;
@@ -62,9 +48,10 @@ public class PlayerController : MonoBehaviour
 
         foreach (var rb in food.GetComponentsInChildren<Rigidbody>())
         {
-            rb.isKinematic = true;
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+            
         }
 
         foreach (var col in food.GetComponentsInChildren<Collider>())
@@ -80,37 +67,5 @@ public class PlayerController : MonoBehaviour
 
         foreach (var col in food.GetComponentsInChildren<Collider>())
             col.enabled = true;
-    }
-
-    private Food FindNearestPickupableFood()
-    {
-        var center = transform.position + pickupProbeOffset;
-        var cols = Physics.OverlapSphere(center, pickupRadius, pickupLayers, QueryTriggerInteraction.Collide);
-
-        Food best = null;
-        float bestSqr = float.MaxValue;
-
-        foreach (var col in cols)
-        {
-            if (col == null)
-                continue;
-
-            var food = col.GetComponentInParent<Food>();
-            if (food == null)
-                continue;
-
-            var owner = food.GetComponentInParent<PlayerController>();
-            if (owner != null && owner != this)
-                continue;
-
-            float sqr = (food.transform.position - center).sqrMagnitude;
-            if (sqr < bestSqr)
-            {
-                bestSqr = sqr;
-                best = food;
-            }
-        }
-
-        return best;
     }
 }

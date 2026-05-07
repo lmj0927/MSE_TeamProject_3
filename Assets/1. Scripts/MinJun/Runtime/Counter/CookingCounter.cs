@@ -27,4 +27,10 @@ public class CookingCounter : ACounter
             }
         }
     }
+
+    protected void AddFood(Food food)
+    {
+        foods.Add(food);
+        food.transform.position = foodPoint.position + (Vector3.up * foods.Count * 0.1f);
+    }
 }

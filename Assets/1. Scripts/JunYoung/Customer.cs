@@ -28,7 +28,7 @@ public class Customer : MonoBehaviour, IInteractable
     private Renderer rd;
     private Material[] mat;
 
-    //private Sprite portrait;
+    private Sprite portrait;
 
     private Vector2 sitRange;
     private Vector2 mealRange;
@@ -157,7 +157,7 @@ public class Customer : MonoBehaviour, IInteractable
         SetCostume(hatType, glassesType, mouthType);
         SetFace(0);
 
-        /*
+        
         if (anim != null) anim.Update(0f);
 
         if (portrait != null)
@@ -166,8 +166,8 @@ public class Customer : MonoBehaviour, IInteractable
             Destroy(portrait);
         }
 
-        portrait = PreviewGenerator.TakeLiveSnapshot(this.gameObject, 512, 512, true);
-        */
+        portrait = PreviewGenerator.TakeLiveSnapshot(this.gameObject, 512, 512, false);
+        
 
         // Random Timer
         sitTimer = UnityEngine.Random.Range(sitRange.x, sitRange.y);
@@ -419,7 +419,7 @@ public class Customer : MonoBehaviour, IInteractable
         OnMealFinished?.Invoke(seatNum);
     }
 
-    //public Sprite Portrait => portrait;
+    public Sprite Portrait => portrait;
     public bool SetOrder(FoodSO f)
     {
         if (f == null) return false;
