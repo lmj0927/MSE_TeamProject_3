@@ -57,8 +57,7 @@ public class PlayerMovement : MonoBehaviour
             if (!wantsRun && stamina != null)
             {
                 float weight = 1f;
-                if (isMoving) weight = 0.4f;
-                if (isCarrying) weight *= 0.85f;
+                if (isMoving) weight = 0.5f;
 
                 stamina.RegenWhileIdle(Time.deltaTime * weight);
             }

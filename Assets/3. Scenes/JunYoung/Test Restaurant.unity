@@ -1315,10 +1315,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c2daf7a725f2141f6b7b8dd8670f85bf, type: 2}
   - {fileID: 11400000, guid: e38924b304554414cacd7113bf110d07, type: 2}
   - {fileID: 11400000, guid: 5f577420f36348b449a2d3be07d47070, type: 2}
+  - {fileID: 11400000, guid: 70061971142e45a48bc4da91f8a08e1d, type: 2}
   fireRecipes:
   - {fileID: 11400000, guid: df066a4f617134f5ca5093364f1ce026, type: 2}
   sliceRecipes:
   - {fileID: 11400000, guid: 2d8883842888d4e3a88538c247e47af4, type: 2}
+  - {fileID: 11400000, guid: 11f0a40084e49c4438f6cb29845ab9dd, type: 2}
   trashFood: {fileID: 11400000, guid: 509d46e9af02c47a1b5000f361bf8252, type: 2}
   debugRecipes:
   - {fileID: 11400000, guid: 394a1f53939274e1792ab9d209e5ccf5, type: 2}
@@ -6158,6 +6160,8 @@ MonoBehaviour:
   isDontDestroyOnLoad: 0
   ac: {fileID: 1275964246}
   entrance: {fileID: 8300000, guid: f8a6a74b45a5c9d4b82d3918358332bf, type: 3}
+  slice: {fileID: 8300000, guid: d36107d0c9464dc469a82f82737ee08f, type: 3}
+  grill: {fileID: 8300000, guid: 815ce57b9c1e70144b4d86b9126f69ba, type: 3}
 --- !u!4 &1275964248
 Transform:
   m_ObjectHideFlags: 0

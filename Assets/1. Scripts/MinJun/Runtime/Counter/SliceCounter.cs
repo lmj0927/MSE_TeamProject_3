@@ -40,6 +40,7 @@ public class SliceCounter : ACounter
         }
         else if (isSlicing)
         {
+            SoundManager.Instance.Slice();
             currentSliceCount++;
             if (progressBar != null)
                 progressBar.SetProgress((float)currentSliceCount / sliceCount);

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 92d527cadb10f4e99aedfd1d154147e3, type: 3}
-  m_Name: SlicedLettuceRecipe
+  m_Name: SlicedTomatoRecipe 1
   m_EditorClassIdentifier: Assembly-CSharp::RecipeSO
-  result: {fileID: 11400000, guid: 34d8bc7055aff4ef7845011b6b190674, type: 2}
+  result: {fileID: 11400000, guid: f86a8e9c2552b224b871a799c9008d54, type: 2}
   ingredients:
-  - {fileID: 11400000, guid: f3e22cbb482a74764a7a768e65fe6d27, type: 2}
+  - {fileID: 11400000, guid: fd2f5bfb6e76c7c49b117de2136e6cdb, type: 2}
   complements: []
-  value: 6
+  value: 4

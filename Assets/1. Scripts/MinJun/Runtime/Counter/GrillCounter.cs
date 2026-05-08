@@ -53,10 +53,12 @@ public class GrillCounter : ACounter
                 grillTime = recipe.Value;
                 resultFood = recipe.Result;
                 SetState(GrillState);
+                SoundManager.Instance.GrillStart();
             }
         }
         else if (CanRemoveFood(player))
         {
+            SoundManager.Instance.GrillEnd();
             player.AddFood(RemoveFood());
             SetState(NoneState);
         }
