@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4724022097710499247}
   - component: {fileID: 4819416931242830096}
   - component: {fileID: 3188334344579673734}
-  - component: {fileID: -8073682421218383911}
+  - component: {fileID: 3728015284107132367}
   m_Layer: 0
   m_Name: cheeseSlice
   m_TagString: Untagged
@@ -30,8 +30,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -119,8 +119,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 10
   m_CollisionDetection: 0
---- !u!64 &-8073682421218383911
-MeshCollider:
+--- !u!65 &3728015284107132367
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -137,7 +137,6 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4624954665066789184, guid: a7f7e61166f3c4336a9b90ceaef19816, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 0.8, y: 0.032000244, z: 0.8}
+  m_Center: {x: 0, y: 0, z: 0}
