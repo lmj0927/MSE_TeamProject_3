@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using DG.Tweening;
 
 public class BasePopupUI : MonoBehaviour, IBaseUI
@@ -8,9 +8,9 @@ public class BasePopupUI : MonoBehaviour, IBaseUI
     protected virtual void Awake()
     {
         defaultScale = transform.localScale;
-        transform.localScale = Vector3.zero;
         gameObject.SetActive(false);
     }
+
     public void Show()
     {
         gameObject.SetActive(true);
@@ -22,11 +22,16 @@ public class BasePopupUI : MonoBehaviour, IBaseUI
         gameObject.SetActive(false);
     }
 
-    protected virtual void OnShow() {}
+    protected virtual void ResetTop() { }
+
+    protected virtual void OnShow() { }
 
     private void ShowAnimation()
     {
+        ResetTop();
+
         transform.localScale = Vector3.zero;
+
         showTween?.Kill();
         showTween = DOTween.Sequence()
             .Append(transform.DOScale(defaultScale * 1.1f, 0.12f).SetEase(Ease.OutQuad))
