@@ -218,6 +218,7 @@ GameObject:
   - component: {fileID: 4044267325454984251}
   - component: {fileID: 4044267325454984250}
   - component: {fileID: 4044267325454984249}
+  - component: {fileID: 8284814935773011963}
   m_Layer: 0
   m_Name: FFK_TrashBin_01_01
   m_TagString: Untagged
@@ -385,6 +386,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.7448618, y: 0.062066726, z: 1.1529962}
   m_Center: {x: 0, y: 0.031033363, z: -0.015413046}
+--- !u!114 &8284814935773011963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1470087677100648022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43d2b42b164fb1f48b592d227e5a5d99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrashCounter
+  foodPoint: {fileID: 0}
 --- !u!1 &1958214515358410909
 GameObject:
   m_ObjectHideFlags: 0

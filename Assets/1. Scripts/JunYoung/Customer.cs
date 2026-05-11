@@ -28,7 +28,7 @@ public class Customer : MonoBehaviour, IInteractable
     private Renderer rd;
     private Material[] mat;
 
-    private Sprite portrait;
+    public Sprite portrait { get; private set; }
 
     private Vector2 sitRange;
     private Vector2 mealRange;
@@ -38,18 +38,19 @@ public class Customer : MonoBehaviour, IInteractable
     private float dragChair = 0.25f;
 
     private bool isDecided = false;
-    private bool isWaiting = false;
-    private float sitTimer = 60.0f;
+    public bool isWaiting { get; private set; } = false;
+    public float sitTimer { get; private set; } = 60.0f;
     private float maxSit;
     private float boring = 30.0f;
-    private bool isBored = false; 
+    public bool isBored { get; private set; } = false; 
     private float angry = 10.0f;
-    private bool isAngry = false;
+    public bool isAngry { get; private set; } = false;
 
     private bool isEating = false;
     private bool hasEaten = false;
     private float mealTimer = 10.0f;
 
+    public RecipeSO recipe { get; private set; }
     [SerializeField]
     private Image orderImg;
     [SerializeField]
@@ -195,11 +196,10 @@ public class Customer : MonoBehaviour, IInteractable
         if (agent != null) agent.speed = UnityEngine.Random.Range(speedRange.x, speedRange.y);
         if (anim != null) anim.speed = UnityEngine.Random.Range(0.9f, 1.15f);
 
-        RecipeSO r = RecipeManager.Instance.GiveRandomAssembleRecipe();
+        recipe = RecipeManager.Instance.GiveRandomAssembleRecipe();
 
-        OrderManager.Instance.AddOrder(this, r);
-        order = r.Result.FoodName;
-        orderImg.sprite = r.Result.Sprite;
+        order = recipe.Result.FoodName;
+        orderImg.sprite = recipe.Result.Sprite;
         isDecided = false;
         isBored = false;
         isAngry = false;
@@ -422,12 +422,6 @@ public class Customer : MonoBehaviour, IInteractable
 
         OnMealFinished?.Invoke(seatNum);
     }
-
-    public Sprite Portrait => portrait;
-
-    public float SitTimer => sitTimer;
-
-    public bool IsWaiting => isWaiting;
 
     public bool IsReady()
     {

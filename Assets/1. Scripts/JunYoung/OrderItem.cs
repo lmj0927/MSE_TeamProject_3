@@ -17,18 +17,22 @@ public class OrderItem : MonoBehaviour
     [SerializeField] private Image customerPortrait;
     [SerializeField] private Image menuImage;
     [SerializeField] private IngredientSlot[] slots;
+    private Customer current;
+    [SerializeField] private StateChanger patienceColor;
 
-    public void SetOrder(Sprite portrait, RecipeSO recipe)
+    private void Update()
     {
-        if (customerPortrait == null) { Debug.LogError($"{gameObject.name}의 customerPortrait가 비어있습니다!"); return; }
-        if (recipe == null) { Debug.LogError("넘어온 RecipeSO 데이터가 null입니다!"); return; }
-        if (recipe.Result == null) { Debug.LogError($"{recipe.name} 레시피의 Result 데이터가 비어있습니다!"); return; }
-        if (recipe.Ingredients == null) { Debug.LogError($"{recipe.name} 레시피의 Ingredients 리스트가 null입니다!"); return; }
+        if (current.isBored && !current.isAngry) patienceColor.SetColorState(1);
+        else if (current.isAngry) patienceColor.SetColorState(2);
+    }
+    public void SetOrder(Customer customer)
+    {
+        patienceColor.SetColorState(0);
+        current = customer;
+        customerPortrait.sprite = customer.portrait;
+        menuImage.sprite = customer.recipe.Result.Sprite;
 
-        customerPortrait.sprite = portrait;
-        menuImage.sprite = recipe.Result.Sprite;
-
-        var grouped = recipe.Ingredients
+        var grouped = customer.recipe.Ingredients
             .GroupBy(i => i)
             .Select(g => new { Food = g.Key, Count = g.Count() })
             .ToList();

@@ -39,10 +39,13 @@ public class StateChanger : MonoBehaviour
 
             Color.RGBToHSV(originalColors[i], out float h, out float s, out float v);
 
- 
+
             h = Mathf.Repeat(h + hueShift, 1f);
 
-            targetImages[i].color = Color.HSVToRGB(h, s, v);
+            Color newColor = Color.HSVToRGB(h, s, v);
+            newColor.a = originalColors[i].a;
+
+            targetImages[i].color = newColor;
         }
     }
 }

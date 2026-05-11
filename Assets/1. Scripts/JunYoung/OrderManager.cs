@@ -1,13 +1,15 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using DG.Tweening;
 
 public class OrderManager : Singleton<OrderManager>
 {
     [SerializeField] private GameObject orderUI;
     [SerializeField] private OrderItem[] uiSlots;
 
-    private List<(Customer c, RecipeSO r)> orders = new List<(Customer c, RecipeSO r)>();
+    private List<Customer> orders = new List<Customer>();
+    private HashSet<Customer> animatedCustomers = new HashSet<Customer>();
 
     private void Awake()
     {
@@ -19,22 +21,28 @@ public class OrderManager : Singleton<OrderManager>
     {
         CloseUI();
     }
-    public void AddOrder(Customer customer, RecipeSO order)
+
+    public void AddOrder(Customer customer)
     {
-        orders.Add((customer, order));
+        if (orders.Contains(customer)) return;
+
+        orders.Add(customer);
+        SoundManager.Instance.Order();
+        Resort();
     }
 
     public void RemoveOrder(Customer customer)
     {
-        orders.RemoveAll(o => o.c == customer);
+        orders.Remove(customer);
+        animatedCustomers.Remove(customer);
         Resort();
     }
 
     public void Resort()
     {
         var waitingOrders = orders
-            .OrderBy(o => o.c.SitTimer) 
-            .Take(uiSlots.Length) 
+            .OrderBy(c => c.sitTimer)
+            .Take(uiSlots.Length)
             .ToList();
 
         if (waitingOrders.Count == 0)
@@ -45,14 +53,23 @@ public class OrderManager : Singleton<OrderManager>
 
         if (!orderUI.activeSelf) ShowUI();
 
-        SoundManager.Instance.Order();
-        
         for (int i = 0; i < uiSlots.Length; i++)
         {
             if (i < waitingOrders.Count)
             {
+                Customer currentCustomer = waitingOrders[i];
                 uiSlots[i].gameObject.SetActive(true);
-                uiSlots[i].SetOrder(waitingOrders[i].c.Portrait, waitingOrders[i].r);
+
+                uiSlots[i].SetOrder(currentCustomer);
+
+                if (!animatedCustomers.Contains(currentCustomer))
+                {
+                    animatedCustomers.Add(currentCustomer);
+
+                    uiSlots[i].transform.DOKill(true);
+                    uiSlots[i].transform.localScale = Vector3.one;
+                    uiSlots[i].transform.DOPunchScale(new Vector3(0.1f, 0.1f, 0f), 0.3f, 5, 1);
+                }
             }
             else
             {
@@ -60,7 +77,6 @@ public class OrderManager : Singleton<OrderManager>
             }
         }
     }
-
     public void ShowUI() => orderUI.SetActive(true);
     public void CloseUI() => orderUI.SetActive(false);
 }
