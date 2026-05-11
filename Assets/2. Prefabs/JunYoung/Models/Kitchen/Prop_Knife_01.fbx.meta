@@ -1,5 +1,12 @@
 fileFormatVersion: 2
-guid: 8b5c0811c8ed0d6468fbecfa6334d052
+guid: ba514a6b61666cf4ea240772e76020d3
+AssetOrigin:
+  serializedVersion: 1
+  productId: 204525
+  packageName: Pandazole - Kitchen Food lowpoly pack
+  packageVersion: 1.0.0
+  assetPath: Assets/Pandazole_Ultimate_Pack/Pandazole Kitchen Food/Models/Prop_Knife_01.fbx
+  uploadId: 463565
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -12,7 +19,7 @@ ModelImporter:
   materials:
     materialImportMode: 1
     materialName: 0
-    materialSearch: 2
+    materialSearch: 1
     materialLocation: 1
   animations:
     legacyGenerateAnimations: 4

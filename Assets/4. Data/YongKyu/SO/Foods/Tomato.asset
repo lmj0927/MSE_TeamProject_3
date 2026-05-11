@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Tomato
   m_EditorClassIdentifier: Assembly-CSharp::FoodSO
   foodName: Tomato
-  prefab: {fileID: 7972246777664831026, guid: 9e3b86b6cd4b25843ac9dc3f8985e807, type: 3}
+  prefab: {fileID: 1371948376002834343, guid: 9e3b86b6cd4b25843ac9dc3f8985e807, type: 3}
   sprite: {fileID: 21300000, guid: 860f6d4f259a5c64fa8f38f01404a7e0, type: 3}
