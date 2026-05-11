@@ -95,6 +95,8 @@ public class CustomerManager : MonoBehaviour
 
                         kioskState[i] = false;
                         kCustomers[i] = null;
+
+                        OrderManager.Instance.Resort();
                     }
                     
                 }

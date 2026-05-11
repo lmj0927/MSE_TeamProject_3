@@ -6,15 +6,15 @@ public class SoundManager : Singleton<SoundManager>
     private AudioSource ac;             //단일 조리환경이므로 수정필요
 
     [SerializeField]
-    private AudioClip entrance;
+    private AudioClip order;
     [SerializeField]
     private AudioClip slice;
     [SerializeField]
     private AudioClip grill;
    
-    public void Entrance()
+    public void Order()
     {
-        ac.PlayOneShot(entrance);
+        ac.PlayOneShot(order);
     }
 
     public void Slice()         //단일 조리환경이므로 수정필요

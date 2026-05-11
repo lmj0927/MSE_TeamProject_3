@@ -16,7 +16,7 @@ public class RecipeSO : ScriptableObject
     /// </summary>
     [SerializeField] private int value;
 
-    public FoodSO Result => result;
+    public FoodSO Result => result; 
     public List<FoodSO> Ingredients => ingredients;
     public List<RecipeSO> Complements => complements;
     public int Value => value;

@@ -106,6 +106,7 @@ public class Customer : MonoBehaviour, IInteractable
             {
                 SetFace(2);
                 isWaiting = false;
+                OrderManager.Instance.RemoveOrder(this);
                 Stand();
 
             } else if (!isAngry && sitTimer <= angry)
@@ -143,6 +144,12 @@ public class Customer : MonoBehaviour, IInteractable
     {
         OnMealFinished = null;
         OnSleep = null;
+
+        if (portrait != null)
+        {
+            if (portrait.texture != null) Destroy(portrait.texture);
+            Destroy(portrait);
+        }
     }
 
     // Basic Functions:
@@ -189,6 +196,8 @@ public class Customer : MonoBehaviour, IInteractable
         if (anim != null) anim.speed = UnityEngine.Random.Range(0.9f, 1.15f);
 
         RecipeSO r = RecipeManager.Instance.GiveRandomAssembleRecipe();
+
+        OrderManager.Instance.AddOrder(this, r);
         order = r.Result.FoodName;
         orderImg.sprite = r.Result.Sprite;
         isDecided = false;
@@ -198,6 +207,9 @@ public class Customer : MonoBehaviour, IInteractable
         isEating = false;
         hasEaten = false;
 
+        StopAllCoroutines();
+        if (agent != null) agent.enabled = true;
+        food = null;
         current = cState.Entering;
         arriveHandled = false;
         alreadyDeciding = false;
@@ -289,8 +301,6 @@ public class Customer : MonoBehaviour, IInteractable
         return false;
     }
 
-
-
     // State Change Functions:
     private void HandleArrival()
     {
@@ -318,7 +328,6 @@ public class Customer : MonoBehaviour, IInteractable
     {
         if (alreadyDeciding) return;
 
-        SoundManager.Instance.Entrance();
         alreadyDeciding = true;
         StartCoroutine(DecideRoutine());
     }
@@ -332,12 +341,6 @@ public class Customer : MonoBehaviour, IInteractable
 
         isDecided = true;
         agent.enabled = true;
-    }
-
-    public bool IsReady()
-    {
-        if (!alreadyDeciding || !isDecided) return false;
-        else return true;
     }
 
     private void Sit()
@@ -369,6 +372,7 @@ public class Customer : MonoBehaviour, IInteractable
         if (patienceBar != null) patienceBar.gameObject.SetActive(false);
         isWaiting = false;
 
+        OrderManager.Instance.RemoveOrder(this);
         served.transform.position = destination.GetChild(1).position;
 
         if (!served.Data.FoodName.Equals(order))
@@ -420,14 +424,17 @@ public class Customer : MonoBehaviour, IInteractable
     }
 
     public Sprite Portrait => portrait;
-    public bool SetOrder(FoodSO f)
-    {
-        if (f == null) return false;
 
-       
-        order = f.FoodName;
-        return true;
+    public float SitTimer => sitTimer;
+
+    public bool IsWaiting => isWaiting;
+
+    public bool IsReady()
+    {
+        if (!alreadyDeciding || !isDecided) return false;
+        else return true;
     }
+
     public void SetRanges(Vector2 sit, Vector2 meal, Vector2 speed)
     {
         sitRange = sit;
