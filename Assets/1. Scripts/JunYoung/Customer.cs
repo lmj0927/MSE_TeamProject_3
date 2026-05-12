@@ -431,8 +431,17 @@ public class Customer : MonoBehaviour, IInteractable
             anim.SetTrigger("stand");
             yield return new WaitForSeconds(0.1f);
 
-            yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length *0.4f);
-        } else yield return new WaitForSeconds(0.8f);   // Patience Stand Scenario (Controlled by AnimController)
+            yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length * 0.4f);
+        }
+        else
+        {
+            while(true)     // Patience Stand Scenario (Controlled by AnimController)
+            {
+                if (anim.GetCurrentAnimatorStateInfo(0).IsName("stand")) break;
+                yield return null;
+            }
+            yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length * 0.4f);   
+        }
 
         transform.position = new Vector3(transform.position.x, 0, transform.position.z);
         destination.position += (destination.forward * dragChair);
