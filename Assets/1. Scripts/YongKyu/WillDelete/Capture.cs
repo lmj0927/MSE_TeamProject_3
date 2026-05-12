@@ -101,8 +101,9 @@ public class PrefabPreviewCapture
         cameraObject.transform.rotation = Quaternion.LookRotation(viewDirection, Vector3.up);
 
         // 프리팹 전체가 화면 안에 들어오도록 orthographic size 자동 계산.
-        float padding = 1.25f;
-        camera.orthographicSize = GetOrthographicSizeForBounds(bounds, camera, padding);
+        //float padding = 1.25f;
+        //camera.orthographicSize = GetOrthographicSizeForBounds(bounds, camera, padding);
+        camera.orthographicSize = 1.2f;
 
         // 기존 씬 조명/환경 설정 백업.
         AmbientMode previousAmbientMode = RenderSettings.ambientMode;

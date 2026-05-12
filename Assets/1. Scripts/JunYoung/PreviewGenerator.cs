@@ -28,16 +28,17 @@ public class PreviewGenerator
 
         camera.orthographic = true;
         camera.nearClipPlane = 0.01f;
-        camera.farClipPlane = maxSize * 20f;
+        camera.farClipPlane = 50f; 
         camera.cullingMask = 1 << PreviewLayer;
         camera.aspect = (float)width / height;
 
         Vector3 cameraDir = (liveObject.transform.forward + Vector3.up * 0.3f).normalized;
-        float cameraDistance = maxSize * 2.0f;
+        float cameraDistance = 5f; 
 
         cameraObject.transform.position = center + cameraDir * cameraDistance;
         cameraObject.transform.LookAt(center);
 
+        camera.orthographicSize = 1.2f; // maxSize * 0.7f -> 1.2f로 수정 (필요시 이 숫자만 조절하세요)
         camera.orthographicSize = maxSize * 0.7f; 
 
         AmbientMode previousAmbientMode = RenderSettings.ambientMode;

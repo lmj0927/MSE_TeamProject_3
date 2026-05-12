@@ -15,7 +15,7 @@ public class OrderItem : MonoBehaviour
     }
 
     [SerializeField] private Image customerPortrait;
-    [SerializeField] private Image menuImage;
+    [SerializeField] private Image[] menuImages;
     [SerializeField] private IngredientSlot[] slots;
     private Customer current;
     [SerializeField] private StateChanger patienceColor;
@@ -30,9 +30,12 @@ public class OrderItem : MonoBehaviour
         patienceColor.SetColorState(0);
         current = customer;
         customerPortrait.sprite = customer.portrait;
-        menuImage.sprite = customer.recipe.Result.Sprite;
+        menuImages[0].sprite = customer.mainOrder.Result.Sprite;
 
-        var grouped = customer.recipe.Ingredients
+        SetMenuImg(customer.drinkOrder, 1);
+        SetMenuImg(customer.sideOrder, 2);
+
+        var grouped = customer.mainOrder.Ingredients
             .GroupBy(i => i)
             .Select(g => new { Food = g.Key, Count = g.Count() })
             .ToList();
@@ -59,5 +62,17 @@ public class OrderItem : MonoBehaviour
                 slots[i].root.SetActive(false);
             }
         }
+    }
+
+    private void SetMenuImg(RecipeSO r, int idx)
+    {
+        if (r == null)
+        {
+            menuImages[idx].gameObject.SetActive(false);
+            return;
+        }
+
+        menuImages[idx].gameObject.SetActive(true);
+        menuImages[idx].sprite = r.Result.Sprite;
     }
 }

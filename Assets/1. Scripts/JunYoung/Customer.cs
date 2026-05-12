@@ -1,6 +1,7 @@
-using JetBrains.Rider.Unity.Editor;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -54,15 +55,9 @@ public class Customer : MonoBehaviour, IInteractable
     public RecipeSO mainOrder { get; private set; }
     public RecipeSO drinkOrder { get; private set; }
     public RecipeSO sideOrder { get; private set; }
-    [SerializeField]
-    private Image orderImg;
-    [SerializeField]
-    private String order;
-    private String sideMenu;    // Doesn't use yet (need to chanage logic)
-    private String beVerage;
     private Food food;
-    [SerializeField] 
-    private Transform holdAnchor;
+    [SerializeField] private Image[] menuImages;
+    [SerializeField] private Transform holdAnchor;
 
 
     // Event for CustomerManger to check Customer leaving
@@ -203,8 +198,10 @@ public class Customer : MonoBehaviour, IInteractable
         if (anim != null) anim.speed = UnityEngine.Random.Range(0.9f, 1.15f);
 
         //set variables
-        order = mainOrder.Result.FoodName;
-        orderImg.sprite = mainOrder.Result.Sprite;
+        menuImages[0].sprite = mainOrder.Result.Sprite;
+
+        SetMenuImg(drinkOrder, 1);
+        SetMenuImg(sideOrder, 2);
 
         isDecided = false;
         isBored = false;
@@ -222,7 +219,18 @@ public class Customer : MonoBehaviour, IInteractable
         alreadyStand = false;
         agent.stoppingDistance = 0.3f;
     }
+    
+    private void SetMenuImg(RecipeSO r, int idx)
+    {
+        if (r == null)
+        {
+            menuImages[idx].gameObject.SetActive(false);
+            return;
+        }
 
+        menuImages[idx].gameObject.SetActive(true);
+        menuImages[idx].sprite = r.Result.Sprite;
+    }
     private void RandomColor()
     {
         Color randomC = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
@@ -373,7 +381,7 @@ public class Customer : MonoBehaviour, IInteractable
         if (patienceBar != null) patienceBar.gameObject.SetActive(true);
     }
 
-    private void getFood(Food served)
+    private void GetFood(Food served)
     {
         if (patienceBar != null) patienceBar.gameObject.SetActive(false);
         isWaiting = false;
@@ -381,7 +389,7 @@ public class Customer : MonoBehaviour, IInteractable
         OrderManager.Instance.RemoveOrder(this);
         served.transform.position = destination.GetChild(1).position;
 
-        if (!served.Data.FoodName.Equals(order))
+        if (!CheckOrder(served))
         {
             SetFace(2);
             anim.SetTrigger("wrong");
@@ -400,6 +408,31 @@ public class Customer : MonoBehaviour, IInteractable
         food.transform.SetParent(holdAnchor, true);
         food.transform.localPosition = Vector3.zero;
         food.transform.localRotation = Quaternion.identity;
+    }
+
+    private bool CheckOrder(Food served)
+    {
+        List<FoodSO> orders = new List<FoodSO>();
+        
+        orders.Add(mainOrder.Result);
+        if (drinkOrder != null) orders.Add(drinkOrder.Result);
+        if (sideOrder != null) orders.Add(sideOrder.Result);
+
+        List<FoodSO> servedFoods = served.GetComponentsInChildren<Food>().Select(f => f.Data).ToList();
+
+        if (orders.Count != servedFoods.Count) return false;
+
+        foreach (var order in orders)
+        {
+            if (servedFoods.Contains(order))
+            {
+                servedFoods.Remove(order);
+                continue;
+            }
+            return false;
+        }
+
+        return true;
     }
 
     private void Stand()
@@ -510,6 +543,6 @@ public class Customer : MonoBehaviour, IInteractable
         if (!player.HasFood()) return;
 
         Food served = player.RemoveFood();
-        getFood(served);
+        GetFood(served);
     }
 }

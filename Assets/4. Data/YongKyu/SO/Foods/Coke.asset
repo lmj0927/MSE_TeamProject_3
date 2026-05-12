@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodSO
   foodName: Coke
   prefab: {fileID: 5344453670103961128, guid: 38824abe17368664da8b9b6f940bc392, type: 3}
-  sprite: {fileID: 21300000, guid: 5500c46a0472a274e9b7ad72f439dfa8, type: 3}
-  type: 5
+  sprite: {fileID: 21300000, guid: cb6868480a621fa4bba7eef67599e078, type: 3}
+  type: 6
