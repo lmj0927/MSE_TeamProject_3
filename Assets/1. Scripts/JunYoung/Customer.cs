@@ -1,3 +1,4 @@
+using JetBrains.Rider.Unity.Editor;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -50,11 +51,15 @@ public class Customer : MonoBehaviour, IInteractable
     private bool hasEaten = false;
     private float mealTimer = 10.0f;
 
-    public RecipeSO recipe { get; private set; }
+    public RecipeSO mainOrder { get; private set; }
+    public RecipeSO drinkOrder { get; private set; }
+    public RecipeSO sideOrder { get; private set; }
     [SerializeField]
     private Image orderImg;
     [SerializeField]
     private String order;
+    private String sideMenu;    // Doesn't use yet (need to chanage logic)
+    private String beVerage;
     private Food food;
     [SerializeField] 
     private Transform holdAnchor;
@@ -197,10 +202,10 @@ public class Customer : MonoBehaviour, IInteractable
         if (agent != null) agent.speed = UnityEngine.Random.Range(speedRange.x, speedRange.y);
         if (anim != null) anim.speed = UnityEngine.Random.Range(0.9f, 1.15f);
 
-        recipe = RecipeManager.Instance.GiveRandomAssembleRecipe();
+        //set variables
+        order = mainOrder.Result.FoodName;
+        orderImg.sprite = mainOrder.Result.Sprite;
 
-        order = recipe.Result.FoodName;
-        orderImg.sprite = recipe.Result.Sprite;
         isDecided = false;
         isBored = false;
         isAngry = false;
@@ -458,11 +463,15 @@ public class Customer : MonoBehaviour, IInteractable
         else return true;
     }
 
-    public void SetRanges(Vector2 sit, Vector2 meal, Vector2 speed)
+    public void SetValues(Vector2 sit, Vector2 meal, Vector2 speed, bool beverage, bool sidemenu)
     {
         sitRange = sit;
         mealRange = meal;
         speedRange = speed;
+
+        mainOrder = RecipeManager.Instance.GiveRandomAssembleRecipe();
+        drinkOrder = beverage ? RecipeManager.Instance.GiveRandomBeverageRecipe() : null;
+        sideOrder = sidemenu ? RecipeManager.Instance.GiveRandomSideRecipe() : null;
 
         InitializeStats();
     }

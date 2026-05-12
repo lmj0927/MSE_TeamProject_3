@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 public class CustomerManager : MonoBehaviour
 {
@@ -9,36 +10,39 @@ public class CustomerManager : MonoBehaviour
 
     [Tooltip("patience tiemr range")]
     [SerializeField] private Vector2 sitTimerRange = new Vector2(45f, 75f);
-
     [Tooltip("meal timer range")]
     [SerializeField] private Vector2 mealTimerRange = new Vector2(8f, 15f);
-
     [Tooltip("walk speed range")]
     [SerializeField] private Vector2 walkSpeedRange = new Vector2(2.5f, 3.5f);
-
-    [SerializeField]
-    private Transform outsideParent;
+    [Tooltip("Parent of Spawnpoints")]
+    [SerializeField] private Transform outsideParent;
 
     private Queue<Customer> pool = new Queue<Customer>();
 
-    [SerializeField]
-    private Transform[] waitingPoint;
+    [SerializeField] private Transform[] waitingPoint;
     private bool[] kioskState;      // Each kiosk's use state
     private Customer[] kCustomers;
 
-    [SerializeField]
-    private Transform chairParent;
+    [Tooltip("Parent of all chairs")]
+    [SerializeField] private Transform chairParent;
     private Transform[] chairs;
     private bool[] useState;    // Each chair's use state
     private Customer[] customers;
 
-    [SerializeField]
-    private Transform trashBin;
+    [Tooltip("Position of Customer's trash bin")]
+    [SerializeField] private Transform trashBin;
 
 
     private float spawnTimer = 0;
-    [SerializeField]
-    private float spawnTerm = 3.0f;
+
+    [Tooltip("term of customer entrance")]
+    [SerializeField] private float spawnTerm = 3.0f;
+
+    [Tooltip("Probability of ordering wiht beverage (0.0 ~ 1.0)")]
+    [SerializeField] private float beverageRatio = 0.8f;
+
+    [Tooltip("Probability of ordering wiht sidemenu (0.0 ~ 1.0)")]
+    [SerializeField] private float sideRatio = 0.5f;
     private void Awake()
     {
         kioskState = new bool[waitingPoint.Length];
@@ -123,16 +127,18 @@ public class CustomerManager : MonoBehaviour
         {
             c = Instantiate(customer, outside.position, outside.rotation).GetComponent<Customer>();
             c.OnSleep += AddToPool;
-            c.SetRanges(sitTimerRange, mealTimerRange, walkSpeedRange);
-            return c;
         }
+        else
+        {
+            c = pool.Dequeue();
+            c.transform.position = outside.position;
+            c.transform.rotation = outside.rotation;
 
-        c = pool.Dequeue();
-        c.transform.position = outside.position;
-        c.transform.rotation = outside.rotation;
-
-        c.gameObject.SetActive(true);
-        c.SetRanges(sitTimerRange, mealTimerRange, walkSpeedRange);
+            c.gameObject.SetActive(true);
+        }
+        bool beverage = UnityEngine.Random.value <= beverageRatio;
+        bool sidemenu = UnityEngine.Random.value <= sideRatio;
+        c.SetValues(sitTimerRange, mealTimerRange, walkSpeedRange, beverage, sidemenu);
         return c;
     }
 

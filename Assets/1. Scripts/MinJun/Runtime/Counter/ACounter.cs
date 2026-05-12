@@ -46,7 +46,7 @@ public abstract class ACounter : MonoBehaviour, IInteractable
     // 기본적으로 Side 음식(사이드, 음료)는 놓을 수 없음
     protected virtual bool AcceptsFood(FoodSO foodData)
     {
-        if (foodData.Type == FoodSO.FoodType.Side) return false;
+        if (foodData.Type == FoodSO.FoodType.Side || foodData.Type == FoodSO.FoodType.Beverage) return false;
 
         return true;
     }

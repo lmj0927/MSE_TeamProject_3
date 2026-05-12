@@ -10,7 +10,8 @@ public class FoodSO : ScriptableObject
         Sliced,
         Fried,
         Main,
-        Side
+        Side,
+        Beverage
     }
 
     [Header("Food Info")]

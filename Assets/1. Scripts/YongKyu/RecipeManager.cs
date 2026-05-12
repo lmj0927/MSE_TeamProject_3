@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor;
 using Unity.VisualScripting;
+using System.Linq;
 
 public class RecipeManager : Singleton<RecipeManager>
 {
@@ -23,13 +24,36 @@ public class RecipeManager : Singleton<RecipeManager>
     FoodSO trashFood;
 
     private List<FoodSO> copyIng = new List<FoodSO>();
+    private List<RecipeSO> sideMenuRecipes = new List<RecipeSO>();
 
+    private void Awake()
+    {
+        InitializeMenuCaches();
+    }
+
+    private void InitializeMenuCaches()
+    {
+        List<RecipeSO> allProcessRecipes = new List<RecipeSO>();
+
+        if (fireRecipes != null) allProcessRecipes.AddRange(fireRecipes);
+        if (sliceRecipes != null) allProcessRecipes.AddRange(sliceRecipes);
+        if (oilRecipes != null) allProcessRecipes.AddRange(oilRecipes);
+
+        sideMenuRecipes = allProcessRecipes
+            .Where(r => r.Result != null && r.Result.Type == FoodSO.FoodType.Side)
+            .ToList();
+
+        if (sideMenuRecipes.Count == 0)
+        {
+            Debug.LogWarning("sideMesRecipe is not valid. All recipes are Null or Empty.");
+        }
+    }
     /// <summary>
-    /// Returns a randomly selected assemble recipe from the assembleRecipes list.
+    /// Returns a randomly selected assemble/beverage/sidemenu recipe from the assembleRecipes list.
     /// If the list is null or empty, returns null.
     /// </summary>
     /// <returns>
-    /// A randomly selected RecipeSO, or null if no assemble recipe is available.
+    /// A randomly selected RecipeSO, or null if no recipe is available.
     /// </returns>
     public RecipeSO GiveRandomAssembleRecipe()
     {
@@ -41,6 +65,25 @@ public class RecipeManager : Singleton<RecipeManager>
         return assembleRecipes[Random.Range(0, assembleRecipes.Count)];
     }
 
+    public RecipeSO GiveRandomBeverageRecipe()
+    {
+        if (beverageRecipes == null || beverageRecipes.Count == 0)
+        {
+            Debug.LogError("beverageRecipe is not valid. Null or Empty.");
+            return null;
+        }
+        return beverageRecipes[Random.Range(0, beverageRecipes.Count)];
+    }
+
+    public RecipeSO GiveRandomSideRecipe()
+    {
+        if (sideMenuRecipes == null || sideMenuRecipes.Count == 0)
+        {
+            Debug.LogError("sideMenuRecipe is not valid. Null or Empty.");
+            return null;
+        }
+        return sideMenuRecipes[Random.Range(0, sideMenuRecipes.Count)];
+    }
 
     /// <summary>
     /// Attempts to cook a food item using the given ingredients and recipe type.
