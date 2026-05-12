@@ -19,7 +19,7 @@ public abstract class ACounter : MonoBehaviour, IInteractable
         return foods.Select(food => food.Data).ToList();
     }
 
-    protected void AddFood(Food food)
+    protected virtual void AddFood(Food food)
     {
         foods.Add(food);
         food.transform.position = foodPoint.position;
@@ -43,10 +43,18 @@ public abstract class ACounter : MonoBehaviour, IInteractable
         foods.Clear();
     }
 
-    // 플레이어가 음식을 들고 있고 카운터에 음식이 없을 때
+    // 기본적으로 Side 음식(사이드, 음료)는 놓을 수 없음
+    protected virtual bool AcceptsFood(FoodSO foodData)
+    {
+        if (foodData.Type == FoodSO.FoodType.Side) return false;
+
+        return true;
+    }
+
+    // 플레이어가 음식을 들고 있고 카운터에 음식이 없을 때 + 놓을 수 있는 음식일 때
     protected bool CanAddFood(PlayerController player)
     {
-        return player.HasFood() && !HasFood();
+        return player.HasFood() && !HasFood() && AcceptsFood(player.HeldFood.data);
     }
 
     // 플레이어가 음식을 들고 있지 않고 카운터에 음식이 있을 때

@@ -68,4 +68,9 @@ public class PlayerController : MonoBehaviour
         foreach (var col in food.GetComponentsInChildren<Collider>())
             col.enabled = true;
     }
+
+    public void FreezeMovement(bool apply)
+    {
+        GetComponent<PlayerMovement>().SetInteracting(apply);
+    }
 }

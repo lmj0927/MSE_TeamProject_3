@@ -7,13 +7,17 @@ public class RecipeManager : Singleton<RecipeManager>
 {
 
     /* RecipeManager */
-
+    [SerializeField]
+    List<RecipeSO> beverageRecipes;
     [SerializeField]
     List<RecipeSO> assembleRecipes;
     [SerializeField]
     List<RecipeSO> fireRecipes;
     [SerializeField]
     List<RecipeSO> sliceRecipes;
+    [SerializeField]
+    List<RecipeSO> oilRecipes;
+
 
     [SerializeField]
     FoodSO trashFood;
@@ -63,6 +67,9 @@ public class RecipeManager : Singleton<RecipeManager>
         List<RecipeSO> recipes;
         switch(type)
         {
+            case RecipeType.Beverage:
+                recipes = beverageRecipes;
+                break;
             case RecipeType.Assemble:
                 recipes = assembleRecipes;
                 break;
@@ -71,6 +78,9 @@ public class RecipeManager : Singleton<RecipeManager>
                 break;
             case RecipeType.Slice:
                 recipes = sliceRecipes;
+                break;
+            case RecipeType.Oil:
+                recipes = oilRecipes;
                 break;
             default:
                 recipes = null;

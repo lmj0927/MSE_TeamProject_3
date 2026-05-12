@@ -15,3 +15,4 @@ MonoBehaviour:
   foodName: RawBeef
   prefab: {fileID: 2592684031479428191, guid: cbc29920c10a245c9b8946dd9c2c3ed5, type: 3}
   sprite: {fileID: 21300000, guid: 9894ff4b5795d4c3db474b6bba59d7e2, type: 3}
+  type: 1

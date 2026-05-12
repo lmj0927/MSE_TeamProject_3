@@ -109,6 +109,7 @@ public class Customer : MonoBehaviour, IInteractable
                 isWaiting = false;
                 OrderManager.Instance.RemoveOrder(this);
                 Stand();
+                if (food != null) Destroy(food.gameObject);
 
             } else if (!isAngry && sitTimer <= angry)
             {
@@ -380,7 +381,7 @@ public class Customer : MonoBehaviour, IInteractable
             SetFace(2);
             anim.SetTrigger("wrong");
             Stand();
-            Destroy(served.gameObject);     // Need to Complement
+            Destroy(served.gameObject);    
 
             return;
         }
@@ -390,6 +391,10 @@ public class Customer : MonoBehaviour, IInteractable
         isEating = true;
         agent.stoppingDistance = 1.5f;
         food = served;
+
+        food.transform.SetParent(holdAnchor, true);
+        food.transform.localPosition = Vector3.zero;
+        food.transform.localRotation = Quaternion.identity;
     }
 
     private void Stand()
@@ -399,6 +404,21 @@ public class Customer : MonoBehaviour, IInteractable
         if (patienceBar != null) patienceBar.gameObject.SetActive(false);
 
         alreadyStand = true;
+
+        if (food != null)
+        {
+            foreach (var rb in food.GetComponentsInChildren<Rigidbody>())
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.isKinematic = true;
+
+            }
+
+            foreach (var col in food.GetComponentsInChildren<Collider>())
+                col.enabled = false;
+        }
+
         StartCoroutine(StandRoutine());
         
     }

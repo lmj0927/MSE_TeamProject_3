@@ -15,3 +15,4 @@ MonoBehaviour:
   foodName: Beef
   prefab: {fileID: 5182101408359990397, guid: fdc2a89310cd548c29b6f95249885586, type: 3}
   sprite: {fileID: 21300000, guid: b961484c61c2843f48edc8e2451054be, type: 3}
+  type: 1

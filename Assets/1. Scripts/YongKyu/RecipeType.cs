@@ -2,5 +2,7 @@ public enum RecipeType
 {
     Fire,
     Slice,
-    Assemble
+    Oil,
+    Assemble,
+    Beverage
 }

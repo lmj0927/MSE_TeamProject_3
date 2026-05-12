@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1281897562867911521}
   - component: {fileID: 6284821598710373958}
   m_Layer: 0
-  m_Name: Prop_Griller
+  m_Name: GrillCounter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

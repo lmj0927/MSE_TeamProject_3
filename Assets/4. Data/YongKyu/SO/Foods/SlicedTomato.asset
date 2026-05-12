@@ -15,3 +15,4 @@ MonoBehaviour:
   foodName: SlicedTomato
   prefab: {fileID: 4670337290282507515, guid: 58ff1ce7446920d4b964fdb87e68ed91, type: 3}
   sprite: {fileID: 21300000, guid: 60c8fa7435aab6c4ea198ad4a42869f5, type: 3}
+  type: 2
