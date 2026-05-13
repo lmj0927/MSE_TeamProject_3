@@ -3,6 +3,7 @@
 public class TrayCounter : ACounter
 {
     private Food mainFood;
+    [SerializeField]
     private Transform currentTray;
 
     [SerializeField] private GameObject Tray;
