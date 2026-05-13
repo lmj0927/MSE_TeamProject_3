@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 6267811575993080410}
   - component: {fileID: 932168516168305117}
   - component: {fileID: 1592075189742863264}
-  - component: {fileID: 6708702477292961284}
   m_Layer: 0
   m_Name: potato_Chip_2_Raw Variant
   m_TagString: Untagged
@@ -28,10 +27,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 508329945427586258}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.81776875, y: 0.11959592, z: -0.008622184, w: 0.5629181}
-  m_LocalPosition: {x: 0.013350725, y: 0.029242516, z: 0.15659046}
-  m_LocalScale: {x: 0.20000003, y: 0.20000002, z: 0.2}
-  m_ConstrainProportionsScale: 1
+  m_LocalRotation: {x: 0.5721531, y: 0.48261026, z: -0.58434665, w: 0.31347612}
+  m_LocalPosition: {x: -0.11119822, y: 0.05540125, z: -0.022032985}
+  m_LocalScale: {x: 0.71834415, y: 0.6530402, z: 0.6530401}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1443882369939306154}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -114,33 +113,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -423458190233606760, guid: d47ab4bb4ec197d47b4da22e88ab49dc, type: 3}
---- !u!54 &6708702477292961284
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508329945427586258}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 10
-  m_CollisionDetection: 0
 --- !u!1 &712894314416696325
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,7 +125,6 @@ GameObject:
   - component: {fileID: 5319779442791954892}
   - component: {fileID: 3202764824067958437}
   - component: {fileID: 2418746602098758815}
-  - component: {fileID: 792762029127512534}
   m_Layer: 0
   m_Name: potato_Chip_2_Raw Variant (1)
   m_TagString: Untagged
@@ -169,10 +140,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 712894314416696325}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.31641465, y: -0.020402074, z: 0.0012526294, w: 0.9484008}
-  m_LocalPosition: {x: 0.032843113, y: 0.0095460415, z: 0.05166912}
-  m_LocalScale: {x: 0.20000002, y: 0.2, z: 0.20000002}
-  m_ConstrainProportionsScale: 1
+  m_LocalRotation: {x: 0.22462468, y: 0.65619415, z: -0.2228532, w: 0.6850471}
+  m_LocalPosition: {x: -0.45378742, y: -0.008911681, z: -0.08568187}
+  m_LocalScale: {x: 0.71834403, y: 0.6530401, z: 0.6530402}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1443882369939306154}
   m_LocalEulerAnglesHint: {x: 1.081, y: 10.275, z: -5.939}
@@ -255,13 +226,54 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -423458190233606760, guid: d47ab4bb4ec197d47b4da22e88ab49dc, type: 3}
---- !u!54 &792762029127512534
+--- !u!1 &1415883352984874753
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1443882369939306154}
+  - component: {fileID: 6665336268855095390}
+  m_Layer: 0
+  m_Name: frenchFries_Raw
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1443882369939306154
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415883352984874753}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 8595034414854082855}
+  - {fileID: 4564559922164680964}
+  - {fileID: 6061995988387587162}
+  - {fileID: 6159348362555813660}
+  - {fileID: 1760625128472286830}
+  - {fileID: 3423774060303952633}
+  - {fileID: 4664327620270156128}
+  - {fileID: 2998481263241824056}
+  - {fileID: 4096581654481621396}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &6665336268855095390
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 712894314416696325}
+  m_GameObject: {fileID: 1415883352984874753}
   serializedVersion: 5
   m_Mass: 1
   m_LinearDamping: 0
@@ -282,46 +294,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 10
   m_CollisionDetection: 0
---- !u!1 &1415883352984874753
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1443882369939306154}
-  m_Layer: 0
-  m_Name: PotatoChip_Raw
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1443882369939306154
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1415883352984874753}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.2831013, y: 1.0027246, z: 10.5032}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8595034414854082855}
-  - {fileID: 4564559922164680964}
-  - {fileID: 6061995988387587162}
-  - {fileID: 6159348362555813660}
-  - {fileID: 1760625128472286830}
-  - {fileID: 3423774060303952633}
-  - {fileID: 4664327620270156128}
-  - {fileID: 2998481263241824056}
-  - {fileID: 4096581654481621396}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2386012229611532821
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,7 +306,6 @@ GameObject:
   - component: {fileID: 5107373812752064703}
   - component: {fileID: 8691492928945337000}
   - component: {fileID: 4323437082886737158}
-  - component: {fileID: 5022883880572992042}
   m_Layer: 0
   m_Name: potato_Chip_3_Raw Variant (1)
   m_TagString: Untagged
@@ -350,10 +321,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2386012229611532821}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.5472722, y: 0.095817365, z: 0.084803596, w: 0.82711583}
-  m_LocalPosition: {x: 0.026051998, y: 0.024203897, z: 0.28908634}
-  m_LocalScale: {x: 0.20000003, y: 0.19999999, z: 0.2}
-  m_ConstrainProportionsScale: 1
+  m_LocalRotation: {x: -0.32701468, y: 0.6526123, z: 0.44694504, w: 0.51710606}
+  m_LocalPosition: {x: 0.32142738, y: 0.038949154, z: -0.06350752}
+  m_LocalScale: {x: 0.71834403, y: 0.65304005, z: 0.6530404}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1443882369939306154}
   m_LocalEulerAnglesHint: {x: 0, y: -15.546, z: 0}
@@ -436,33 +407,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 7682209250380153661, guid: d47ab4bb4ec197d47b4da22e88ab49dc, type: 3}
---- !u!54 &5022883880572992042
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2386012229611532821}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 10
-  m_CollisionDetection: 0
 --- !u!1 &2936773574665281258
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,7 +419,6 @@ GameObject:
   - component: {fileID: 853505278053304280}
   - component: {fileID: 8249062690219534491}
   - component: {fileID: 9075607470693050249}
-  - component: {fileID: 6134047558841125774}
   m_Layer: 0
   m_Name: potato_Chip_2_Raw Variant (2)
   m_TagString: Untagged
@@ -491,10 +434,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2936773574665281258}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.24378255, y: -0.0020527656, z: -0.010084728, w: 0.9697754}
-  m_LocalPosition: {x: 0.032901764, y: 0.010890722, z: 0.21853065}
-  m_LocalScale: {x: 0.2, y: 0.20000002, z: 0.20000002}
-  m_ConstrainProportionsScale: 1
+  m_LocalRotation: {x: 0.16524932, y: 0.6842832, z: -0.17951128, w: 0.6871863}
+  m_LocalPosition: {x: 0.09104893, y: -0.0045210277, z: -0.085871816}
+  m_LocalScale: {x: 0.7183441, y: 0.6530402, z: 0.6530402}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1443882369939306154}
   m_LocalEulerAnglesHint: {x: 1.081, y: 10.275, z: -5.939}
@@ -577,33 +520,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -423458190233606760, guid: d47ab4bb4ec197d47b4da22e88ab49dc, type: 3}
---- !u!54 &6134047558841125774
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2936773574665281258}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 10
-  m_CollisionDetection: 0
 --- !u!1 &3302615279896123544
 GameObject:
   m_ObjectHideFlags: 0
@@ -616,7 +532,6 @@ GameObject:
   - component: {fileID: 6947796256390003695}
   - component: {fileID: 3323287221567888056}
   - component: {fileID: 7263957419367315708}
-  - component: {fileID: 3978485230014907576}
   m_Layer: 0
   m_Name: potato_Chip_3_Raw Variant (2)
   m_TagString: Untagged
@@ -632,10 +547,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3302615279896123544}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.53054935, y: -0.087916665, z: -0.022898719, w: 0.84277153}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
-  m_ConstrainProportionsScale: 1
+  m_LocalRotation: {x: -0.39134684, y: 0.533763, z: 0.3589632, w: 0.6580959}
+  m_LocalPosition: {x: -0.62249744, y: -0.04008142, z: 0.021559028}
+  m_LocalScale: {x: 0.718344, y: 0.65304, z: 0.6530402}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1443882369939306154}
   m_LocalEulerAnglesHint: {x: 0, y: -15.546, z: 0}
@@ -718,33 +633,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 7682209250380153661, guid: d47ab4bb4ec197d47b4da22e88ab49dc, type: 3}
---- !u!54 &3978485230014907576
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3302615279896123544}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 10
-  m_CollisionDetection: 0
 --- !u!1 &3456908596955934612
 GameObject:
   m_ObjectHideFlags: 0
@@ -757,7 +645,6 @@ GameObject:
   - component: {fileID: 7890070283825650410}
   - component: {fileID: 7085411304149810894}
   - component: {fileID: 7764522301435794493}
-  - component: {fileID: 6537013765932851829}
   m_Layer: 0
   m_Name: potato_Chip_1_Raw Variant
   m_TagString: Untagged
@@ -773,10 +660,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3456908596955934612}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0010273292, y: -0.17050613, z: -0.0005435533, w: 0.9853559}
-  m_LocalPosition: {x: -0.012452602, y: 0.004197836, z: 0.33097935}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.19999999}
-  m_ConstrainProportionsScale: 1
+  m_LocalRotation: {x: -0.0011107818, y: 0.5761858, z: 0.00034208127, w: 0.81731796}
+  m_LocalPosition: {x: 0.4582164, y: -0.026374644, z: 0.06221771}
+  m_LocalScale: {x: 0.71834403, y: 0.6530401, z: 0.65304023}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1443882369939306154}
   m_LocalEulerAnglesHint: {x: 0, y: -23.549, z: 0}
@@ -859,33 +746,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4694264201477630420, guid: d47ab4bb4ec197d47b4da22e88ab49dc, type: 3}
---- !u!54 &6537013765932851829
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3456908596955934612}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 10
-  m_CollisionDetection: 0
 --- !u!1 &3585496064730636850
 GameObject:
   m_ObjectHideFlags: 0
@@ -898,7 +758,6 @@ GameObject:
   - component: {fileID: 3040381467881400464}
   - component: {fileID: 453156158174229343}
   - component: {fileID: 6737563005591602707}
-  - component: {fileID: 676076613049924064}
   m_Layer: 0
   m_Name: potato_Chip_3_Raw Variant
   m_TagString: Untagged
@@ -914,10 +773,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3585496064730636850}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.90417325, y: -0.04297206, z: 0.13365091, w: 0.4034373}
-  m_LocalPosition: {x: -0.06399751, y: 0.029357791, z: 0.14564705}
-  m_LocalScale: {x: 0.2, y: 0.19999999, z: 0.2}
-  m_ConstrainProportionsScale: 1
+  m_LocalRotation: {x: -0.5448415, y: 0.25488737, z: 0.7338525, w: 0.31565908}
+  m_LocalPosition: {x: -0.14693065, y: 0.05577765, z: 0.23052292}
+  m_LocalScale: {x: 0.718344, y: 0.65304, z: 0.65304047}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1443882369939306154}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1000,33 +859,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 7682209250380153661, guid: d47ab4bb4ec197d47b4da22e88ab49dc, type: 3}
---- !u!54 &676076613049924064
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3585496064730636850}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 10
-  m_CollisionDetection: 0
 --- !u!1 &5879798885834033117
 GameObject:
   m_ObjectHideFlags: 0
@@ -1039,7 +871,6 @@ GameObject:
   - component: {fileID: 3779205345378326657}
   - component: {fileID: 7760697850113632648}
   - component: {fileID: 181746623428930838}
-  - component: {fileID: 2815675039621988740}
   m_Layer: 0
   m_Name: potato_Chip_1_Raw Variant (1)
   m_TagString: Untagged
@@ -1055,10 +886,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5879798885834033117}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.007328872, y: -0.18765807, z: -0.0024131236, w: 0.98220414}
-  m_LocalPosition: {x: 0.018114567, y: 0.0041861534, z: 0.12284756}
-  m_LocalScale: {x: 0.20000002, y: 0.20000003, z: 0.2}
-  m_ConstrainProportionsScale: 1
+  m_LocalRotation: {x: -0.006888631, y: 0.5618289, z: 0.003475959, w: 0.82721746}
+  m_LocalPosition: {x: -0.22137555, y: -0.02641279, z: -0.03759022}
+  m_LocalScale: {x: 0.7183441, y: 0.65304047, z: 0.65304005}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1443882369939306154}
   m_LocalEulerAnglesHint: {x: 0, y: -23.549, z: 0}
@@ -1141,33 +972,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4694264201477630420, guid: d47ab4bb4ec197d47b4da22e88ab49dc, type: 3}
---- !u!54 &2815675039621988740
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5879798885834033117}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 10
-  m_CollisionDetection: 0
 --- !u!1 &7258773909183572725
 GameObject:
   m_ObjectHideFlags: 0
@@ -1180,7 +984,6 @@ GameObject:
   - component: {fileID: 5464575636389469211}
   - component: {fileID: 7459846193619502984}
   - component: {fileID: 3063711686248690564}
-  - component: {fileID: 3697735886682500887}
   m_Layer: 0
   m_Name: potato_Chip_1_Raw Variant (2)
   m_TagString: Untagged
@@ -1196,10 +999,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7258773909183572725}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.015418524, y: -0.22848772, z: 0.0039636674, w: 0.9734167}
-  m_LocalPosition: {x: 0.06309271, y: 0.003475666, z: 0.3036909}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.19999999}
-  m_ConstrainProportionsScale: 1
+  m_LocalRotation: {x: -0.0080998065, y: 0.5267443, z: 0.013705278, w: 0.84987473}
+  m_LocalPosition: {x: 0.3691142, y: -0.028732674, z: -0.18445286}
+  m_LocalScale: {x: 0.71834403, y: 0.6530402, z: 0.65304}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1443882369939306154}
   m_LocalEulerAnglesHint: {x: 0, y: -23.549, z: 0}
@@ -1282,30 +1085,3 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4694264201477630420, guid: d47ab4bb4ec197d47b4da22e88ab49dc, type: 3}
---- !u!54 &3697735886682500887
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7258773909183572725}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 10
-  m_CollisionDetection: 0

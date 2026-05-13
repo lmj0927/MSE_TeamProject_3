@@ -1860,6 +1860,7 @@ MonoBehaviour:
   sliceRecipes:
   - {fileID: 11400000, guid: 2d8883842888d4e3a88538c247e47af4, type: 2}
   - {fileID: 11400000, guid: 11f0a40084e49c4438f6cb29845ab9dd, type: 2}
+  - {fileID: 11400000, guid: 2b6bf48e91b94d240bb9f8ef6b536707, type: 2}
   oilRecipes: []
   trashFood: {fileID: 11400000, guid: 509d46e9af02c47a1b5000f361bf8252, type: 2}
   debugRecipes:
