@@ -15,4 +15,5 @@ MonoBehaviour:
   result: {fileID: 11400000, guid: 34d8bc7055aff4ef7845011b6b190674, type: 2}
   ingredients:
   - {fileID: 11400000, guid: f3e22cbb482a74764a7a768e65fe6d27, type: 2}
-  value: 5
+  complements: []
+  value: 6

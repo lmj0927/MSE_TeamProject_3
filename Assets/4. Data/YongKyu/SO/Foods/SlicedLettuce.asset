@@ -15,3 +15,4 @@ MonoBehaviour:
   foodName: SlicedLettuce
   prefab: {fileID: 4596691420503330492, guid: be7ecd9bfd2ad44069db9a7c24cde461, type: 3}
   sprite: {fileID: 21300000, guid: c648765e362f54062a3668ef3869cfcd, type: 3}
+  type: 2
