@@ -1,6 +1,7 @@
+using Fusion;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     [Header("Food")]
     [SerializeField] private Food heldFood;
@@ -11,10 +12,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector3 pickupProbeOffset = new Vector3(0f, 0.5f, 0f);
     [SerializeField] private LayerMask pickupLayers = ~0;
 
-    public Food HeldFood => heldFood;
+    // public Food HeldFood => heldFood;
     public bool HasFood() => heldFood != null;
 
-    private void Awake()
+    public override void Spawned()
     {
         if (holdAnchor == null)
             holdAnchor = transform;
