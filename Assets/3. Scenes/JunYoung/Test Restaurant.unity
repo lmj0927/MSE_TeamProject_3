@@ -1291,12 +1291,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e38924b304554414cacd7113bf110d07, type: 2}
   - {fileID: 11400000, guid: 5f577420f36348b449a2d3be07d47070, type: 2}
   - {fileID: 11400000, guid: 70061971142e45a48bc4da91f8a08e1d, type: 2}
+  - {fileID: 11400000, guid: f5dd0d0199dfd1d44bcee894768fd780, type: 2}
   grillRecipes:
   - {fileID: 11400000, guid: df066a4f617134f5ca5093364f1ce026, type: 2}
+  - {fileID: 11400000, guid: 8fc058ec95da913458f02c7dd004e2e1, type: 2}
+  - {fileID: 11400000, guid: fa5245b2f29c222429caefaaf0657f6b, type: 2}
   sliceRecipes:
   - {fileID: 11400000, guid: 2d8883842888d4e3a88538c247e47af4, type: 2}
   - {fileID: 11400000, guid: 11f0a40084e49c4438f6cb29845ab9dd, type: 2}
   - {fileID: 11400000, guid: 2b6bf48e91b94d240bb9f8ef6b536707, type: 2}
+  - {fileID: 11400000, guid: 12b4efa7acb403c4693d21ae964a9060, type: 2}
+  - {fileID: 11400000, guid: 6f39f5aeb4be9074a959ca98c8f40fd9, type: 2}
   oilRecipes:
   - {fileID: 11400000, guid: aed579b03117af742b11f3fe19d9b09c, type: 2}
   - {fileID: 11400000, guid: 159976e8db19df34887adf5d44438bf5, type: 2}
@@ -4097,7 +4102,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2652328840234719614, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
       propertyPath: spawnTerm
-      value: 20
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2652328840234719614, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
       propertyPath: chairParent
@@ -10368,7 +10373,7 @@ PrefabInstance:
     - target: {fileID: 6397823430082694703, guid: 100b9120b634de944af278293cdd414d, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: cb6868480a621fa4bba7eef67599e078, type: 3}
+      objectReference: {fileID: 21300000, guid: 36e27d0c0b8964945bbcdea97f3a1ef9, type: 3}
     - target: {fileID: 6560047356105746424, guid: 100b9120b634de944af278293cdd414d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

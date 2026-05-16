@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b69725272f37440bfb817b33c77a5f58, type: 3}
-  m_Name: Coke
+  m_Name: SlicedMushroom
   m_EditorClassIdentifier: Assembly-CSharp::FoodSO
-  foodName: Coke
-  prefab: {fileID: 3958365687770782333, guid: 1cff3a1b0b6ee354eb7c3d77cd360026, type: 3}
-  sprite: {fileID: 21300000, guid: cb6868480a621fa4bba7eef67599e078, type: 3}
-  type: 6
+  foodName: SlicedMushroom
+  prefab: {fileID: 4494518892879114639, guid: d4c63e7caf2c8304eb9a8bcd72c25e11, type: 3}
+  sprite: {fileID: 21300000, guid: fc64c79a0bf3a7348ad8e1a878b5d303, type: 3}
+  type: 2
