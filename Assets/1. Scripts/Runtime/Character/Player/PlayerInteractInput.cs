@@ -1,8 +1,9 @@
-// Owned by SeungYeon Jung
+// Owned by JunYoung Park
 using UnityEngine;
 
 /// <summary>
 /// E 키로 주변 <see cref="IInteractable"/> (MinJun 카운터 등)과 상호작용합니다.
+/// 대상을 바라볼 때 Linework Lite를 이용해 아웃라인을 표시합니다.
 /// </summary>
 public class PlayerInteractInput : MonoBehaviour
 {
@@ -10,8 +11,13 @@ public class PlayerInteractInput : MonoBehaviour
     [SerializeField] private PlayerController counterPlayer;
     [SerializeField] private float interactRadius = 2.5f;
     [SerializeField] private float probeHeight = 0.85f;
-    [SerializeField] [Range(-1f, 1f)] private float minForwardDot = 0.15f;
+    [SerializeField][Range(-1f, 1f)] private float minForwardDot = 0.15f;
     [SerializeField] private LayerMask interactLayers = ~0;
+
+    [Header("Outline Settings")]
+    [SerializeField] private int outlineLayerIndex = 1;
+
+    private IInteractable currentTarget;
 
     private void Awake()
     {
@@ -21,18 +27,26 @@ public class PlayerInteractInput : MonoBehaviour
 
     private void Update()
     {
+        UpdateTargetAndOutline();
+
         if (Input.GetKeyDown(interactKey))
-            TryInteract();
+        {
+            if (currentTarget != null)
+            {
+                currentTarget.Interact(counterPlayer);
+            }
+        }
     }
 
-    public void Interact() => TryInteract();
-
-    public void TryInteract()
+    public void Interact()
     {
-        if (counterPlayer == null)
-            counterPlayer = GetComponent<PlayerController>();
-        if (counterPlayer == null)
-            return;
+        if (currentTarget != null)
+            currentTarget.Interact(counterPlayer);
+    }
+
+    private void UpdateTargetAndOutline()
+    {
+        if (counterPlayer == null) return;
 
         var center = transform.position + Vector3.up * probeHeight;
         var cols = Physics.OverlapSphere(center, interactRadius, interactLayers, QueryTriggerInteraction.Collide);
@@ -42,18 +56,17 @@ public class PlayerInteractInput : MonoBehaviour
 
         foreach (var col in cols)
         {
-            if (col == null)
-                continue;
+            if (col == null) continue;
 
             var interactable = col.GetComponentInParent<IInteractable>();
-            if (interactable == null)
-                continue;
-            if (interactable is MonoBehaviour mb && !mb.isActiveAndEnabled)
-                continue;
+            if (interactable == null) continue;
+
+            if (interactable is MonoBehaviour mb && !mb.isActiveAndEnabled) continue;
 
             var targetPoint = col.bounds.center;
             var toTarget = targetPoint - center;
             float sqr = toTarget.sqrMagnitude;
+
             if (sqr < 0.0001f)
             {
                 best = interactable;
@@ -62,8 +75,7 @@ public class PlayerInteractInput : MonoBehaviour
             }
 
             float dot = Vector3.Dot(transform.forward, toTarget / Mathf.Sqrt(sqr));
-            if (dot < minForwardDot)
-                continue;
+            if (dot < minForwardDot) continue;
 
             if (sqr < bestSqr)
             {
@@ -72,7 +84,48 @@ public class PlayerInteractInput : MonoBehaviour
             }
         }
 
-        if (best != null)
-            best.Interact(counterPlayer);
+        if (currentTarget != best)
+        {
+            if (currentTarget != null)
+            {
+                SetOutline(currentTarget, false);
+            }
+
+            currentTarget = best;
+
+            if (currentTarget != null)
+            {
+                SetOutline(currentTarget, true);
+            }
+        }
+    }
+
+    private void SetOutline(IInteractable interactable, bool show)
+    {
+        if (interactable is MonoBehaviour mb)
+        {
+            Transform outlineT = mb.transform;
+            
+            if (mb is ACounter ac && ac.OutlineRoot != null)
+            {
+                outlineT = ac.OutlineRoot;
+            }
+            Renderer[] renderers = outlineT.GetComponentsInChildren<Renderer>();
+
+
+            uint layerBit = 1u << outlineLayerIndex;
+
+            foreach (var r in renderers)
+            {
+                if (show)
+                {
+                    r.renderingLayerMask |= layerBit;
+                }
+                else
+                {
+                    r.renderingLayerMask &= ~layerBit;
+                }
+            }
+        }
     }
 }

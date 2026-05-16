@@ -6179,6 +6179,7 @@ MonoBehaviour:
   grill: {fileID: 8300000, guid: 815ce57b9c1e70144b4d86b9126f69ba, type: 3}
   fry: {fileID: 8300000, guid: d13005fa5988ee544b39ce44dd8ee6a3, type: 3}
   drink: {fileID: 8300000, guid: 792b75aa18be1ea4b99dadc2bb93da52, type: 3}
+  trash: {fileID: 8300000, guid: 763637f9eefe07849b2c660682851c21, type: 3}
 --- !u!4 &1275964248
 Transform:
   m_ObjectHideFlags: 0

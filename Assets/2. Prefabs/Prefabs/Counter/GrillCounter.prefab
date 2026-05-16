@@ -459,6 +459,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrillCounter
   foodPoint: {fileID: 1925710231713748475}
+  outlineRoot: {fileID: 108398472057696270}
   burnTime: 5
   cookProgressBar: {fileID: 7270873649268372920}
   burnProgressBar: {fileID: 3072098837785187051}
@@ -532,6 +533,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrillCounter
   foodPoint: {fileID: 477963285373845100}
+  outlineRoot: {fileID: 108398472057696270}
   burnTime: 5
   cookProgressBar: {fileID: 461873655566560812}
   burnProgressBar: {fileID: 5201089357944441215}

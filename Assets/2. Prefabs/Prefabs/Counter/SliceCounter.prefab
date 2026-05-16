@@ -155,7 +155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SliceCounter
   foodPoint: {fileID: 2461633508383189703}
-  sliceCount: 5
+  defaultCount: 5
   progressBar: {fileID: 6988603572045264521}
 --- !u!1 &2795608010820608868
 GameObject:
