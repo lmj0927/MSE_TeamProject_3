@@ -1791,6 +1791,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RecipeManager
   isDontDestroyOnLoad: 0
+  sideMenuRecipes:
+  - {fileID: 11400000, guid: af35eca2de76ba745b01fefc4e495831, type: 2}
   beverageRecipes:
   - {fileID: 11400000, guid: 9a880120662d27a409a2ff3b9f52e13e, type: 2}
   assembleRecipes:
@@ -1798,7 +1800,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e38924b304554414cacd7113bf110d07, type: 2}
   - {fileID: 11400000, guid: 5f577420f36348b449a2d3be07d47070, type: 2}
   - {fileID: 11400000, guid: 70061971142e45a48bc4da91f8a08e1d, type: 2}
-  fireRecipes:
+  grillRecipes:
   - {fileID: 11400000, guid: df066a4f617134f5ca5093364f1ce026, type: 2}
   sliceRecipes:
   - {fileID: 11400000, guid: 2d8883842888d4e3a88538c247e47af4, type: 2}
@@ -2328,6 +2330,10 @@ PrefabInstance:
     - target: {fileID: 3231883627383808046, guid: b426652cd05e8a746a2b5d78102908cf, type: 3}
       propertyPath: m_Name
       value: Wall_09
+      objectReference: {fileID: 0}
+    - target: {fileID: 3231883627383808046, guid: b426652cd05e8a746a2b5d78102908cf, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4024258157784285691, guid: b426652cd05e8a746a2b5d78102908cf, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -2982,6 +2988,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall_09
       objectReference: {fileID: 0}
+    - target: {fileID: 3231883627383808046, guid: b426652cd05e8a746a2b5d78102908cf, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4024258157784285691, guid: b426652cd05e8a746a2b5d78102908cf, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -3345,6 +3355,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall_09 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3231883627383808046, guid: b426652cd05e8a746a2b5d78102908cf, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4024258157784285691, guid: b426652cd05e8a746a2b5d78102908cf, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -3375,6 +3389,10 @@ PrefabInstance:
     - target: {fileID: 7423411190647823865, guid: d72a0bbd15806be4281ffbcd00c374fd, type: 3}
       propertyPath: m_Name
       value: Wall_01 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7423411190647823865, guid: d72a0bbd15806be4281ffbcd00c374fd, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7804335222858270531, guid: d72a0bbd15806be4281ffbcd00c374fd, type: 3}
       propertyPath: m_LocalScale.x
@@ -3850,6 +3868,10 @@ PrefabInstance:
     - target: {fileID: 7423411190647823865, guid: d72a0bbd15806be4281ffbcd00c374fd, type: 3}
       propertyPath: m_Name
       value: Wall_01 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7423411190647823865, guid: d72a0bbd15806be4281ffbcd00c374fd, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7804335222858270531, guid: d72a0bbd15806be4281ffbcd00c374fd, type: 3}
       propertyPath: m_LocalScale.x
@@ -4377,6 +4399,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall_05 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 4232175933284182057, guid: e57584fccf1e62847a0a2166eef7692a, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4736,6 +4762,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall_09 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3231883627383808046, guid: b426652cd05e8a746a2b5d78102908cf, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4024258157784285691, guid: b426652cd05e8a746a2b5d78102908cf, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -4997,7 +5027,7 @@ PrefabInstance:
       objectReference: {fileID: 218685235}
     - target: {fileID: 2652328840234719614, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
       propertyPath: sideRatio
-      value: 0
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 2652328840234719614, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
       propertyPath: spawnTerm
@@ -5009,7 +5039,7 @@ PrefabInstance:
       objectReference: {fileID: 806148960}
     - target: {fileID: 2652328840234719614, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
       propertyPath: beverageRatio
-      value: 0.5
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 2652328840234719614, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
       propertyPath: outsideParent
@@ -6009,6 +6039,10 @@ PrefabInstance:
     - target: {fileID: 4232175933284182057, guid: e57584fccf1e62847a0a2166eef7692a, type: 3}
       propertyPath: m_Name
       value: Wall_05 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4232175933284182057, guid: e57584fccf1e62847a0a2166eef7692a, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7193,6 +7227,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall_09 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3231883627383808046, guid: b426652cd05e8a746a2b5d78102908cf, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7371,6 +7409,10 @@ PrefabInstance:
     - target: {fileID: 4232175933284182057, guid: e57584fccf1e62847a0a2166eef7692a, type: 3}
       propertyPath: m_Name
       value: Wall_05
+      objectReference: {fileID: 0}
+    - target: {fileID: 4232175933284182057, guid: e57584fccf1e62847a0a2166eef7692a, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7755,7 +7797,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1334643559}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SWalls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7852,6 +7894,10 @@ PrefabInstance:
     - target: {fileID: 4232175933284182057, guid: e57584fccf1e62847a0a2166eef7692a, type: 3}
       propertyPath: m_Name
       value: Wall_05 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4232175933284182057, guid: e57584fccf1e62847a0a2166eef7692a, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8173,6 +8219,10 @@ PrefabInstance:
     - target: {fileID: 4232175933284182057, guid: e57584fccf1e62847a0a2166eef7692a, type: 3}
       propertyPath: m_Name
       value: Wall_05 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4232175933284182057, guid: e57584fccf1e62847a0a2166eef7692a, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8649,6 +8699,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall_09
       objectReference: {fileID: 0}
+    - target: {fileID: 3231883627383808046, guid: b426652cd05e8a746a2b5d78102908cf, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4024258157784285691, guid: b426652cd05e8a746a2b5d78102908cf, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -8917,6 +8971,10 @@ PrefabInstance:
     - target: {fileID: 4232175933284182057, guid: e57584fccf1e62847a0a2166eef7692a, type: 3}
       propertyPath: m_Name
       value: Wall_05
+      objectReference: {fileID: 0}
+    - target: {fileID: 4232175933284182057, guid: e57584fccf1e62847a0a2166eef7692a, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9361,7 +9419,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1685173150}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: NWalls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9647,7 +9705,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 23
+    m_Bits: 215
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -10144,6 +10202,10 @@ PrefabInstance:
     - target: {fileID: 4232175933284182057, guid: e57584fccf1e62847a0a2166eef7692a, type: 3}
       propertyPath: m_Name
       value: Wall_05 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4232175933284182057, guid: e57584fccf1e62847a0a2166eef7692a, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10787,6 +10849,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall_05
       objectReference: {fileID: 0}
+    - target: {fileID: 4232175933284182057, guid: e57584fccf1e62847a0a2166eef7692a, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11102,7 +11168,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1944606821}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EWalls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12951,6 +13017,10 @@ PrefabInstance:
     - target: {fileID: 5290469519004334502, guid: 87c25aadc64ada841b6c0b23fc8b772c, type: 3}
       propertyPath: m_Name
       value: FrierCounter1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7603090805787587385, guid: 87c25aadc64ada841b6c0b23fc8b772c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.132958
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

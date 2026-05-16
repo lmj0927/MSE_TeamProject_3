@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7575381995793969745}
   - component: {fileID: -647342836302676608}
   - component: {fileID: 243386050534196696}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: lettuce_square
   m_TagString: Untagged
   m_Icon: {fileID: 0}

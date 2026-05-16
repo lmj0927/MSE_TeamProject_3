@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4307502348893455223}
   - component: {fileID: 4815454913541225073}
   - component: {fileID: -6257300398967217179}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: beef_Steak_Cooked
   m_TagString: Untagged
   m_Icon: {fileID: 0}

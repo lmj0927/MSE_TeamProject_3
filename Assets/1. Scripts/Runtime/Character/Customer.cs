@@ -59,6 +59,8 @@ public class Customer : MonoBehaviour, IInteractable
     private Food food;
     [SerializeField] private Image[] menuImages;
     [SerializeField] private Transform holdAnchor;
+    [SerializeField] private GameObject trayPrefab;
+    private GameObject tray;
 
 
     // Event for CustomerManger to check Customer leaving
@@ -215,6 +217,7 @@ public class Customer : MonoBehaviour, IInteractable
         StopAllCoroutines();
         if (agent != null) agent.enabled = true;
         food = null;
+        tray = null;
         current = cState.Entering;
         arriveHandled = false;
         alreadyDeciding = false;
@@ -330,7 +333,7 @@ public class Customer : MonoBehaviour, IInteractable
                 Sit();
                 break;
             case cState.GoingTrash:
-                Destroy(food.gameObject);
+                Destroy(tray);
                 setPath(cState.Leaving, exit);
                 break;
             case cState.Leaving:
@@ -449,16 +452,7 @@ public class Customer : MonoBehaviour, IInteractable
 
         if (food != null)
         {
-            foreach (var rb in food.GetComponentsInChildren<Rigidbody>())
-            {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-                rb.isKinematic = true;
-
-            }
-
-            foreach (var col in food.GetComponentsInChildren<Collider>())
-                col.enabled = false;
+            Destroy(food.gameObject);
         }
 
         StartCoroutine(StandRoutine());
@@ -490,6 +484,12 @@ public class Customer : MonoBehaviour, IInteractable
         current = cState.Leaving;
 
         agent.enabled = true;
+
+        tray = Instantiate(trayPrefab);
+
+        tray.transform.SetParent(holdAnchor, true);
+        tray.transform.localPosition = Vector3.zero;
+        tray.transform.localRotation = Quaternion.identity;
 
         OnMealFinished?.Invoke(seatNum);
     }

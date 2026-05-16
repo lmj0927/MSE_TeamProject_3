@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1679730828563396671}
   - component: {fileID: 4412168901488529283}
   - component: {fileID: 6181621359523678105}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: potato_Chip_2_Burnt Variant
   m_TagString: Untagged
   m_Icon: {fileID: 0}

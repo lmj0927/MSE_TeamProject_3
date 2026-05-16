@@ -415,6 +415,7 @@ MonoBehaviour:
   - {fileID: 4862483107158080655}
   - {fileID: 2718371885429724359}
   holdAnchor: {fileID: 2565280929897100830}
+  trayPrefab: {fileID: 2333169965421215431, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
 --- !u!54 &8504017697533193220
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -1,0 +1,79 @@
+// Owned by JunYoung Park
+using UnityEngine;
+using UnityEngine.Serialization;
+
+public class FrierCounter : AFireCounter
+{
+    [SerializeField] private FrierCounter otherside;
+    private bool isBasketDown = false;
+    
+    private Vector3 offset = new Vector3(0, -0.13f, 0.05f);
+
+    public override void Interact(PlayerController player)
+    {
+        if (!isBasketDown && CanAddFood(player))
+        {
+            AddFood(player.RemoveFood());
+            var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Oil);
+            if (recipe != null)
+            {
+                cookTime = recipe.Value;
+                resultFood = recipe.Result;
+            }
+        } else if (!isBasketDown && !isDone && HasFood())
+        {
+            isBasketDown = true;
+            otherside.SetBasket(true);
+
+            StartFry();
+            otherside.StartFry();
+            
+        } else if (isDone && isBasketDown)
+        {
+            isBasketDown = false;
+            otherside.SetBasket(false);
+
+            FinishFry();
+            otherside.FinishFry();
+        } else if (isDone && CanRemoveFood(player))
+        {
+            isDone = false;
+
+            player.AddFood(RemoveFood());
+            resultFood = null;
+        } 
+    }
+
+    public void StartFry()
+    {
+        transform.position += offset;
+
+        if (HasFood())
+        {
+            foreach (Food f in foods)
+            {
+                f.transform.position += offset;
+            }
+            SetState(CookState);
+        }
+    }
+
+    public void FinishFry()
+    {
+        transform.position -= offset;
+
+        if (HasFood())
+        {
+            foreach (Food f in foods)
+            {
+                f.transform.position = foodPoint.position;
+            }
+            SetState(NoneState);
+        }
+    }
+
+    public void SetBasket(bool val)
+    {
+        isBasketDown = val;
+    }
+}

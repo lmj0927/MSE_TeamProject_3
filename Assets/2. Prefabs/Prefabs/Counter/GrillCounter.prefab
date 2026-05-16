@@ -460,7 +460,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GrillCounter
   foodPoint: {fileID: 1925710231713748475}
   burnTime: 5
-  grillProgressBar: {fileID: 7270873649268372920}
+  cookProgressBar: {fileID: 7270873649268372920}
   burnProgressBar: {fileID: 3072098837785187051}
   resultFood: {fileID: 0}
 --- !u!1 &8791401640596746609
@@ -533,7 +533,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GrillCounter
   foodPoint: {fileID: 477963285373845100}
   burnTime: 5
-  grillProgressBar: {fileID: 461873655566560812}
+  cookProgressBar: {fileID: 461873655566560812}
   burnProgressBar: {fileID: 5201089357944441215}
   resultFood: {fileID: 0}
 --- !u!1001 &918899000013461779
@@ -544,6 +544,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1145344267028567640}
     m_Modifications:
+    - target: {fileID: 2499997439427639372, guid: 3cd07b94027df9d45b1edf766a547ab7, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5697356776823403416, guid: 3cd07b94027df9d45b1edf766a547ab7, type: 3}
       propertyPath: mode
       value: 2

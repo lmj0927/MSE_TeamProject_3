@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7235835850264097012}
   - component: {fileID: 4418327886172597899}
   - component: {fileID: 3319064345762245322}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: mushroom_Sliced_Cooked Variant
   m_TagString: Untagged
   m_Icon: {fileID: 0}

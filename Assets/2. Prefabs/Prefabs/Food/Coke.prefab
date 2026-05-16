@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3235455811257159645}
   - component: {fileID: 7462082076502577656}
   - component: {fileID: 776093503218060234}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Straw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,8 +102,8 @@ GameObject:
   - component: {fileID: 682088540349665303}
   - component: {fileID: 7926741751147100028}
   - component: {fileID: 4963804632252523374}
-  - component: {fileID: 2177042705106278740}
-  m_Layer: 0
+  - component: {fileID: 2336070128796124178}
+  m_Layer: 7
   m_Name: Coke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,7 +205,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.19822109, y: 0.31202173, z: 0.19822109}
   m_Center: {x: 0, y: 0.15648896, z: -0.000000014901161}
---- !u!54 &2177042705106278740
+--- !u!54 &2336070128796124178
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -230,7 +230,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 10
+  m_Constraints: 90
   m_CollisionDetection: 0
 --- !u!1 &7517679048651806336
 GameObject:
@@ -243,7 +243,7 @@ GameObject:
   - component: {fileID: 7383504120225998521}
   - component: {fileID: 6632431724080103923}
   - component: {fileID: 5664854437997304426}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Lid
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8981355878292726870}
   - component: {fileID: -7249000952543771189}
   - component: {fileID: -7083559293332773731}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: groundBeef_Raw
   m_TagString: Untagged
   m_Icon: {fileID: 0}

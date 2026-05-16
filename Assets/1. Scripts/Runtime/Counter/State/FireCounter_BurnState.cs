@@ -1,10 +1,10 @@
 // Owned by MinJun Lee
 using UnityEngine;
 
-public class GrillCounter_BurnState : BaseState<GrillCounter>
+public class FireCounter_BurnState : BaseState<AFireCounter>
 {
     private float elapsedTime;
-    public GrillCounter_BurnState(GrillCounter controller) : base(controller) { }
+    public FireCounter_BurnState(AFireCounter controller) : base(controller) { }
 
     public override void Enter()
     {

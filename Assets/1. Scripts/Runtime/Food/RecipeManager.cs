@@ -10,11 +10,13 @@ public class RecipeManager : Singleton<RecipeManager>
 
     /* RecipeManager */
     [SerializeField]
+    List<RecipeSO> sideMenuRecipes;
+    [SerializeField]
     List<RecipeSO> beverageRecipes;
     [SerializeField]
     List<RecipeSO> assembleRecipes;
     [SerializeField]
-    List<RecipeSO> fireRecipes;
+    List<RecipeSO> grillRecipes;
     [SerializeField]
     List<RecipeSO> sliceRecipes;
     [SerializeField]
@@ -25,30 +27,7 @@ public class RecipeManager : Singleton<RecipeManager>
     FoodSO trashFood;
 
     private List<FoodSO> copyIng = new List<FoodSO>();
-    private List<RecipeSO> sideMenuRecipes = new List<RecipeSO>();
 
-    private void Awake()
-    {
-        InitializeMenuCaches();
-    }
-
-    private void InitializeMenuCaches()
-    {
-        List<RecipeSO> allProcessRecipes = new List<RecipeSO>();
-
-        if (fireRecipes != null) allProcessRecipes.AddRange(fireRecipes);
-        if (sliceRecipes != null) allProcessRecipes.AddRange(sliceRecipes);
-        if (oilRecipes != null) allProcessRecipes.AddRange(oilRecipes);
-
-        sideMenuRecipes = allProcessRecipes
-            .Where(r => r.Result != null && r.Result.Type == FoodSO.FoodType.Side)
-            .ToList();
-
-        if (sideMenuRecipes.Count == 0)
-        {
-            Debug.LogWarning("sideMesRecipe is not valid. All recipes are Null or Empty.");
-        }
-    }
     /// <summary>
     /// Returns a randomly selected assemble/beverage/sidemenu recipe from the assembleRecipes list.
     /// If the list is null or empty, returns null.
@@ -111,14 +90,17 @@ public class RecipeManager : Singleton<RecipeManager>
         List<RecipeSO> recipes;
         switch(type)
         {
+            case RecipeType.Side:
+                recipes = sideMenuRecipes;
+                break;
             case RecipeType.Beverage:
                 recipes = beverageRecipes;
                 break;
             case RecipeType.Assemble:
                 recipes = assembleRecipes;
                 break;
-            case RecipeType.Fire:
-                recipes = fireRecipes;
+            case RecipeType.Grill:
+                recipes = grillRecipes;
                 break;
             case RecipeType.Slice:
                 recipes = sliceRecipes;

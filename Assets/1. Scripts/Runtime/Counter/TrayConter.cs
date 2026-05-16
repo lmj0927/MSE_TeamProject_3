@@ -29,10 +29,17 @@ public class TrayCounter : ACounter
             {
                 mainFood = player.RemoveFood();
                 mainFood.transform.position = foodPoint.position;
+                mainFood.transform.rotation = Quaternion.identity;
 
-                currentTray = Instantiate(Tray).transform;
-                currentTray.SetParent(mainFood.transform, true);
-                currentTray.localPosition = Vector3.zero;
+                currentTray = mainFood.transform.Find("Tray_Root");
+
+                if (currentTray == null)
+                {
+                    currentTray = Instantiate(Tray).transform;
+                    currentTray.name = "Tray_Root"; 
+                    currentTray.SetParent(mainFood.transform, true);
+                    currentTray.localPosition = Vector3.zero;
+                }
 
                 CombineAllToMain();
             }
@@ -41,7 +48,7 @@ public class TrayCounter : ACounter
                 if (mainFood != null)
                 {
                     var food = player.RemoveFood();
-                    
+
                     food.transform.SetParent(currentTray, true);
                     AddFood(food);
                 }
@@ -59,6 +66,8 @@ public class TrayCounter : ACounter
 
                 mainFood = null;
                 currentTray = null;
+
+                foods.Clear();
             }
             else if (HasFood())
             {

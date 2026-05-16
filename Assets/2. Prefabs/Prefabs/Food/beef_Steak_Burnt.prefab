@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4931687193939625302}
   - component: {fileID: 8319088441534931741}
   - component: {fileID: -207969075043073431}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: beef_Steak_Burnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}

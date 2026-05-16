@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3599942313834545822}
   - component: {fileID: 7537314296021038963}
   - component: {fileID: 498306444545973610}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: burgerBun
   m_TagString: Untagged
   m_Icon: {fileID: 0}

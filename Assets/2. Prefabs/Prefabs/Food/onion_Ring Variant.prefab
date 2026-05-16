@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6588250865946507601}
   - component: {fileID: 5091415715060325928}
   - component: {fileID: 2746361014540767593}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: onion_Ring Variant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
