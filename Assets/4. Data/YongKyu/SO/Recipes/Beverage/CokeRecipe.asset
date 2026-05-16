@@ -16,4 +16,4 @@ MonoBehaviour:
   ingredients:
   - {fileID: 11400000, guid: 46b05fbae0046c14790c642769a29356, type: 2}
   complements: []
-  value: 4
+  value: 3

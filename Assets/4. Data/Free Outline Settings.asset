@@ -44,9 +44,9 @@ MonoBehaviour:
   occludedColor: {r: 1, g: 0, b: 0, a: 1}
   blendMode: 1
   extrusionMethod: 0
-  scaling: 0
-  width: 2.1
-  minWidth: 10
+  scaling: 1
+  width: 8.3
+  minWidth: 4.6
   scaleWithResolution: 1
   referenceResolution: 1
   customResolution: 0
