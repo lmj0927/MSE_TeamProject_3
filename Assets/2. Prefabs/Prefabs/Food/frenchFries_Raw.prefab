@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6267811575993080410}
   - component: {fileID: 932168516168305117}
   - component: {fileID: 1592075189742863264}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: potato_Chip_2_Raw Variant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 5319779442791954892}
   - component: {fileID: 3202764824067958437}
   - component: {fileID: 2418746602098758815}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: potato_Chip_2_Raw Variant (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,7 +236,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1443882369939306154}
   - component: {fileID: 6665336268855095390}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: frenchFries_Raw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -284,7 +284,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 10
+  m_Constraints: 122
   m_CollisionDetection: 0
 --- !u!1 &2386012229611532821
 GameObject:
@@ -298,7 +298,7 @@ GameObject:
   - component: {fileID: 5107373812752064703}
   - component: {fileID: 8691492928945337000}
   - component: {fileID: 4323437082886737158}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: potato_Chip_3_Raw Variant (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -411,7 +411,7 @@ GameObject:
   - component: {fileID: 853505278053304280}
   - component: {fileID: 8249062690219534491}
   - component: {fileID: 9075607470693050249}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: potato_Chip_2_Raw Variant (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -524,7 +524,7 @@ GameObject:
   - component: {fileID: 6947796256390003695}
   - component: {fileID: 3323287221567888056}
   - component: {fileID: 7263957419367315708}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: potato_Chip_3_Raw Variant (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -637,7 +637,7 @@ GameObject:
   - component: {fileID: 7890070283825650410}
   - component: {fileID: 7085411304149810894}
   - component: {fileID: 7764522301435794493}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: potato_Chip_1_Raw Variant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -750,7 +750,7 @@ GameObject:
   - component: {fileID: 3040381467881400464}
   - component: {fileID: 453156158174229343}
   - component: {fileID: 6737563005591602707}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: potato_Chip_3_Raw Variant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -863,7 +863,7 @@ GameObject:
   - component: {fileID: 3779205345378326657}
   - component: {fileID: 7760697850113632648}
   - component: {fileID: 181746623428930838}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: potato_Chip_1_Raw Variant (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -976,7 +976,7 @@ GameObject:
   - component: {fileID: 5464575636389469211}
   - component: {fileID: 7459846193619502984}
   - component: {fileID: 3063711686248690564}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: potato_Chip_1_Raw Variant (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1086,7 +1086,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5413099565318089883}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}

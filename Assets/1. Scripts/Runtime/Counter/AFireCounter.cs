@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -9,6 +10,7 @@ public abstract class AFireCounter : ACounter
     [SerializeField] protected RadialProgressBar cookProgressBar;
     [SerializeField] protected RadialProgressBar burnProgressBar;
     protected bool isDone = false;
+    public Action OnCookFinished;
     public FireCounter_NoneState NoneState { get; private set; }
     public FireCounter_CookState CookState { get; private set; }
     public FireCounter_BurnState BurnState { get; private set; }

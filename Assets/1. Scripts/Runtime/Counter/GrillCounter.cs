@@ -1,7 +1,4 @@
 // Owned by MinJun Lee
-using UnityEngine;
-using UnityEngine.InputSystem.XR;
-using UnityEngine.Serialization;
 
 public class GrillCounter : AFireCounter
 {
@@ -10,19 +7,21 @@ public class GrillCounter : AFireCounter
         if (CanAddFood(player))
         {
             AddFood(player.RemoveFood());
+
+            SoundManager.Instance.GrillStart(this);
+
             var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Grill);
             if (recipe != null)
             {
                 cookTime = recipe.Value;
                 resultFood = recipe.Result;
-                SoundManager.Instance.GrillStart();
             }
 
             SetState(CookState);
         }
         else if (isDone && CanRemoveFood(player))
         {
-            SoundManager.Instance.GrillEnd();
+            OnCookFinished?.Invoke();
             player.AddFood(RemoveFood());
             SetState(NoneState);
 

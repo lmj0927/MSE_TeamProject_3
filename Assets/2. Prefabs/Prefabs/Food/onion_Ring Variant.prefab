@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6588250865946507601}
   - component: {fileID: 5091415715060325928}
   - component: {fileID: 2746361014540767593}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: onion_Ring Variant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,5 +139,5 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 10
+  m_Constraints: 122
   m_CollisionDetection: 0

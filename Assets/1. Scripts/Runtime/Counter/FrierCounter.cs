@@ -50,6 +50,7 @@ public class FrierCounter : AFireCounter
 
         if (HasFood())
         {
+            SoundManager.Instance.FryStart(this);
             foreach (Food f in foods)
             {
                 f.transform.position += offset;
@@ -64,6 +65,7 @@ public class FrierCounter : AFireCounter
 
         if (HasFood())
         {
+            OnCookFinished?.Invoke();
             foreach (Food f in foods)
             {
                 f.transform.position = foodPoint.position;

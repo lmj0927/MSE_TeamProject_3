@@ -333,7 +333,7 @@ public class Customer : MonoBehaviour, IInteractable
                 Sit();
                 break;
             case cState.GoingTrash:
-                Destroy(tray);
+                if (tray != null) Destroy(tray);
                 setPath(cState.Leaving, exit);
                 break;
             case cState.Leaving:
@@ -485,11 +485,14 @@ public class Customer : MonoBehaviour, IInteractable
 
         agent.enabled = true;
 
-        tray = Instantiate(trayPrefab);
+        if (hasEaten)
+        {
+            tray = Instantiate(trayPrefab);
 
-        tray.transform.SetParent(holdAnchor, true);
-        tray.transform.localPosition = Vector3.zero;
-        tray.transform.localRotation = Quaternion.identity;
+            tray.transform.SetParent(holdAnchor, true);
+            tray.transform.localPosition = Vector3.zero;
+            tray.transform.localRotation = Quaternion.identity;
+        }
 
         OnMealFinished?.Invoke(seatNum);
     }

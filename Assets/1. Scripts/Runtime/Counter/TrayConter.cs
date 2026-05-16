@@ -31,43 +31,32 @@ public class TrayCounter : ACounter
                 mainFood.transform.position = foodPoint.position;
                 mainFood.transform.rotation = Quaternion.identity;
 
+            }
+            else if (type == FoodSO.FoodType.Side || type == FoodSO.FoodType.Beverage)
+            {
+                AddFood(player.RemoveFood());
+            }
+        }
+        else 
+        {
+            if (mainFood != null)
+            {
                 currentTray = mainFood.transform.Find("Tray_Root");
 
                 if (currentTray == null)
                 {
                     currentTray = Instantiate(Tray).transform;
-                    currentTray.name = "Tray_Root"; 
+                    currentTray.name = "Tray_Root";
                     currentTray.SetParent(mainFood.transform, true);
                     currentTray.localPosition = Vector3.zero;
                 }
 
                 CombineAllToMain();
-            }
-            else if (type == FoodSO.FoodType.Side || type == FoodSO.FoodType.Beverage)
-            {
-                if (mainFood != null)
-                {
-                    var food = player.RemoveFood();
 
-                    food.transform.SetParent(currentTray, true);
-                    AddFood(food);
-                }
-                else
-                {
-                    AddFood(player.RemoveFood());
-                }
-            }
-        }
-        else
-        {
-            if (mainFood != null)
-            {
                 player.AddFood(mainFood);
 
                 mainFood = null;
                 currentTray = null;
-
-                foods.Clear();
             }
             else if (HasFood())
             {

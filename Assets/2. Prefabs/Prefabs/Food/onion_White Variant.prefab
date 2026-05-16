@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6122687011047294448}
   - component: {fileID: 5765990983887956779}
   - component: {fileID: 137893974517956830}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: onion_White Variant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,5 +139,5 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 10
+  m_Constraints: 122
   m_CollisionDetection: 0
