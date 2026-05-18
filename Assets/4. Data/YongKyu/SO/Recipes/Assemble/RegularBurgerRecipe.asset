@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92d527cadb10f4e99aedfd1d154147e3, type: 3}
+  m_Name: RegularBurgerRecipe
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeSO
+  result: {fileID: 11400000, guid: 73a59bef1eac59841ba582f31edfb6eb, type: 2}
+  ingredients:
+  - {fileID: 11400000, guid: 483349d683bf44a409b8799e9760e500, type: 2}
+  - {fileID: 11400000, guid: 394a1f53939274e1792ab9d209e5ccf5, type: 2}
+  - {fileID: 11400000, guid: 34d8bc7055aff4ef7845011b6b190674, type: 2}
+  - {fileID: 11400000, guid: f86a8e9c2552b224b871a799c9008d54, type: 2}
+  - {fileID: 11400000, guid: 0ed4b2ad98e0e420d801dfb60234d087, type: 2}
+  complements:
+  - {fileID: 11400000, guid: 85d7d67ad1de84c45b920463287e69b6, type: 2}
+  - {fileID: 11400000, guid: a0818a5d4942a3a4e81c328dafa92ceb, type: 2}
+  value: 0
