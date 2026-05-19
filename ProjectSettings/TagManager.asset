@@ -8,13 +8,13 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - CantPass
   - Water
   - UI
   - Wall
   - Food
   - Ingredient
-  - 
+  - Player
   - 
   - 
   - 
