@@ -6,7 +6,8 @@ public class FrierCounter : AFireCounter
 {
     [SerializeField] private FrierCounter otherside;
     private bool isBasketDown = false;
-    
+    [SerializeField] private ParticleSystem boiling;
+
     private Vector3 offset = new Vector3(0, -0.13f, 0.05f);
 
     public override void Interact(PlayerController player)
@@ -55,12 +56,17 @@ public class FrierCounter : AFireCounter
             {
                 f.transform.position += offset;
             }
+            boiling.Play();
             SetState(CookState);
         }
     }
 
-    public void FinishFry()
+    public void FinishFry(bool onlyBoil = false)
     {
+        boiling.Stop();
+
+        if (onlyBoil) return; 
+
         transform.position -= offset;
 
         if (HasFood())

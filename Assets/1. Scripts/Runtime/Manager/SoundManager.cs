@@ -97,6 +97,7 @@ public class SoundManager : Singleton<SoundManager>
             audio.Stop();
             audio.clip = null;
             audio.volume = 1f;
+            c.FinishFry(true);
         });
 
         Action StopAudio = null;
