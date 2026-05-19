@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2581998755237043736}
   - component: {fileID: -7942021045058905697}
   - component: {fileID: 6862903361287180130}
+  - component: {fileID: 628266957202613597}
   m_Layer: 0
   m_Name: groundBeef_Burnt
   m_TagString: Untagged
@@ -141,3 +142,21 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 5206871348096782535, guid: 0b759830a749f44c5b6b7d41600f3d1c, type: 3}
+--- !u!114 &628266957202613597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2592684031479428191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 1963671473
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours: []
+  ForceRemoteRenderTimeframe: 0

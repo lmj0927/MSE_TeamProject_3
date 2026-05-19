@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1182275716867520712}
   - component: {fileID: 7926106386261601410}
   - component: {fileID: 282718892890625490}
+  - component: {fileID: 880461314392284880}
   m_Layer: 0
   m_Name: beef_Steak_Raw
   m_TagString: Untagged
@@ -141,3 +142,21 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -1058184896938683969, guid: 0b759830a749f44c5b6b7d41600f3d1c, type: 3}
+--- !u!114 &880461314392284880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1902271098695974524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 4055549285
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours: []
+  ForceRemoteRenderTimeframe: 0

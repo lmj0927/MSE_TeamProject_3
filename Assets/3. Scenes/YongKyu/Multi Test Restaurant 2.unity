@@ -1068,6 +1068,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 942973604}
     m_Modifications:
+    - target: {fileID: 3572336829831436872, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+      propertyPath: SortKey
+      value: 2577089726
+      objectReference: {fileID: 0}
     - target: {fileID: 3597091641127603654, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
       propertyPath: m_Name
       value: TrayCounter1
@@ -1111,6 +1115,18 @@ PrefabInstance:
     - target: {fileID: 4691510256976105976, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5848849794423108105, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+      propertyPath: SortKey
+      value: 4144486996
+      objectReference: {fileID: 0}
+    - target: {fileID: 6279161969032135091, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+      propertyPath: SortKey
+      value: 1059692838
+      objectReference: {fileID: 0}
+    - target: {fileID: 7616431511183283787, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+      propertyPath: SortKey
+      value: 33761508
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5766,6 +5782,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 942973604}
     m_Modifications:
+    - target: {fileID: 3572336829831436872, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+      propertyPath: SortKey
+      value: 2916300046
+      objectReference: {fileID: 0}
     - target: {fileID: 3597091641127603654, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
       propertyPath: m_Name
       value: TrayCounter1
@@ -5809,6 +5829,18 @@ PrefabInstance:
     - target: {fileID: 4691510256976105976, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5848849794423108105, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+      propertyPath: SortKey
+      value: 188730020
+      objectReference: {fileID: 0}
+    - target: {fileID: 6279161969032135091, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+      propertyPath: SortKey
+      value: 1398903158
+      objectReference: {fileID: 0}
+    - target: {fileID: 7616431511183283787, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+      propertyPath: SortKey
+      value: 372971828
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
