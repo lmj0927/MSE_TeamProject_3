@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5347540493275455756}
   - component: {fileID: 4037247936918059207}
   - component: {fileID: 5106619095373965780}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: tomato Variant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 10
+  m_Constraints: 122
   m_CollisionDetection: 0
 --- !u!1 &2884150752694940117
 GameObject:
@@ -153,7 +153,7 @@ GameObject:
   - component: {fileID: 366514865213087571}
   - component: {fileID: 7280446570986324728}
   - component: {fileID: 36221860379504467}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: sapLeaves
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -243,7 +243,7 @@ GameObject:
   - component: {fileID: 4219593635207708610}
   - component: {fileID: 8042668630970783407}
   - component: {fileID: 5326978484075638693}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: sap
   m_TagString: Untagged
   m_Icon: {fileID: 0}

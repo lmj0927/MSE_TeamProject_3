@@ -8,6 +8,9 @@ public abstract class ACounter : MonoBehaviour, IInteractable
     [SerializeField] protected Transform foodPoint;
     protected List<Food> foods = new List<Food>();
 
+    [SerializeField] private Transform outlineRoot;
+
+    public Transform OutlineRoot => outlineRoot;
     public virtual void Interact(PlayerController player) { }
 
     protected bool HasFood()

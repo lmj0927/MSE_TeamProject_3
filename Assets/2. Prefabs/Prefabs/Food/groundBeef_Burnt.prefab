@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2581998755237043736}
   - component: {fileID: -7942021045058905697}
   - component: {fileID: 6862903361287180130}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: groundBeef_Burnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 10
+  m_Constraints: 122
   m_CollisionDetection: 0
 --- !u!64 &6862903361287180130
 MeshCollider:

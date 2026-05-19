@@ -8,6 +8,7 @@ public class TrashCounter : ACounter
         if (player.HasFood())
         {
             Destroy(player.RemoveFood().gameObject);
+            SoundManager.Instance.Trash();
         }
     }
 }

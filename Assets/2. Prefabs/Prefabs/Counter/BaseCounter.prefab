@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseCounter
   foodPoint: {fileID: 3674087371947750666}
+  scatterRadius: 0.2
 --- !u!1 &5525183537566247035
 GameObject:
   m_ObjectHideFlags: 0
