@@ -1,7 +1,10 @@
 // Owned by MinJun Lee
 
+using UnityEngine;
+
 public class GrillCounter : AFireCounter
 {
+    [SerializeField] private ParticleSystem smoke;
     public override void Interact(PlayerController player)
     {
         if (CanAddFood(player))
@@ -18,12 +21,14 @@ public class GrillCounter : AFireCounter
             }
 
             SetState(CookState);
+            smoke.Play();
         }
         else if (isDone && CanRemoveFood(player))
         {
             OnCookFinished?.Invoke();
             player.AddFood(RemoveFood());
             SetState(NoneState);
+            smoke.Stop();
 
             isDone = false;
             resultFood = null;
