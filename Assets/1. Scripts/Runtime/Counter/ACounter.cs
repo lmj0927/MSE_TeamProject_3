@@ -2,11 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Fusion;
 
-public abstract class ACounter : MonoBehaviour, IInteractable
+public abstract class ACounter : NetworkBehaviour, IInteractable
 {
     [SerializeField] protected Transform foodPoint;
+    [SerializeField] protected FoodSpawner foodSpawner;
     protected List<Food> foods = new List<Food>();
+
+    public override void Spawned()
+    {
+        
+        foodSpawner = NetworkRunner.GetRunnerForGameObject(gameObject).GetComponent<FoodSpawner>();
+        if(foodSpawner == null)
+        {
+            Debug.LogError("[ACounter Spawned] foodSpawner is null.");
+        }
+        else if(!foodSpawner.CanSpawn())
+        {
+            Debug.LogError("[ACounter Spawned] foodSpawner cannot spawn since it is null or Runner.CanSpawn is false.");
+        }
+        else
+        {
+            Debug.Log("[ACounter Spawned] foodSpawner found.");
+        }
+    }
 
     public virtual void Interact(PlayerController player) { }
 

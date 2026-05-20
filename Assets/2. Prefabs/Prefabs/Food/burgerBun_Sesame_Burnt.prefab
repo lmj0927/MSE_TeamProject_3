@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: -18848457487808560}
   - component: {fileID: 5189062008716186998}
   - component: {fileID: -6172311344704071924}
+  - component: {fileID: 141215859546326178}
+  - component: {fileID: -3628087316139057428}
   m_Layer: 0
   m_Name: burgerBun_Sesame_Burnt
   m_TagString: Untagged
@@ -158,5 +160,39 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 141215859546326178}
+  - {fileID: -3628087316139057428}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &141215859546326178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5998982487778130480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Food
+  _IsHeld: 0
+  _HolderObject: {fileID: 0}
+  data: {fileID: 0}
+--- !u!114 &-3628087316139057428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5998982487778130480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0

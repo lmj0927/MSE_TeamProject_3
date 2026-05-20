@@ -114,6 +114,6 @@ public class GrillCounter : ACounter
         if (resultFood == null) return;
         var food = RemoveFood();
         Destroy(food.gameObject);
-        AddFood(resultFood.CreateFood());
+        AddFood(foodSpawner.SpawnFood(resultFood));
     }
 }

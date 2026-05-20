@@ -17,7 +17,7 @@ public class CookingCounter : ACounter
             if (recipe != null)
             {
                 ClearFood();
-                player.AddFood(recipe.Result.CreateFood());
+                player.AddFood(foodSpawner.SpawnFood(recipe.Result));
                 recipe = null;
             }
             else

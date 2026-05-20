@@ -39,8 +39,9 @@ public class RefrigeratorCounter : ACounter
         }
     }
 
-    private void OnIngredientSelected(Food food)
+    private void OnIngredientSelected(FoodSO foodSO)
     {
+        Food food = foodSpawner.SpawnFood(foodSO);
         if(food != null)
             interactPlayer.AddFood(food);
         interactPlayer.FreezeMovement(false);

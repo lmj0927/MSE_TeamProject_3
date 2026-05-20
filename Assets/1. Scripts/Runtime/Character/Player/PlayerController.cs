@@ -1,10 +1,13 @@
 // Owned by SeungYeon Jung
 using Fusion;
+using Mono.Cecil.Cil;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : NetworkBehaviour
 {
     [Header("Food")]
+    [Networked] public NetworkObject HeldFoodObject { get; set; }
     [SerializeField] private Food heldFood;
     [SerializeField] private Transform holdAnchor;
 
@@ -26,6 +29,7 @@ public class PlayerController : NetworkBehaviour
         if (otherOwner != null && otherOwner != this)
             return false;
 
+        HeldFoodObject = food.Object;
         heldFood = food;
         AttachHeldFood(food);
         return true;
@@ -33,12 +37,13 @@ public class PlayerController : NetworkBehaviour
 
     public Food RemoveFood()
     {
-        var removed = heldFood;
+        Food removed = heldFood;
         if (removed == null)
             return null;
 
         DetachHeldFood(removed);
-        heldFood = null;
+        HeldFoodObject = null;
+        // heldFood = null;
         return removed;
     }
 
@@ -74,5 +79,38 @@ public class PlayerController : NetworkBehaviour
     public void FreezeMovement(bool apply)
     {
         GetComponent<PlayerMovement>().SetInteracting(apply);
+    }
+
+    public override void Render()
+    {
+        if(HeldFoodObject)
+        {
+            heldFood.transform.SetParent(holdAnchor, true);
+            heldFood.transform.localPosition = Vector3.zero;
+            heldFood.transform.localRotation = Quaternion.identity;
+
+            foreach (var rb in heldFood.GetComponentsInChildren<Rigidbody>())
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.isKinematic = true;
+                
+            }
+
+            foreach (var col in heldFood.GetComponentsInChildren<Collider>())
+                col.enabled = false;
+        }
+        else if(heldFood)
+        {
+            heldFood.transform.SetParent(null, true);
+
+            foreach (var rb in heldFood.GetComponentsInChildren<Rigidbody>())
+                rb.isKinematic = false;
+
+            foreach (var col in heldFood.GetComponentsInChildren<Collider>())
+                col.enabled = true;
+
+            heldFood = null;    
+        }
     }
 }

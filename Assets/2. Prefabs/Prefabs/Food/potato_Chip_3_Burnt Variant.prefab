@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 3647935263235227676}
   - component: {fileID: 2388961528549784615}
   - component: {fileID: -7594174593058723175}
+  - component: {fileID: -7665934985900120070}
+  - component: {fileID: -7332008905355334913}
   m_Layer: 0
   m_Name: potato_Chip_3_Burnt Variant
   m_TagString: Untagged
@@ -158,5 +160,39 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: -7665934985900120070}
+  - {fileID: -7332008905355334913}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &-7665934985900120070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6339201248639500848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Food
+  _IsHeld: 0
+  _HolderObject: {fileID: 0}
+  data: {fileID: 0}
+--- !u!114 &-7332008905355334913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6339201248639500848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0

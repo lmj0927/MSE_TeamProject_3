@@ -639,6 +639,41 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 477963285373845100, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
   m_PrefabInstance: {fileID: 805250474}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &56835796 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8791401640596746609, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
+  m_PrefabInstance: {fileID: 805250474}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &56835798 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9188486821248386060, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
+  m_PrefabInstance: {fileID: 805250474}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 56835796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbabc2efb14bd944c9edcbc115cd2d25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GrillCounter
+--- !u!114 &56835800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 56835796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 498504821
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 56835798}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1001 &87804260
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -776,11 +811,27 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2368471849580701088, guid: 5781341be03cefc489041e206efa287a, type: 3}
   m_PrefabInstance: {fileID: 96819241}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &100448965 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4984348835542864326, guid: 28f3adadfa8e13d41bd2af81c2170f85, type: 3}
+  m_PrefabInstance: {fileID: 1098977109}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &111285688 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1269831396063712775, guid: 24778c532f60cbe4c911301b88256f40, type: 3}
   m_PrefabInstance: {fileID: 273566491}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &114216728 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6279161969032135091, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+  m_PrefabInstance: {fileID: 943301038}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
 --- !u!1 &114757441
 GameObject:
   m_ObjectHideFlags: 0
@@ -929,10 +980,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4845366198117246445, guid: 50b14fc4622815a4b85e559d5a1d4803, type: 3}
+      propertyPath: foodSpawner
+      value: 
+      objectReference: {fileID: 1147759435}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 987877775518127341, guid: 50b14fc4622815a4b85e559d5a1d4803, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1234140698}
   m_SourcePrefab: {fileID: 100100000, guid: 50b14fc4622815a4b85e559d5a1d4803, type: 3}
 --- !u!4 &146667511 stripped
 Transform:
@@ -1068,6 +1126,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 942973604}
     m_Modifications:
+    - target: {fileID: 2126985303935368853, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+      propertyPath: foodSpawner
+      value: 
+      objectReference: {fileID: 1147759435}
     - target: {fileID: 3572336829831436872, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
       propertyPath: SortKey
       value: 2577089726
@@ -1131,7 +1193,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3597091641127603654, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1106470152}
   m_SourcePrefab: {fileID: 100100000, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
 --- !u!4 &172612603 stripped
 Transform:
@@ -2030,6 +2095,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4092760562053089278, guid: 3d4e26bfea0879d438a9b2c3ff199a12, type: 3}
   m_PrefabInstance: {fileID: 298554294}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &302546014 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3572336829831436872, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+  m_PrefabInstance: {fileID: 172612602}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
 --- !u!4 &307326273 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4092760562053089278, guid: 3d4e26bfea0879d438a9b2c3ff199a12, type: 3}
@@ -2071,6 +2147,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Refrigerator1
       objectReference: {fileID: 0}
+    - target: {fileID: 2342009040054033653, guid: 231a044c3195405429a8a45939beab71, type: 3}
+      propertyPath: foodSpawner
+      value: 
+      objectReference: {fileID: 1147759435}
     - target: {fileID: 2685334816312188819, guid: 231a044c3195405429a8a45939beab71, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.96
@@ -2190,7 +2270,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1694085636472818072, guid: 231a044c3195405429a8a45939beab71, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 593724540}
   m_SourcePrefab: {fileID: 100100000, guid: 231a044c3195405429a8a45939beab71, type: 3}
 --- !u!4 &316712491 stripped
 Transform:
@@ -2331,6 +2414,41 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5677248946099893715, guid: 5819ceb8bc89a1d4cb5da24301b682c8, type: 3}
   m_PrefabInstance: {fileID: 321614138}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &342648066 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7820728921980966719, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
+  m_PrefabInstance: {fileID: 1114851435}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &342648068 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8164291559107399081, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
+  m_PrefabInstance: {fileID: 1114851435}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 342648066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbabc2efb14bd944c9edcbc115cd2d25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GrillCounter
+--- !u!114 &342648070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 342648066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 2348501142
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 342648068}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1001 &369673031
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2644,6 +2762,41 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 820016947310684650, guid: 2e34a171a62506a429d6079b405e2d0c, type: 3}
   m_PrefabInstance: {fileID: 403993293}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &428458567 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8791401640596746609, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
+  m_PrefabInstance: {fileID: 1114851435}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &428458569 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9188486821248386060, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
+  m_PrefabInstance: {fileID: 1114851435}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428458567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbabc2efb14bd944c9edcbc115cd2d25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GrillCounter
+--- !u!114 &428458571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428458567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 1001432790
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 428458569}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &429973645
 GameObject:
   m_ObjectHideFlags: 0
@@ -3520,6 +3673,41 @@ Transform:
   - {fileID: 1810883851}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &593724534 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1694085636472818072, guid: 231a044c3195405429a8a45939beab71, type: 3}
+  m_PrefabInstance: {fileID: 316712490}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &593724535 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2342009040054033653, guid: 231a044c3195405429a8a45939beab71, type: 3}
+  m_PrefabInstance: {fileID: 316712490}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593724534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 746bc05f1c804b540aaa9b1abd3a0353, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RefrigeratorCounter
+--- !u!114 &593724540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593724534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 1873458743
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 593724535}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1001 &598760737
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3881,6 +4069,17 @@ Transform:
   - {fileID: 1132107467}
   m_Father: {fileID: 1429881059}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &666977301 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7616431511183283787, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+  m_PrefabInstance: {fileID: 172612602}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
 --- !u!1 &695885759
 GameObject:
   m_ObjectHideFlags: 0
@@ -5133,10 +5332,24 @@ PrefabInstance:
       propertyPath: foodPoint
       value: 
       objectReference: {fileID: 55233918}
+    - target: {fileID: 8164291559107399081, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
+      propertyPath: foodSpawner
+      value: 
+      objectReference: {fileID: 1147759435}
+    - target: {fileID: 9188486821248386060, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
+      propertyPath: foodSpawner
+      value: 
+      objectReference: {fileID: 1147759435}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8791401640596746609, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 56835800}
+    - targetCorrespondingSourceObject: {fileID: 7820728921980966719, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1762765304}
   m_SourcePrefab: {fileID: 100100000, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
 --- !u!4 &805250475 stripped
 Transform:
@@ -5190,6 +5403,17 @@ Transform:
   - {fileID: 1731867366}
   m_Father: {fileID: 753386881}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &814059777 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7616431511183283787, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+  m_PrefabInstance: {fileID: 943301038}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
 --- !u!1 &835881957 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3245843130989309597, guid: 2e34a171a62506a429d6079b405e2d0c, type: 3}
@@ -5782,6 +6006,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 942973604}
     m_Modifications:
+    - target: {fileID: 2126985303935368853, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+      propertyPath: foodSpawner
+      value: 
+      objectReference: {fileID: 1147759435}
     - target: {fileID: 3572336829831436872, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
       propertyPath: SortKey
       value: 2916300046
@@ -5845,7 +6073,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3597091641127603654, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1666578508}
   m_SourcePrefab: {fileID: 100100000, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
 --- !u!4 &943301039 stripped
 Transform:
@@ -6464,6 +6695,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6747835953349734679, guid: f0e315cd1016ba040b69194e7a793a21, type: 3}
+      propertyPath: foodSpawner
+      value: 
+      objectReference: {fileID: 1147759435}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 4917995921994218994, guid: f0e315cd1016ba040b69194e7a793a21, type: 3}
@@ -6477,6 +6712,9 @@ PrefabInstance:
     - {fileID: 4404494668857772035, guid: f0e315cd1016ba040b69194e7a793a21, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 987877775518127341, guid: f0e315cd1016ba040b69194e7a793a21, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1428109419}
     - targetCorrespondingSourceObject: {fileID: 2827096377291700540, guid: f0e315cd1016ba040b69194e7a793a21, type: 3}
       insertIndex: -1
       addedObject: {fileID: 50935174}
@@ -6627,6 +6865,11 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 1152154010362572454, guid: f2013f8e4efea4f4eaeb91f27caf8209, type: 3}
   m_PrefabInstance: {fileID: 1005145464}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1016575051 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 987877775518127341, guid: f0e315cd1016ba040b69194e7a793a21, type: 3}
+  m_PrefabInstance: {fileID: 1974832210}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1028747293
 PrefabInstance:
@@ -7047,6 +7290,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7942742876463990160, guid: 28f3adadfa8e13d41bd2af81c2170f85, type: 3}
+      propertyPath: foodSpawner
+      value: 
+      objectReference: {fileID: 1147759435}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -7068,13 +7315,85 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4773094381523350028, guid: 28f3adadfa8e13d41bd2af81c2170f85, type: 3}
       insertIndex: -1
       addedObject: {fileID: 96819242}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4984348835542864326, guid: 28f3adadfa8e13d41bd2af81c2170f85, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1098977115}
   m_SourcePrefab: {fileID: 100100000, guid: 28f3adadfa8e13d41bd2af81c2170f85, type: 3}
 --- !u!4 &1098977110 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4773094381523350028, guid: 28f3adadfa8e13d41bd2af81c2170f85, type: 3}
   m_PrefabInstance: {fileID: 1098977109}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1098977111 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7942742876463990160, guid: 28f3adadfa8e13d41bd2af81c2170f85, type: 3}
+  m_PrefabInstance: {fileID: 1098977109}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100448965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dd50bcb4b7dc1946b6e07ee0486f18f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+--- !u!114 &1098977115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100448965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 3052269699
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 1098977111}
+  ForceRemoteRenderTimeframe: 0
+--- !u!1 &1106470146 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3597091641127603654, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+  m_PrefabInstance: {fileID: 172612602}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1106470147 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2126985303935368853, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+  m_PrefabInstance: {fileID: 172612602}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1106470146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb1e64d575a9a434a8923aa80af48dae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrayCounter
+--- !u!114 &1106470152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1106470146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 1478261722
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects:
+  - {fileID: 302546014}
+  - {fileID: 1971427571}
+  - {fileID: 666977301}
+  - {fileID: 1900340280}
+  NetworkedBehaviours:
+  - {fileID: 1106470147}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1001 &1114851435
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7135,10 +7454,24 @@ PrefabInstance:
       propertyPath: foodPoint
       value: 
       objectReference: {fileID: 1762064383}
+    - target: {fileID: 8164291559107399081, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
+      propertyPath: foodSpawner
+      value: 
+      objectReference: {fileID: 1147759435}
+    - target: {fileID: 9188486821248386060, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
+      propertyPath: foodSpawner
+      value: 
+      objectReference: {fileID: 1147759435}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8791401640596746609, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 428458571}
+    - targetCorrespondingSourceObject: {fileID: 7820728921980966719, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 342648070}
   m_SourcePrefab: {fileID: 100100000, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
 --- !u!4 &1114851436 stripped
 Transform:
@@ -7257,6 +7590,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1125659630}
   m_Mesh: {fileID: 3958455336704093324, guid: b9c054b445d458c45bcb601fd368e786, type: 3}
+--- !u!1 &1126219198 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1694085636472818072, guid: 231a044c3195405429a8a45939beab71, type: 3}
+  m_PrefabInstance: {fileID: 2055186914}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1132107466
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7339,6 +7677,7 @@ GameObject:
   - component: {fileID: 1147759432}
   - component: {fileID: 1147759431}
   - component: {fileID: 1147759434}
+  - component: {fileID: 1147759435}
   m_Layer: 0
   m_Name: Prototype Runner
   m_TagString: Untagged
@@ -7455,6 +7794,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawner
   PlayerPrefab: {fileID: 5576661620642222183, guid: e3b92d30497cf4853a6d0ab77992c5c6, type: 3}
+--- !u!114 &1147759435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147759430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b46815f7554214585aa309060a34c23a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FoodSpawner
 --- !u!1001 &1152638323
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7798,6 +8149,41 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3598487402067014291, guid: e57584fccf1e62847a0a2166eef7692a, type: 3}
   m_PrefabInstance: {fileID: 747447767}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1234140692 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 987877775518127341, guid: 50b14fc4622815a4b85e559d5a1d4803, type: 3}
+  m_PrefabInstance: {fileID: 146667510}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1234140693 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4845366198117246445, guid: 50b14fc4622815a4b85e559d5a1d4803, type: 3}
+  m_PrefabInstance: {fileID: 146667510}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1234140692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70f495438d11ee44abcd23040eec4f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SliceCounter
+--- !u!114 &1234140698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1234140692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 876668877
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 1234140693}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1001 &1256032455
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8336,6 +8722,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e57584fccf1e62847a0a2166eef7692a, type: 3}
+--- !u!114 &1363725204 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3572336829831436872, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+  m_PrefabInstance: {fileID: 943301038}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
 --- !u!1 &1390171856
 GameObject:
   m_ObjectHideFlags: 0
@@ -8748,6 +9145,41 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4092760562053089278, guid: 3d4e26bfea0879d438a9b2c3ff199a12, type: 3}
   m_PrefabInstance: {fileID: 1425630273}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1428109413 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 987877775518127341, guid: f0e315cd1016ba040b69194e7a793a21, type: 3}
+  m_PrefabInstance: {fileID: 976618866}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1428109414 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6747835953349734679, guid: f0e315cd1016ba040b69194e7a793a21, type: 3}
+  m_PrefabInstance: {fileID: 976618866}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428109413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89559c4e402661b4fa7f489319970833, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CookingCounter
+--- !u!114 &1428109419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428109413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 1585784338
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 1428109414}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &1429881058
 GameObject:
   m_ObjectHideFlags: 0
@@ -9259,10 +9691,17 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: d4475f5f23fde564cb61f0fda10e0539, type: 2}
+    - target: {fileID: 4845366198117246445, guid: 50b14fc4622815a4b85e559d5a1d4803, type: 3}
+      propertyPath: foodSpawner
+      value: 
+      objectReference: {fileID: 1147759435}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 987877775518127341, guid: 50b14fc4622815a4b85e559d5a1d4803, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2077376548}
   m_SourcePrefab: {fileID: 100100000, guid: 50b14fc4622815a4b85e559d5a1d4803, type: 3}
 --- !u!4 &1537946127 stripped
 Transform:
@@ -9774,6 +10213,45 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8718969964391764583, guid: ce7b01619770c5e44a562f61fb4229b2, type: 3}
   m_PrefabInstance: {fileID: 1662148141}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1666578502 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3597091641127603654, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+  m_PrefabInstance: {fileID: 943301038}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1666578503 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2126985303935368853, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+  m_PrefabInstance: {fileID: 943301038}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666578502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb1e64d575a9a434a8923aa80af48dae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrayCounter
+--- !u!114 &1666578508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666578502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 576576361
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects:
+  - {fileID: 1363725204}
+  - {fileID: 1995964169}
+  - {fileID: 814059777}
+  - {fileID: 114216728}
+  NetworkedBehaviours:
+  - {fileID: 1666578503}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1001 &1671141850
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10431,6 +10909,41 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 477963285373845100, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
   m_PrefabInstance: {fileID: 1114851435}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1762765300 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7820728921980966719, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
+  m_PrefabInstance: {fileID: 805250474}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1762765302 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8164291559107399081, guid: efe87a71863a2f64998d7f8e69a5d54e, type: 3}
+  m_PrefabInstance: {fileID: 805250474}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1762765300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbabc2efb14bd944c9edcbc115cd2d25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GrillCounter
+--- !u!114 &1762765304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1762765300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 2379332600
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 1762765302}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1001 &1777770657
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11399,6 +11912,17 @@ MonoBehaviour:
   m_IgnoreFromBuild: 0
   m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff
+--- !u!114 &1900340280 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6279161969032135091, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+  m_PrefabInstance: {fileID: 172612602}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
 --- !u!1 &1922629505
 GameObject:
   m_ObjectHideFlags: 0
@@ -11641,6 +12165,17 @@ Transform:
   - {fileID: 906917972}
   m_Father: {fileID: 392345833}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1971427571 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5848849794423108105, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+  m_PrefabInstance: {fileID: 172612602}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
 --- !u!1001 &1974832210
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11693,16 +12228,53 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6747835953349734679, guid: f0e315cd1016ba040b69194e7a793a21, type: 3}
+      propertyPath: foodSpawner
+      value: 
+      objectReference: {fileID: 1147759435}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 987877775518127341, guid: f0e315cd1016ba040b69194e7a793a21, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1974832217}
   m_SourcePrefab: {fileID: 100100000, guid: f0e315cd1016ba040b69194e7a793a21, type: 3}
 --- !u!4 &1974832211 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4092760562053089278, guid: f0e315cd1016ba040b69194e7a793a21, type: 3}
   m_PrefabInstance: {fileID: 1974832210}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1974832212 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6747835953349734679, guid: f0e315cd1016ba040b69194e7a793a21, type: 3}
+  m_PrefabInstance: {fileID: 1974832210}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1016575051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89559c4e402661b4fa7f489319970833, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CookingCounter
+--- !u!114 &1974832217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1016575051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 647453954
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 1974832212}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &1979877595 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3245843130989309597, guid: 2e34a171a62506a429d6079b405e2d0c, type: 3}
@@ -11790,6 +12362,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4092760562053089278, guid: 3d4e26bfea0879d438a9b2c3ff199a12, type: 3}
   m_PrefabInstance: {fileID: 1989165707}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1995964169 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5848849794423108105, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}
+  m_PrefabInstance: {fileID: 943301038}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
 --- !u!1001 &2011377873
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11954,6 +12537,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Refrigerator2
       objectReference: {fileID: 0}
+    - target: {fileID: 2342009040054033653, guid: 231a044c3195405429a8a45939beab71, type: 3}
+      propertyPath: foodSpawner
+      value: 
+      objectReference: {fileID: 1147759435}
     - target: {fileID: 2685334816312188819, guid: 231a044c3195405429a8a45939beab71, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.96
@@ -12073,13 +12660,81 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1694085636472818072, guid: 231a044c3195405429a8a45939beab71, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2055186921}
   m_SourcePrefab: {fileID: 100100000, guid: 231a044c3195405429a8a45939beab71, type: 3}
 --- !u!4 &2055186915 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2685334816312188819, guid: 231a044c3195405429a8a45939beab71, type: 3}
   m_PrefabInstance: {fileID: 2055186914}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2055186916 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2342009040054033653, guid: 231a044c3195405429a8a45939beab71, type: 3}
+  m_PrefabInstance: {fileID: 2055186914}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1126219198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 746bc05f1c804b540aaa9b1abd3a0353, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RefrigeratorCounter
+--- !u!114 &2055186921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1126219198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 977652938
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 2055186916}
+  ForceRemoteRenderTimeframe: 0
+--- !u!1 &2077376542 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 987877775518127341, guid: 50b14fc4622815a4b85e559d5a1d4803, type: 3}
+  m_PrefabInstance: {fileID: 1537946126}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2077376543 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4845366198117246445, guid: 50b14fc4622815a4b85e559d5a1d4803, type: 3}
+  m_PrefabInstance: {fileID: 1537946126}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077376542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70f495438d11ee44abcd23040eec4f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SliceCounter
+--- !u!114 &2077376548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077376542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 4084392084
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 2077376543}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &2086792486
 GameObject:
   m_ObjectHideFlags: 0
@@ -12120,6 +12775,11 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 5536165321555656284, guid: f2013f8e4efea4f4eaeb91f27caf8209, type: 3}
   m_PrefabInstance: {fileID: 1005145464}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2130924942 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3942583456473686962, guid: 9e59d2f33cebfd749880f43d30c6f854, type: 3}
+  m_PrefabInstance: {fileID: 9153774000508873139}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2140199651
 GameObject:
@@ -12221,6 +12881,36 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7973564680474468994, guid: 9e59d2f33cebfd749880f43d30c6f854, type: 3}
   m_PrefabInstance: {fileID: 9153774000508873139}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1530767679872813064 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 581700416991747139, guid: 9e59d2f33cebfd749880f43d30c6f854, type: 3}
+  m_PrefabInstance: {fileID: 9153774000508873139}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2130924942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43d2b42b164fb1f48b592d227e5a5d99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrashCounter
+--- !u!114 &1530767679872813068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2130924942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 3604131716
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 1530767679872813064}
+  ForceRemoteRenderTimeframe: 0
 --- !u!4 &4908446893916703748 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3141862116280336555, guid: 87c25aadc64ada841b6c0b23fc8b772c, type: 3}
@@ -13363,6 +14053,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 942973604}
     m_Modifications:
+    - target: {fileID: 581700416991747139, guid: 9e59d2f33cebfd749880f43d30c6f854, type: 3}
+      propertyPath: foodSpawner
+      value: 
+      objectReference: {fileID: 1147759435}
     - target: {fileID: 3942583456473686962, guid: 9e59d2f33cebfd749880f43d30c6f854, type: 3}
       propertyPath: m_Name
       value: Trash
@@ -13410,7 +14104,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3942583456473686962, guid: 9e59d2f33cebfd749880f43d30c6f854, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1530767679872813068}
   m_SourcePrefab: {fileID: 100100000, guid: 9e59d2f33cebfd749880f43d30c6f854, type: 3}
 --- !u!1001 &9209984118185805271
 PrefabInstance:

@@ -15,7 +15,7 @@ public class IngredientPopupUI : BasePopupUI
     [SerializeField] private IngredientButton buttonPrefab;
     private List<IngredientButton> ingredientButtons = new List<IngredientButton>();
 
-    public Action<Food> OnIngredientSelected;
+    public Action<FoodSO> OnIngredientSelected;
 
     private GameObject lastSelected;
 
@@ -116,8 +116,8 @@ public class IngredientPopupUI : BasePopupUI
 
     private void OnIngredientButtonClick(FoodSO food)
     {
-        var instantiatedFood = food.CreateFood();
-        OnIngredientSelected?.Invoke(instantiatedFood);
+        // var instantiatedFood = food.CreateFood();
+        OnIngredientSelected?.Invoke(food);
         Hide();
     }
 

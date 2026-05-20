@@ -56,7 +56,7 @@ public class SliceCounter : ACounter
                 }
                 var food = RemoveFood();
                 Destroy(food.gameObject);
-                AddFood(recipe.Result.CreateFood());
+                AddFood(foodSpawner.SpawnFood(recipe.Result));
                 recipe = null;
             }
         }

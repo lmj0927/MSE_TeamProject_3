@@ -349,6 +349,8 @@ GameObject:
   - component: {fileID: 3402264211794209329}
   - component: {fileID: 1919394824479900882}
   - component: {fileID: -8080323132156763440}
+  - component: {fileID: 5438281403834099066}
+  - component: {fileID: 3388136381475492188}
   m_Layer: 0
   m_Name: CheeseBurger
   m_TagString: Untagged
@@ -418,8 +420,42 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 5438281403834099066}
+  - {fileID: 3388136381475492188}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &5438281403834099066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8150073998765606098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Food
+  _IsHeld: 0
+  _HolderObject: {fileID: 0}
+  data: {fileID: 11400000, guid: fa44b1c3a2c554108a53c334cd57a0a0, type: 2}
+--- !u!114 &3388136381475492188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8150073998765606098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &8516486382341049854
 GameObject:
   m_ObjectHideFlags: 0

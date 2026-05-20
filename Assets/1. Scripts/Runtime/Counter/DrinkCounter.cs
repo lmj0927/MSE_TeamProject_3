@@ -73,7 +73,7 @@ public class DrinkCounter : ACounter
         currentUser.FreezeMovement(true);
         progressBar.gameObject.SetActive(true);
 
-        AddFood(drinks[selected].CreateFood());
+        AddFood(foodSpawner.SpawnFood(drinks[selected]));
 
         recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Beverage);
         maxTimingRange = recipe.Value;
