@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3678738050282860461}
   - component: {fileID: 795526099471694239}
   - component: {fileID: 135057776984631540}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: beer_Inside
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 8551174331158628995}
   - component: {fileID: 1322540571555899699}
   - component: {fileID: -766925328800300278}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: beer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -216,7 +216,7 @@ GameObject:
   - component: {fileID: 8680245503159292859}
   - component: {fileID: 8465853567308898202}
   - component: {fileID: 3810083437706077869}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: beer_Cap
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -1,5 +1,6 @@
 // Owned by SeungYeon Jung
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
@@ -24,6 +25,16 @@ public class PlayerController : MonoBehaviour
         var otherOwner = food.GetComponentInParent<PlayerController>();
         if (otherOwner != null && otherOwner != this)
             return false;
+
+        List<FoodSO> holding = new List<FoodSO>();
+
+        holding.Add(food.data); 
+        var recipe = RecipeManager.Instance.Cook(holding, RecipeType.Side);
+        if (recipe != null)
+        {
+            Destroy(food.gameObject);
+            food = recipe.Result.CreateFood();
+        }
 
         heldFood = food;
         AttachHeldFood(food);

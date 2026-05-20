@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class SliceCounter : ACounter
 {
-    [SerializeField] private int sliceCount = 5;
+    private int sliceCount = 5;
+    [SerializeField] private int defaultCount = 5;
     [SerializeField] private ProgressBar progressBar;
 
     private bool isSlicing = false;
@@ -28,10 +29,12 @@ public class SliceCounter : ACounter
             if (recipe != null)
             {
                 sliceCount = recipe.Value;
-                isSlicing = true;
-                if (progressBar != null)
-                    progressBar.gameObject.SetActive(true);
             }
+            else sliceCount = defaultCount;
+
+            isSlicing = true;
+            if (progressBar != null)
+                progressBar.gameObject.SetActive(true);
             return;
         }
         else if (CanRemoveFood(player) && !isSlicing)
@@ -56,8 +59,12 @@ public class SliceCounter : ACounter
                 }
                 var food = RemoveFood();
                 Destroy(food.gameObject);
-                AddFood(recipe.Result.CreateFood());
-                recipe = null;
+                if (recipe == null) AddFood(RecipeManager.Instance.GetTrashFood().CreateFood());
+                else
+                {
+                    AddFood(recipe.Result.CreateFood());
+                    recipe = null;
+                }
             }
         }
     }

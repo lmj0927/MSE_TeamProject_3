@@ -566,6 +566,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RefrigeratorCounter
   foodPoint: {fileID: 0}
+  outlineRoot: {fileID: 0}
   ingredientPopupUI: {fileID: 2117089050705044222}
   hinges:
   - {fileID: 1230142676739803571}
@@ -1584,6 +1585,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c713607e84def4676acdc9357bf1759b, type: 2}
   - {fileID: 11400000, guid: f3e22cbb482a74764a7a768e65fe6d27, type: 2}
   - {fileID: 11400000, guid: fd2f5bfb6e76c7c49b117de2136e6cdb, type: 2}
+  - {fileID: 11400000, guid: 8996c515460bc96459a4d360f088e50e, type: 2}
+  - {fileID: 11400000, guid: 1d0e5bc9f2fbfcb4b846174c21af9e8b, type: 2}
+  - {fileID: 11400000, guid: 24126e021057a83469dd87f563835657, type: 2}
+  - {fileID: 11400000, guid: b20a7f54da13f864da1997f77714f6c9, type: 2}
   scrollRect: {fileID: 4329212345306392515}
   buttonPrefab: {fileID: 4011580607080774361, guid: 6843a0f08f0c6804dad06cce441f8c62, type: 3}
 --- !u!225 &5903134912003492125

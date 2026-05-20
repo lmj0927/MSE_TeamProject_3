@@ -1,9 +1,10 @@
 // Owned by YongKyu Lee
 public enum RecipeType
 {
-    Fire,
+    Grill,
     Slice,
     Oil,
     Assemble,
-    Beverage
+    Beverage,
+    Side
 }
