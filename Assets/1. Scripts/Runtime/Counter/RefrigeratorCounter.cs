@@ -1,6 +1,7 @@
 // Owned by MinJun Lee
 using UnityEngine;
 using DG.Tweening;
+using Fusion;
 public class RefrigeratorCounter : ACounter
 {
     [SerializeField] private IngredientPopupUI ingredientPopupUI;
@@ -9,13 +10,17 @@ public class RefrigeratorCounter : ACounter
     [SerializeField] private GameObject[] hinges;
     [SerializeField] private float openAngle = 40f;
     [SerializeField] private float doorAnimDuration = 0.5f;
-    void Start()
+    public override void Spawned()
     {
+        base.Spawned();
+        
         ingredientPopupUI.OnIngredientSelected += OnIngredientSelected;
     }
 
-    void Update()
+    public override void FixedUpdateNetwork()
     {
+        base.FixedUpdateNetwork();
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (interactPlayer != null)
@@ -41,7 +46,7 @@ public class RefrigeratorCounter : ACounter
 
     private void OnIngredientSelected(FoodSO foodSO)
     {
-        Food food = foodSpawner.SpawnFood(foodSO);
+        NetworkObject food = foodSpawner.SpawnFood(foodSO);
         if(food != null)
             interactPlayer.AddFood(food);
         interactPlayer.FreezeMovement(false);

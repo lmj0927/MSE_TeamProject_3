@@ -7,8 +7,21 @@ using Fusion;
 public abstract class ACounter : NetworkBehaviour, IInteractable
 {
     [SerializeField] protected Transform foodPoint;
+
+    /// <summary>
+    /// Food spawner/despawner for networked food object.
+    /// </summary>
     [SerializeField] protected FoodSpawner foodSpawner;
-    protected List<Food> foods = new List<Food>();
+    
+    /// <summary>
+    /// List of the network object ids for each of the food object.
+    /// </summary>
+    [Networked, Capacity(16)] protected NetworkLinkedList<NetworkId> foods { get; }
+
+    /// <summary>
+    /// List of the positions of each foods.
+    /// </summary>
+    [Networked, Capacity(16)] protected NetworkLinkedList<Vector3> foodPositions { get; }
 
     public override void Spawned()
     {
@@ -24,7 +37,7 @@ public abstract class ACounter : NetworkBehaviour, IInteractable
         }
         else
         {
-            Debug.Log("[ACounter Spawned] foodSpawner found.");
+            // Debug.Log("[ACounter Spawned] foodSpawner found.");
         }
     }
 
@@ -37,31 +50,61 @@ public abstract class ACounter : NetworkBehaviour, IInteractable
 
     protected List<FoodSO> GetFoodSOs()
     {
-        return foods.Select(food => food.Data).ToList();
+        return foods.Select(f => Runner.FindObject(f).GetComponent<Food>().Data).ToList();
     }
 
-    protected virtual void AddFood(Food food)
+    protected virtual void AddFood(NetworkObject food)
     {
         foods.Add(food);
-        food.transform.position = foodPoint.position;
+        // food.transform.position = foodPoint.position;
+        foodPositions.Add(foodPoint.position);
     }
 
-    protected Food RemoveFood()
+    /// <summary>
+    /// This function is used for removing food.
+    /// No restoring for rigidbody of food.
+    /// </summary>
+    /// <returns>Food NetworkObject without rigidbody.</returns>
+    protected NetworkObject RemoveFood()
     {
         if (foods.Count == 0) return null;
 
         var temp = foods.Last();
         foods.Remove(temp);
-        return temp;
+        foodPositions.Remove(foodPositions.Last());
+        return Runner.FindObject(temp);
     }
 
+    /// <summary>
+    /// This function is used for the player re-picking a food.
+    /// Restore the rigidbody of food.
+    /// </summary>
+    /// <returns>Food NetworkObject with rigidbody.</returns>
+    protected NetworkObject RemoveFoodAndRestoreRigidBody()
+    {
+        NetworkObject foodNO = RemoveFood();
+        if(foodNO == null) return null;
+
+        foreach (var rb in foodNO.GetComponentsInChildren<Rigidbody>())
+            rb.isKinematic = false;
+
+        foreach (var col in foodNO.GetComponentsInChildren<Collider>())
+            col.enabled = true;
+
+        return foodNO;
+    }
+
+    /// <summary>
+    /// This function removes all of the foods this counter have in the scene.
+    /// </summary>
     protected void ClearFood()
     {
         foreach (var food in foods)
         {
-            Destroy(food.gameObject);
+            foodSpawner.Despawn(food);
         }
         foods.Clear();
+        foodPositions.Clear();
     }
 
     // 기본적으로 Side 음식(사이드, 음료)는 놓을 수 없음
@@ -82,5 +125,27 @@ public abstract class ACounter : NetworkBehaviour, IInteractable
     protected bool CanRemoveFood(PlayerController player)
     {
         return !player.HasFood() && HasFood();
+    }
+
+    public override void FixedUpdateNetwork()
+    {
+        for(int i = 0; i < foods.Count; ++i)
+        {
+            NetworkObject foodNO = Runner.FindObject(foods[i]);
+            foreach(Rigidbody rb in foodNO.GetComponentsInChildren<Rigidbody>())
+            {
+                if(!rb.isKinematic)
+                {
+                    rb.linearVelocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                }
+                rb.isKinematic = true;
+            }
+
+            foreach (var col in foodNO.GetComponentsInChildren<Collider>())
+                col.enabled = false;
+
+            foodNO.transform.position = foodPositions[i];
+        }
     }
 }

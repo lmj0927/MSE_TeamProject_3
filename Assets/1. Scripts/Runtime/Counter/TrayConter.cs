@@ -1,9 +1,10 @@
 ﻿// Owned by JunYoung Park
+using Fusion;
 using UnityEngine;
 
 public class TrayCounter : ACounter
 {
-    private Food mainFood;
+    private NetworkObject mainFood;
     [SerializeField]
     private Transform currentTray;
 
@@ -27,7 +28,7 @@ public class TrayCounter : ACounter
 
             if (type == FoodSO.FoodType.Main)
             {
-                mainFood = player.RemoveFood();
+                mainFood = player.RemoveFoodAndRestoreRigidbody();
                 mainFood.transform.position = foodPoint.position;
 
                 currentTray = Instantiate(Tray).transform;
@@ -40,7 +41,7 @@ public class TrayCounter : ACounter
             {
                 if (mainFood != null)
                 {
-                    var food = player.RemoveFood();
+                    var food = player.RemoveFoodAndRestoreRigidbody();
                     
                     food.transform.SetParent(currentTray, true);
                     AddFood(food);
@@ -73,26 +74,30 @@ public class TrayCounter : ACounter
 
         foreach (var food in foods)
         {
-            food.transform.SetParent(currentTray, true);
+            Runner.FindObject(food).transform.SetParent(currentTray, true);
         }
         foods.Clear();
     }
 
-    protected override void AddFood(Food food)
+    protected override void AddFood(NetworkObject food)
     {
         foods.Add(food);
 
-        if (food.Data.Type == FoodSO.FoodType.Main)
+        var foodDataType = food.GetComponent<Food>().Data.Type;
+        if (foodDataType == FoodSO.FoodType.Main)
         {
-            food.transform.position = foodPoint.position;
+            // food.transform.position = foodPoint.position;
+            foodPositions.Add(foodPoint.position);
         }
-        else if (food.Data.Type == FoodSO.FoodType.Side)
+        else if (foodDataType == FoodSO.FoodType.Side)
         {
-            food.transform.position = subPoints[0].position;
+            // food.transform.position = subPoints[0].position;
+            foodPositions.Add(subPoints[0].position);
         }
-        else if (food.Data.Type == FoodSO.FoodType.Beverage)
+        else if (foodDataType == FoodSO.FoodType.Beverage)
         {
-            food.transform.position = subPoints[1].position;
+            // food.transform.position = subPoints[1].position;
+            foodPositions.Add(subPoints[1].position);
         }
     }
 }

@@ -4,11 +4,11 @@ using UnityEngine;
 public class FoodSpawner : SimulationBehaviour
 {
 
-    public Food SpawnFood(FoodSO foodSO, PlayerRef? inputAuthority = null)
+    public NetworkObject SpawnFood(FoodSO foodSO, PlayerRef? inputAuthority = null)
     {
         return SpawnFood(foodSO, Vector3.zero, Quaternion.identity, inputAuthority);
     }
-    public Food SpawnFood(FoodSO foodSO, Vector3 position, Quaternion rotation, PlayerRef? inputAuthority = null)
+    public NetworkObject SpawnFood(FoodSO foodSO, Vector3 position, Quaternion rotation, PlayerRef? inputAuthority = null)
     {
         if (foodSO == null)
         {
@@ -33,7 +33,7 @@ public class FoodSpawner : SimulationBehaviour
             Debug.Log("[FoodSpawner SpawnFood] Runner is null.");
             return null;
         }
-        Debug.Log(Runner.CanSpawn + " runner can spawn");
+        // Debug.Log(Runner.CanSpawn + " runner can spawn");
 
         NetworkObject obj = Runner.Spawn(
             foodSO.Prefab,
@@ -42,14 +42,19 @@ public class FoodSpawner : SimulationBehaviour
             inputAuthority
         );
 
-        Food food = obj.GetComponent<Food>();
+        // Food food = obj.GetComponent<Food>();
 
-        if (food == null)
-        {
-            Debug.LogError("[FoodSpawner SpawnFood] The FoodSO has a prefab of NetworkObject without a Food component. Please try again after add it.");
-        }
+        // if (food == null)
+        // {
+        //     Debug.LogError("[FoodSpawner SpawnFood] The FoodSO has a prefab of NetworkObject without a Food component. Please try again after add it.");
+        // }
 
-        return food;
+        return obj;
+    }
+
+    public void Despawn(NetworkId foodObjectId)
+    {
+        Runner.Despawn(Runner.FindObject(foodObjectId));
     }
 
     public void Despawn(NetworkObject foodObject)

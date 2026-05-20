@@ -1,4 +1,5 @@
 // Owned by MinJun Lee
+using Fusion;
 using UnityEngine;
 
 public class CookingCounter : ACounter
@@ -29,9 +30,10 @@ public class CookingCounter : ACounter
         }
     }
 
-    protected override void AddFood(Food food)
+    protected override void AddFood(NetworkObject food)
     {
         foods.Add(food);
-        food.transform.position = foodPoint.position + (Vector3.up * foods.Count * 0.1f);
+        // food.transform.position = foodPoint.position + (Vector3.up * foods.Count * 0.1f);
+        foodPositions.Add(foodPoint.position + (Vector3.up * foods.Count * 0.1f));
     }
 }

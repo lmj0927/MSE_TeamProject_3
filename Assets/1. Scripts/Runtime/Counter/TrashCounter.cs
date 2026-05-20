@@ -8,7 +8,7 @@ public class TrashCounter : ACounter
         if (player.HasFood())
         {
             // Destroy(player.RemoveFood().gameObject);
-            foodSpawner.Despawn(player.RemoveFood().Object);
+            foodSpawner.Despawn(player.RemoveFood());
         }
     }
 }

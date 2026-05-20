@@ -23,8 +23,10 @@ public class DrinkCounter : ACounter
 
     private Coroutine colorRoutine;
 
-    private void Awake()
+    public override void Spawned()
     {
+        base.Spawned();
+        
         if (progressBar != null)
         {
             progressBar.gameObject.SetActive(false);
@@ -33,8 +35,10 @@ public class DrinkCounter : ACounter
         }
     }
 
-    private void Update()
+    public override void FixedUpdateNetwork()
     {
+        base.FixedUpdateNetwork();
+
         if (isUsing)
         {
             current += Time.deltaTime;
@@ -103,7 +107,7 @@ public class DrinkCounter : ACounter
 
         if (isSuccess)
         {
-            currentUser.AddFood(RemoveFood());
+            currentUser.AddFood(RemoveFoodAndRestoreRigidBody());
         }
         else
         {

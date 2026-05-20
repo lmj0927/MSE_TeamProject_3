@@ -21,13 +21,17 @@ public class GrillCounter : ACounter
 
     public FoodSO resultFood;
 
-    private void Awake()
+    public override void Spawned()
     {
+        base.Spawned();
+        
         InitState();
     }
 
-    private void Update()
+    public override void FixedUpdateNetwork()
     {
+        base.FixedUpdateNetwork();
+
         stateMachine.Update();
     }
 
@@ -59,7 +63,7 @@ public class GrillCounter : ACounter
         else if (CanRemoveFood(player))
         {
             SoundManager.Instance.GrillEnd();
-            player.AddFood(RemoveFood());
+            player.AddFood(RemoveFoodAndRestoreRigidBody());
             SetState(NoneState);
         }
     }
@@ -113,7 +117,8 @@ public class GrillCounter : ACounter
     {
         if (resultFood == null) return;
         var food = RemoveFood();
-        Destroy(food.gameObject);
+        // Destroy(food.gameObject);
+        foodSpawner.Despawn(food);
         AddFood(foodSpawner.SpawnFood(resultFood));
     }
 }

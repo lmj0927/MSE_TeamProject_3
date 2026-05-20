@@ -1,7 +1,5 @@
 // Owned by SeungYeon Jung
 using Fusion;
-using Mono.Cecil.Cil;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : NetworkBehaviour
@@ -20,31 +18,63 @@ public class PlayerController : NetworkBehaviour
             holdAnchor = transform;
     }
 
-    public bool AddFood(Food food)
+    /// <summary>
+    /// Add a food (networked) object to the player.
+    /// </summary>
+    /// <param name="foodNO">A food object created by `FoodSpawner`.</param>
+    /// <returns>Success or fail.</returns>
+    public bool AddFood(NetworkObject foodNO)
     {
-        if (food == null || heldFood != null)
+        if (foodNO == null || heldFood != null)
             return false;
 
-        var otherOwner = food.GetComponentInParent<PlayerController>();
+        var otherOwner = foodNO.GetComponentInParent<PlayerController>();
         if (otherOwner != null && otherOwner != this)
             return false;
 
-        HeldFoodObject = food.Object;
-        heldFood = food;
-        AttachHeldFood(food);
+        HeldFoodObject = foodNO;
+        HeldFoodObject.RequestStateAuthority();
+        if(!HeldFoodObject.HasStateAuthority)
+        {
+            Debug.LogError("[PlayerController AddFood] Failed to get authority!");
+        }
+        heldFood = foodNO.GetComponent<Food>();
+        // AttachHeldFood(heldFood);
         return true;
     }
 
-    public Food RemoveFood()
+    /// <summary>
+    /// Remove food player is holding.
+    /// </summary>
+    /// <returns>Removed food without rigidbody.</returns>
+    public NetworkObject RemoveFood()
     {
         Food removed = heldFood;
         if (removed == null)
             return null;
 
-        DetachHeldFood(removed);
+        // DetachHeldFood(removed);
         HeldFoodObject = null;
-        // heldFood = null;
-        return removed;
+        heldFood = null;
+        return removed.Object;
+    }
+
+    /// <summary>
+    /// Remove food player is holding after restoring rigidbody.
+    /// </summary>
+    /// <returns>Removed food with rigidbody.</returns>
+    public NetworkObject RemoveFoodAndRestoreRigidbody()
+    {
+        NetworkObject foodNO = RemoveFood();
+        if(foodNO == null) return null;
+
+        // restore the rigidbody
+        foreach (var rb in foodNO.GetComponentsInChildren<Rigidbody>())
+            rb.isKinematic = false;
+        foreach (var col in foodNO.GetComponentsInChildren<Collider>())
+            col.enabled = true;
+
+        return foodNO;
     }
 
     private void AttachHeldFood(Food food)
@@ -81,36 +111,24 @@ public class PlayerController : NetworkBehaviour
         GetComponent<PlayerMovement>().SetInteracting(apply);
     }
 
-    public override void Render()
+    public override void FixedUpdateNetwork()
     {
-        if(HeldFoodObject)
+        base.FixedUpdateNetwork();
+
+        if(HeldFoodObject == null) return;
+
+        // follow the hold anchor
+        HeldFoodObject.transform.position = holdAnchor.position;
+        HeldFoodObject.transform.rotation = holdAnchor.rotation;
+
+        // disable the collisions
+        foreach (var rb in HeldFoodObject.GetComponentsInChildren<Rigidbody>())
         {
-            heldFood.transform.SetParent(holdAnchor, true);
-            heldFood.transform.localPosition = Vector3.zero;
-            heldFood.transform.localRotation = Quaternion.identity;
-
-            foreach (var rb in heldFood.GetComponentsInChildren<Rigidbody>())
-            {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-                rb.isKinematic = true;
-                
-            }
-
-            foreach (var col in heldFood.GetComponentsInChildren<Collider>())
-                col.enabled = false;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
         }
-        else if(heldFood)
-        {
-            heldFood.transform.SetParent(null, true);
-
-            foreach (var rb in heldFood.GetComponentsInChildren<Rigidbody>())
-                rb.isKinematic = false;
-
-            foreach (var col in heldFood.GetComponentsInChildren<Collider>())
-                col.enabled = true;
-
-            heldFood = null;    
-        }
+        foreach (var col in HeldFoodObject.GetComponentsInChildren<Collider>())
+            col.enabled = false;
     }
 }

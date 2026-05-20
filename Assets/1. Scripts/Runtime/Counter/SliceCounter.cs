@@ -10,8 +10,10 @@ public class SliceCounter : ACounter
     private int currentSliceCount = 0;
     private RecipeSO recipe;
 
-    private void Awake()
+    public override void Spawned()
     {
+        base.Spawned();
+
         if (progressBar != null)
         {
             progressBar.gameObject.SetActive(false);
@@ -55,7 +57,8 @@ public class SliceCounter : ACounter
                     progressBar.SetProgress(0f);
                 }
                 var food = RemoveFood();
-                Destroy(food.gameObject);
+                // Destroy(food.gameObject);
+                foodSpawner.Despawn(food);
                 AddFood(foodSpawner.SpawnFood(recipe.Result));
                 recipe = null;
             }

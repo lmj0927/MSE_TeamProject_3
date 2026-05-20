@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Fusion;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -56,7 +57,7 @@ public class Customer : MonoBehaviour, IInteractable
     public RecipeSO mainOrder { get; private set; }
     public RecipeSO drinkOrder { get; private set; }
     public RecipeSO sideOrder { get; private set; }
-    private Food food;
+    private NetworkObject food;
     [SerializeField] private Image[] menuImages;
     [SerializeField] private Transform holdAnchor;
 
@@ -385,7 +386,7 @@ public class Customer : MonoBehaviour, IInteractable
         patienceColor?.SetColorState(1, maxSit - boring);
     }
 
-    private void GetFood(Food served)
+    private void GetFood(NetworkObject served)
     {
         if (patienceBar != null) patienceBar.gameObject.SetActive(false);
         isWaiting = false;
@@ -414,7 +415,7 @@ public class Customer : MonoBehaviour, IInteractable
         food.transform.localRotation = Quaternion.identity;
     }
 
-    private bool CheckOrder(Food served)
+    private bool CheckOrder(NetworkObject served)
     {
         List<FoodSO> orders = new List<FoodSO>();
         
@@ -551,7 +552,7 @@ public class Customer : MonoBehaviour, IInteractable
         if (!isWaiting) return;
         if (!player.HasFood()) return;
 
-        Food served = player.RemoveFood();
+        NetworkObject served = player.RemoveFood();
         GetFood(served);
     }
 }
