@@ -87,6 +87,7 @@ public class IngredientPopupUI : BasePopupUI
             if (btn != null) Destroy(btn.gameObject);
         }
         ingredientButtons.Clear();
+        ingredients = RecipeManager.Instance.Ingredients;
 
         for (int i = 0; i < ingredients.Count; i++)
         {

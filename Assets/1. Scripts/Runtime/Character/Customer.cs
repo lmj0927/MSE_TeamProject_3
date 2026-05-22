@@ -490,8 +490,14 @@ public class Customer : MonoBehaviour, IInteractable
             tray = Instantiate(trayPrefab);
 
             tray.transform.SetParent(holdAnchor, true);
+            
             tray.transform.localPosition = Vector3.zero;
             tray.transform.localRotation = Quaternion.identity;
+
+            var rb = tray.GetComponent<Rigidbody>();
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
         }
 
         OnMealFinished?.Invoke(seatNum);
