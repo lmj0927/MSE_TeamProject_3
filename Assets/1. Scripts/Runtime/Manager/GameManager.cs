@@ -59,7 +59,7 @@ public class GameManager : Singleton<GameManager>
                 if (pastP != currentP)
                 {
                     pastP = currentP;
-
+                    print(currentP);
 
                     int star = 0;
                     if (reading != null)
