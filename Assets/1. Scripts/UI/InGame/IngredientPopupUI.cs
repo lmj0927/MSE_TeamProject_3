@@ -22,6 +22,10 @@ public class IngredientPopupUI : BasePopupUI
     protected override void Awake()
     {
         base.Awake();
+    }
+
+    private void Start()
+    {
         Initialize();
     }
 
@@ -43,32 +47,6 @@ public class IngredientPopupUI : BasePopupUI
         else if (currentSelected == null && lastSelected != null)
         {
             EventSystem.current.SetSelectedGameObject(lastSelected);
-        }
-    }
-
-    protected override void ResetTop()
-    {
-        if (scrollRect != null && scrollRect.content != null)
-        {
-            Canvas.ForceUpdateCanvases();
-            LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
-
-            scrollRect.StopMovement();
-            scrollRect.verticalNormalizedPosition = 1f;
-        }
-
-        if (ingredientButtons.Count > 0)
-        {
-            lastSelected = ingredientButtons[0].gameObject;
-
-            EventSystem.current.SetSelectedGameObject(null);
-            EventSystem.current.SetSelectedGameObject(lastSelected);
-
-            Button firstBtn = ingredientButtons[0].GetComponent<Button>();
-            if (firstBtn != null)
-            {
-                firstBtn.Select();
-            }
         }
     }
 
@@ -113,6 +91,8 @@ public class IngredientPopupUI : BasePopupUI
                 btn.navigation = nav;
             }
         }
+
+        ResetTop(); 
     }
 
     private void OnIngredientButtonClick(FoodSO food)
@@ -120,6 +100,38 @@ public class IngredientPopupUI : BasePopupUI
         var instantiatedFood = food.CreateFood();
         OnIngredientSelected?.Invoke(instantiatedFood);
         Hide();
+    }
+
+    protected override void ResetTop()
+    {
+        if (scrollRect != null && scrollRect.content != null)
+        {
+            Canvas.ForceUpdateCanvases();
+
+            LayoutRebuilder.ForceRebuildLayoutImmediate(scrollRect.content);
+
+            scrollRect.StopMovement();
+            scrollRect.verticalNormalizedPosition = 1f;
+
+            DOVirtual.DelayedCall(0.01f, () =>
+            {
+                if (scrollRect != null) scrollRect.verticalNormalizedPosition = 1f;
+            });
+        }
+
+        if (ingredientButtons.Count > 0)
+        {
+            lastSelected = ingredientButtons[0].gameObject;
+
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(lastSelected);
+
+            Button firstBtn = ingredientButtons[0].GetComponent<Button>();
+            if (firstBtn != null)
+            {
+                firstBtn.Select();
+            }
+        }
     }
 
     private void SnapTo(RectTransform target)
@@ -133,10 +145,14 @@ public class IngredientPopupUI : BasePopupUI
         {
             float targetNormalizedPos = 1f - ((float)index / (total - 1));
 
+            DOTween.Kill("PopupScroll");
+
             DOTween.To(() => scrollRect.verticalNormalizedPosition,
                        x => scrollRect.verticalNormalizedPosition = x,
                        targetNormalizedPos,
-                       0.2f).SetEase(Ease.OutQuad);
+                       0.2f)
+                   .SetEase(Ease.OutQuad)
+                   .SetId("PopupScroll");
         }
     }
 }

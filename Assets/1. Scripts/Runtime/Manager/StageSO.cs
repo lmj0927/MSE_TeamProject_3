@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "StageSO", menuName = "Scriptable Objects/StageSO")]
@@ -16,4 +17,17 @@ public class StageSO : ScriptableObject
     [Header("Available Content")]
     public FoodSO[] availableIngredients;
     public RecipeSO[] availableAssemble;
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (availableIngredients != null && availableIngredients.Length > 0)
+        {
+            availableIngredients = availableIngredients
+                .Where(item => item != null)    
+                .OrderBy(item => item.FoodName)   
+                .ToArray();
+        }
+    }
+#endif
 }
