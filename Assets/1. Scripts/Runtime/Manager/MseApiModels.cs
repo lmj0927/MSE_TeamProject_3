@@ -28,6 +28,7 @@ public class ApiErrorBody
 public class CreateRoomRequestBody
 {
     public string title;
+    public int stage;
     public int maxPlayers;
 }
 
@@ -37,6 +38,7 @@ public class RoomResponse
     public string roomId;
     public string hostUserId;
     public string title;
+    public int stage;
     public int maxPlayers;
     public int currentPlayerCount;
     public string status;

@@ -21,11 +21,19 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public string AccessToken { get; private set; }
 
+    public string LocalUserId { get; private set; }
+
     public bool HasAccessToken => !string.IsNullOrEmpty(AccessToken);
 
     public void SetAccessToken(string token) => AccessToken = token;
 
-    public void ClearAccessToken() => AccessToken = null;
+    public void SetLocalUserId(string userId) => LocalUserId = userId ?? string.Empty;
+
+    public void ClearAccessToken()
+    {
+        AccessToken = null;
+        LocalUserId = null;
+    }
 
     string Root => baseUrl.TrimEnd('/');
 
@@ -157,7 +165,11 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         var r = await LoginAsync(userId, password, cancellationToken);
         if (r.Ok)
+        {
             SetAccessToken(r.Value);
+            SetLocalUserId(userId);
+        }
+
         return r;
     }
 
@@ -212,10 +224,15 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
     /// <summary>POST /api/rooms</summary>
-    public async UniTask<ApiResult<RoomResponse>> CreateRoomAsync(string title, int maxPlayers,
+    public async UniTask<ApiResult<RoomResponse>> CreateRoomAsync(string title, int stage, int maxPlayers,
         CancellationToken cancellationToken = default)
     {
-        var payload = JsonUtility.ToJson(new CreateRoomRequestBody { title = title, maxPlayers = maxPlayers });
+        var payload = JsonUtility.ToJson(new CreateRoomRequestBody
+        {
+            title = title,
+            stage = stage,
+            maxPlayers = maxPlayers
+        });
         using var req = new UnityWebRequest(Root + "/api/rooms", UnityWebRequest.kHttpVerbPOST);
         req.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(payload));
         req.downloadHandler = new DownloadHandlerBuffer();
@@ -278,6 +295,40 @@ public class NetworkManager : Singleton<NetworkManager>
 
         if (IsNetworkFailure(req))
             return ApiResult<RoomResponse>.Failure(0, "NETWORK", req.error ?? "Network error", body);
+
+        if (code == 200)
+        {
+            var room = JsonUtility.FromJson<RoomResponse>(body);
+            return ApiResult<RoomResponse>.Success(room, code, body);
+        }
+
+        return FailureFromRequest<RoomResponse>(req, body);
+    }
+
+    /// <summary>
+    /// POST /api/rooms/{roomId}/leave — Host: 204 (room deleted). Guest: 200 + updated <see cref="RoomResponse"/>.
+    /// </summary>
+    public async UniTask<ApiResult<RoomResponse>> LeaveRoomAsync(string roomId,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrEmpty(roomId))
+            return ApiResult<RoomResponse>.Failure(0, "CLIENT", "roomId is empty", string.Empty);
+
+        var url = $"{Root}/api/rooms/{Uri.EscapeDataString(roomId)}/leave";
+        using var req = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST);
+        req.uploadHandler = new UploadHandlerRaw(Array.Empty<byte>());
+        req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
+        SetBearerIfNeeded(req, true, AccessToken);
+        await SendWebRequestAsync(req, cancellationToken);
+        var body = req.downloadHandler?.text ?? string.Empty;
+        var code = (int)req.responseCode;
+
+        if (IsNetworkFailure(req))
+            return ApiResult<RoomResponse>.Failure(0, "NETWORK", req.error ?? "Network error", body);
+
+        if (code == 204)
+            return ApiResult<RoomResponse>.Success(null, code, body);
 
         if (code == 200)
         {

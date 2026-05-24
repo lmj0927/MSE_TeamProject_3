@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -12,6 +13,7 @@ using UnityEngine.UI;
 public class NetworkAuthTestUI : MonoBehaviour
 {
     [SerializeField] private string serverUrl = "http://localhost:8080";
+    private string joinRoomSceneName = "JoinRoom";
 
     TMP_InputField _userIdInput;
     TMP_InputField _passwordInput;
@@ -184,9 +186,13 @@ public class NetworkAuthTestUI : MonoBehaviour
         var result = await NetworkManager.Instance.LoginAndStoreTokenAsync(userId, password, destroyCancellationToken);
         SetBusy(false);
         if (result.Ok)
-            Log($"Login OK. Token length: {result.Value?.Length ?? 0} (stored on NetworkManager)");
-        else
-            ReportServerFailure("Login", result.StatusCode, result.ErrorCode, result.ErrorMessage, result.RawBody);
+        {
+            Log($"Login OK. Loading {joinRoomSceneName}…");
+            SceneManager.LoadScene(joinRoomSceneName);
+            return;
+        }
+
+        ReportServerFailure("Login", result.StatusCode, result.ErrorCode, result.ErrorMessage, result.RawBody);
     }
 
     /// <summary>
