@@ -3,13 +3,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class Customer : MonoBehaviour, IInteractable
 {
-    public enum cState { Entering, GoingSeat, Sitting, GoingTrash, Leaving }
+    public enum cState { Entering, GoingSeat, Sitting, GoingTrash, Leaving, StageEnd }
+    public enum Emotion { Happy, Boring, Angry}
 
     [SerializeField]
     private GameObject hat;
@@ -44,10 +46,9 @@ public class Customer : MonoBehaviour, IInteractable
     public bool isWaiting { get; private set; } = false;
     public float sitTimer { get; private set; } = 60.0f;
     private float maxSit;
+    private Emotion emotion = Emotion.Happy;
     private float boring = 30.0f;
-    public bool isBored { get; private set; } = false; 
     private float angry = 10.0f;
-    public bool isAngry { get; private set; } = false;
 
     private bool isEating = false;
     private bool hasEaten = false;
@@ -86,7 +87,6 @@ public class Customer : MonoBehaviour, IInteractable
             patienceColor = patienceBar.GetComponent<StateChanger>();
         }
     }
-
     private void Update()
     {
         // Arrival Triggers
@@ -114,17 +114,17 @@ public class Customer : MonoBehaviour, IInteractable
                 Stand();
                 if (food != null) Destroy(food.gameObject);
 
-            } else if (!isAngry && sitTimer <= angry)
+            } else if (emotion == Emotion.Boring && sitTimer <= angry)
             {
-                isAngry = true;
+                emotion = Emotion.Angry;
                 SetFace(2);
                 anim.SetTrigger("angry");
                 patienceColor.SetColorState(2, 0f);
             }
-            else if (!isAngry && !isBored && sitTimer <= boring)
+            else if (emotion == Emotion.Happy && sitTimer <= boring)
             {
                 patienceColor.SetColorState(1, 0f);
-                isBored = true;
+                emotion = Emotion.Boring;
                 SetFace(1);
                 anim.SetTrigger("boring");
                 patienceColor.SetColorState(2, boring - angry);
@@ -208,8 +208,7 @@ public class Customer : MonoBehaviour, IInteractable
         SetMenuImg(sideOrder, 2);
 
         isDecided = false;
-        isBored = false;
-        isAngry = false;
+        emotion = Emotion.Happy;
         isWaiting = false;
         isEating = false;
         hasEaten = false;
@@ -340,6 +339,10 @@ public class Customer : MonoBehaviour, IInteractable
                 OnSleep?.Invoke(this);
                 gameObject.SetActive(false);
                 break;
+            case cState.StageEnd:
+                GameManager.Instance.CompleteTask();
+                Destroy(gameObject);
+                break;
         }
     }
 
@@ -358,8 +361,11 @@ public class Customer : MonoBehaviour, IInteractable
 
         yield return new WaitForSeconds(UnityEngine.Random.Range(1, 6));
 
-        isDecided = true;
-        agent.enabled = true;
+        if (current != cState.StageEnd)
+        {
+            isDecided = true;
+            agent.enabled = true;
+        }
     }
 
     private void Sit()
@@ -382,10 +388,13 @@ public class Customer : MonoBehaviour, IInteractable
         yield return new WaitForSeconds(0.1f);
         yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length * 0.9f);
 
-        isWaiting = true;
-        if (patienceBar != null) patienceBar.gameObject.SetActive(true);
+        if (current != cState.StageEnd)
+        {
+            isWaiting = true;
+            if (patienceBar != null) patienceBar.gameObject.SetActive(true);
 
-        patienceColor?.SetColorState(1, maxSit - boring);
+            patienceColor?.SetColorState(1, maxSit - boring);
+        }
     }
 
     private void GetFood(Food served)
@@ -396,17 +405,20 @@ public class Customer : MonoBehaviour, IInteractable
         OrderManager.Instance.RemoveOrder(this);
         served.transform.position = destination.GetChild(1).position;
 
-        if (!CheckOrder(served))
+        int points = CheckOrder(served);
+
+        if (points == 0)
         {
             SetFace(2);
             anim.SetTrigger("wrong");
             Stand();
-            Destroy(served.gameObject);    
+            Destroy(served.gameObject);
 
             return;
         }
+        else GameManager.Instance.AddPoint(points);
 
-        SetFace(0);
+            SetFace(0);
         anim.SetTrigger("correct");
         isEating = true;
         agent.stoppingDistance = 1.5f;
@@ -417,9 +429,10 @@ public class Customer : MonoBehaviour, IInteractable
         food.transform.localRotation = Quaternion.identity;
     }
 
-    private bool CheckOrder(Food served)
+    private int CheckOrder(Food served)
     {
         List<FoodSO> orders = new List<FoodSO>();
+        int points = 0;
         
         orders.Add(mainOrder.Result);
         if (drinkOrder != null) orders.Add(drinkOrder.Result);
@@ -427,19 +440,29 @@ public class Customer : MonoBehaviour, IInteractable
 
         List<FoodSO> servedFoods = served.GetComponentsInChildren<Food>().Select(f => f.Data).ToList();
 
-        if (orders.Count != servedFoods.Count) return false;
+        if (orders.Count != servedFoods.Count) return points;
 
         foreach (var order in orders)
         {
             if (servedFoods.Contains(order))
             {
                 servedFoods.Remove(order);
+                points += order.Point;
+
                 continue;
             }
-            return false;
+            return 0;
         }
 
-        return true;
+        float weight = 1f;
+
+        switch(emotion)
+        {
+            case Emotion.Boring: weight = 0.75f; break;
+            case Emotion.Angry: weight = 0.5f; break;
+        }
+
+        return Mathf.RoundToInt(points * weight);
     }
 
     private void Stand()
@@ -466,8 +489,6 @@ public class Customer : MonoBehaviour, IInteractable
         {
             anim.SetTrigger("stand");
             yield return new WaitForSeconds(0.1f);
-
-            yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length * 0.4f);
         }
         else
         {
@@ -476,25 +497,32 @@ public class Customer : MonoBehaviour, IInteractable
                 if (anim.GetCurrentAnimatorStateInfo(0).IsName("stand")) break;
                 yield return null;
             }
-            yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length * 0.4f);   
         }
+        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length * 0.4f);
 
         transform.position = new Vector3(transform.position.x, 0, transform.position.z);
         destination.position += (destination.forward * dragChair);
-        current = cState.Leaving;
+        if (current != cState.StageEnd) current = cState.Leaving;
 
         agent.enabled = true;
-
+        
         if (hasEaten)
         {
             tray = Instantiate(trayPrefab);
 
             tray.transform.SetParent(holdAnchor, true);
+            
             tray.transform.localPosition = Vector3.zero;
             tray.transform.localRotation = Quaternion.identity;
+
+            var rb = tray.GetComponent<Rigidbody>();
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
         }
 
-        OnMealFinished?.Invoke(seatNum);
+        if (current != cState.StageEnd) OnMealFinished?.Invoke(seatNum);
+        else setPath(current, destination);
     }
 
     public bool IsReady()
@@ -533,12 +561,7 @@ public class Customer : MonoBehaviour, IInteractable
         if (agent.enabled)
         {
             agent.SetDestination(destination.position);
-            if (next != null && food != null)
-            {
-                food.transform.SetParent(holdAnchor, true);
-                food.transform.localPosition = Vector3.zero;
-                food.transform.localRotation = Quaternion.identity;
-            }
+            
             anim.SetBool("hasTrash", next != null);
             anim.SetTrigger("walk");
         }
@@ -556,5 +579,13 @@ public class Customer : MonoBehaviour, IInteractable
 
         Food served = player.RemoveFood();
         GetFood(served);
+    }
+
+    public void ForceExit(Transform exitPos)
+    {
+        current = cState.StageEnd;
+        destination = exitPos;
+        Stand();
+        GameManager.Instance.RegisterTask();
     }
 }

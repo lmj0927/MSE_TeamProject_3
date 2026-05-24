@@ -26,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
 
     CharacterController playerController;
     float cachedSpeed;
-    bool isInteracting = false;
+    bool isFreezing = false;
 
     private void Start()
     {
@@ -43,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
         // ⭐ 추가: UI 표시 로직을 위해 wantsRun 변수를 밖으로 빼냈습니다.
         bool wantsRun = false;
 
-        if (!isInteracting)
+        if (!isFreezing)
         {
             hAxis = Input.GetAxisRaw("Horizontal");
             vAxis = Input.GetAxisRaw("Vertical");
@@ -133,6 +133,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void SetInteracting(bool flag)
     {
-        isInteracting = flag;
+        isFreezing = flag;
     }
 }

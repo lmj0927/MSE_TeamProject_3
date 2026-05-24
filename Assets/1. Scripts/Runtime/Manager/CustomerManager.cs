@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CustomerManager : MonoBehaviour
 {
+    private bool isPlaying = false;
+
     [SerializeField]
     private GameObject customer;
 
@@ -57,8 +59,15 @@ public class CustomerManager : MonoBehaviour
         customers = new Customer[chairs.Length];
     }
 
+    private void Start()
+    {
+        GameManager.Instance.OnStageStart += HandleStageStart;
+        GameManager.Instance.OnStageEnd += HandleStageEnd;
+    }
     void Update()
     {
+        if (!isPlaying) return;
+
         int emptyK = GetEmptyKiosk();
 
         if (emptyK != -1)
@@ -102,10 +111,18 @@ public class CustomerManager : MonoBehaviour
 
                         OrderManager.Instance.AddOrder(c);
                     }
-                    
+
                 }
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        if (GameManager.Instance == null) return;
+
+        GameManager.Instance.OnStageStart -= HandleStageStart;
+        GameManager.Instance.OnStageEnd -= HandleStageEnd;
     }
 
     private Transform GetOutside()
@@ -113,7 +130,7 @@ public class CustomerManager : MonoBehaviour
         int ran = UnityEngine.Random.Range(0, outsideParent.childCount);
 
         return outsideParent.GetChild(ran);
-        
+
     }
     private Customer GetCustomer()
     {
@@ -159,6 +176,10 @@ public class CustomerManager : MonoBehaviour
         }
         return -1;
     }
+    private void AddToPool(Customer c)
+    {
+        pool.Enqueue(c);
+    }
     private void HandleGetout(int idx)
     {
         if (customers[idx] == null) return;
@@ -175,7 +196,25 @@ public class CustomerManager : MonoBehaviour
         customers[idx] = null;
     }
 
-    private void AddToPool(Customer c) {
-        pool.Enqueue(c);
+    private void HandleStageStart() {
+        isPlaying = true;
+    }
+    private void HandleStageEnd() {
+        isPlaying = false;
+
+        foreach(var kC in kCustomers) {
+            if (kC == null) continue;
+
+            Transform outside = GetOutside();
+            kC.ForceExit(outside);
+        }
+
+        foreach (var c in customers)
+        {
+            if (c == null) continue;
+
+            Transform outside = GetOutside();
+            c.ForceExit(outside);
+        }
     }
 }

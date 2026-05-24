@@ -4,7 +4,6 @@ using UnityEngine;
 public class SliceCounter : ACounter
 {
     private int sliceCount = 5;
-    [SerializeField] private int defaultCount = 5;
     [SerializeField] private ProgressBar progressBar;
 
     private bool isSlicing = false;
@@ -26,11 +25,9 @@ public class SliceCounter : ACounter
         {
             AddFood(player.RemoveFood());
             recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Slice);
-            if (recipe != null)
-            {
-                sliceCount = recipe.Value;
-            }
-            else sliceCount = defaultCount;
+            if (recipe == null) return;
+
+            sliceCount = recipe.Value;
 
             isSlicing = true;
             if (progressBar != null)

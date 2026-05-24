@@ -21,13 +21,20 @@ public class RecipeManager : Singleton<RecipeManager>
     List<RecipeSO> sliceRecipes;
     [SerializeField]
     List<RecipeSO> oilRecipes;
-
+    [SerializeField]
+    List<FoodSO> ingredients;
+    public List<FoodSO> Ingredients => ingredients;
 
     [SerializeField]
     FoodSO trashFood;
 
     private List<FoodSO> copyIng = new List<FoodSO>();
 
+    public void SetData(List<FoodSO> ing, List<RecipeSO> assemble)
+    {
+        ingredients = ing;
+        assembleRecipes = assemble;
+    }
     /// <summary>
     /// Returns a randomly selected assemble/beverage/sidemenu recipe from the assembleRecipes list.
     /// If the list is null or empty, returns null.

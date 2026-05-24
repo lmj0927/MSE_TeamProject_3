@@ -25,19 +25,12 @@ public class TrayCounter : ACounter
 
             if (type == FoodSO.FoodType.Main && mainFood != null) return;
 
-            if (type == FoodSO.FoodType.Main)
-            {
-                mainFood = player.RemoveFood();
-                mainFood.transform.position = foodPoint.position;
-                mainFood.transform.rotation = Quaternion.identity;
-
-            }
-            else if (type == FoodSO.FoodType.Side || type == FoodSO.FoodType.Beverage)
+            if (type == FoodSO.FoodType.Main || type == FoodSO.FoodType.Side || type == FoodSO.FoodType.Beverage)
             {
                 AddFood(player.RemoveFood());
             }
         }
-        else 
+        else
         {
             if (mainFood != null)
             {
@@ -72,6 +65,11 @@ public class TrayCounter : ACounter
         foreach (var food in foods)
         {
             food.transform.SetParent(currentTray, true);
+
+            var rb = food.GetComponent<Rigidbody>();
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
         }
         foods.Clear();
     }
@@ -82,6 +80,7 @@ public class TrayCounter : ACounter
 
         if (food.Data.Type == FoodSO.FoodType.Main)
         {
+            mainFood = food;
             food.transform.position = foodPoint.position;
         }
         else if (food.Data.Type == FoodSO.FoodType.Side)
@@ -92,5 +91,7 @@ public class TrayCounter : ACounter
         {
             food.transform.position = subPoints[1].position;
         }
+
+        food.transform.rotation = Quaternion.identity;
     }
 }

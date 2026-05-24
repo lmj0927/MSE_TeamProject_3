@@ -16,3 +16,4 @@ MonoBehaviour:
   prefab: {fileID: 4706460075730594061, guid: e22bc91e0c62a6d4594bfa9b85051519, type: 3}
   sprite: {fileID: 21300000, guid: 6c134bcd056825d4cb70022168131f03, type: 3}
   type: 4
+  point: 6600

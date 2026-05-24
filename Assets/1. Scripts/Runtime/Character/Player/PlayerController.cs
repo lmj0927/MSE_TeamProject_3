@@ -16,7 +16,20 @@ public class PlayerController : MonoBehaviour
         if (holdAnchor == null)
             holdAnchor = transform;
     }
+    private void Start()
+    {
+        FreezeMovement(true);
+        GameManager.Instance.OnStageStart += HandleStageStart;
+        GameManager.Instance.OnResult += HandleStageEnd;
+    }
 
+    private void OnDestroy()
+    {
+        if (GameManager.Instance == null) return;
+
+        GameManager.Instance.OnStageStart -= HandleStageStart;
+        GameManager.Instance.OnResult -= HandleStageEnd;
+    }
     public bool AddFood(Food food)
     {
         if (food == null || heldFood != null)
@@ -60,8 +73,11 @@ public class PlayerController : MonoBehaviour
 
         foreach (var rb in food.GetComponentsInChildren<Rigidbody>())
         {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            if (!rb.isKinematic)
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
             rb.isKinematic = true;
             
         }
@@ -85,4 +101,7 @@ public class PlayerController : MonoBehaviour
     {
         GetComponent<PlayerMovement>().SetInteracting(apply);
     }
+
+    private void HandleStageStart() => FreezeMovement(false);
+    private void HandleStageEnd() => FreezeMovement(true);
 }
