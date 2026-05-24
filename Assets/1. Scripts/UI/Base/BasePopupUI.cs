@@ -9,7 +9,8 @@ public class BasePopupUI : MonoBehaviour, IBaseUI
     protected virtual void Awake()
     {
         defaultScale = transform.localScale;
-        gameObject.SetActive(false);
+        if (gameObject.activeSelf)
+            gameObject.SetActive(false);
     }
 
     public void Show()
