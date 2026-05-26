@@ -17,7 +17,7 @@ public class CookingCounter : ACounter
         {
             if (recipe != null)
             {
-                ClearFood();
+                RPC_ClearFood();
                 player.AddFood(foodSpawner.SpawnFood(recipe.Result));
                 recipe = null;
             }
@@ -32,8 +32,9 @@ public class CookingCounter : ACounter
 
     protected override void AddFood(NetworkObject food)
     {
-        foods.Add(food);
+        // foods.Add(food);
         // food.transform.position = foodPoint.position + (Vector3.up * foods.Count * 0.1f);
-        foodPositions.Add(foodPoint.position + (Vector3.up * foods.Count * 0.1f));
+        // foodPositions.Add(foodPoint.position + (Vector3.up * foods.Count * 0.1f));
+        RPC_AddFood(food, foodPoint.position + (Vector3.up * foods.Count * 0.1f));
     }
 }

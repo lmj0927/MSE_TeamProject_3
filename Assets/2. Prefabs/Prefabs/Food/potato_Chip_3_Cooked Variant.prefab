@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 3050107399920416227}
   - component: {fileID: 8376169236368694523}
   - component: {fileID: 5246558020111997330}
+  - component: {fileID: -8020706429367786308}
   m_Layer: 0
   m_Name: potato_Chip_3_Cooked Variant
   m_TagString: Untagged
@@ -163,6 +164,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 8376169236368694523}
   - {fileID: 5246558020111997330}
+  - {fileID: -8020706429367786308}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &8376169236368694523
 MonoBehaviour:
@@ -176,8 +178,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Food
-  _IsHeld: 0
-  _HolderObject: {fileID: 0}
+  _Holder: 0
+  _HolderRef: {fileID: 0}
+  _LocalOffset: {x: 0, y: 0, z: 0}
   data: {fileID: 0}
 --- !u!114 &5246558020111997330
 MonoBehaviour:
@@ -196,3 +199,15 @@ MonoBehaviour:
   SyncParent: 0
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
+--- !u!114 &-8020706429367786308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4791470369758251743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5c32f2cd570402f83de085663572a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AuthorityHandler

@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -3656961203765981749}
   - component: {fileID: -6462502194589654149}
   - component: {fileID: 6604304616871516533}
+  - component: {fileID: -3053219594911306455}
   m_Layer: 0
   m_Name: cheeseSlice
   m_TagString: Untagged
@@ -162,6 +163,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: -6462502194589654149}
   - {fileID: 6604304616871516533}
+  - {fileID: -3053219594911306455}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &-6462502194589654149
 MonoBehaviour:
@@ -175,8 +177,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Food
-  _IsHeld: 0
-  _HolderObject: {fileID: 0}
+  _Holder: 0
+  _HolderRef: {fileID: 0}
+  _LocalOffset: {x: 0, y: 0, z: 0}
   data: {fileID: 11400000, guid: 0ed4b2ad98e0e420d801dfb60234d087, type: 2}
 --- !u!114 &6604304616871516533
 MonoBehaviour:
@@ -195,3 +198,15 @@ MonoBehaviour:
   SyncParent: 0
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
+--- !u!114 &-3053219594911306455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3639859132765996545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5c32f2cd570402f83de085663572a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AuthorityHandler

@@ -48,7 +48,8 @@ public class RefrigeratorCounter : ACounter
     {
         NetworkObject food = foodSpawner.SpawnFood(foodSO);
         if(food != null)
-            interactPlayer.AddFood(food);
+            // interactPlayer.AddFood(food);
+            FoodTransfer.Transfer(this, interactPlayer, food, Vector3.zero);
         interactPlayer.FreezeMovement(false);
         interactPlayer = null;
         SetDoors(false);
@@ -64,4 +65,7 @@ public class RefrigeratorCounter : ACounter
         hinges[1].transform.DOLocalRotate(new Vector3(0, -targetAngle, 0), doorAnimDuration)
             .SetEase(Ease.OutQuad);
     }
+
+    public override bool CanRemove() => true;
+    public override void OnRemoved(NetworkObject food) {}
 }

@@ -4,15 +4,17 @@ using UnityEngine;
 using System.Linq;
 using Fusion;
 
-public abstract class ACounter : NetworkBehaviour, IInteractable
+public abstract class ACounter : NetworkBehaviour, IInteractable, IFoodHolder
 {
     [SerializeField] protected Transform foodPoint;
+
+    public Transform FoodPoint => foodPoint;
 
     /// <summary>
     /// Food spawner/despawner for networked food object.
     /// </summary>
     [SerializeField] protected FoodSpawner foodSpawner;
-    
+
     /// <summary>
     /// List of the network object ids for each of the food object.
     /// </summary>
@@ -23,21 +25,18 @@ public abstract class ACounter : NetworkBehaviour, IInteractable
     /// </summary>
     [Networked, Capacity(16)] protected NetworkLinkedList<Vector3> foodPositions { get; }
 
+    public AuthorityHandler AuthorityHandler => GetComponent<AuthorityHandler>();
+
     public override void Spawned()
     {
-        
         foodSpawner = NetworkRunner.GetRunnerForGameObject(gameObject).GetComponent<FoodSpawner>();
-        if(foodSpawner == null)
+        if (foodSpawner == null)
         {
             Debug.LogError("[ACounter Spawned] foodSpawner is null.");
         }
-        else if(!foodSpawner.CanSpawn())
+        else if (!foodSpawner.CanSpawn())
         {
             Debug.LogError("[ACounter Spawned] foodSpawner cannot spawn since it is null or Runner.CanSpawn is false.");
-        }
-        else
-        {
-            // Debug.Log("[ACounter Spawned] foodSpawner found.");
         }
     }
 
@@ -55,43 +54,126 @@ public abstract class ACounter : NetworkBehaviour, IInteractable
 
     protected virtual void AddFood(NetworkObject food)
     {
-        foods.Add(food);
-        // food.transform.position = foodPoint.position;
-        foodPositions.Add(foodPoint.position);
+        Debug.LogError("[ACounter virtual AddFood] Call RPC_AddFood instead.");
+        // RPC_AddFood(food, foodPoint.position);
+
+    }
+
+    protected virtual void AddFood(NetworkObject food, Vector3 position)
+    {
+        GetComponent<AuthorityHandler>().RequestStateAuthority(
+            onAuthorized: () =>
+            {
+                Debug.Log("[ACounter AddFood] Authorized");
+
+                food.transform.SetParent(foodPoint, false);
+                food.transform.SetPositionAndRotation(position, Quaternion.identity);
+
+                food.GetComponent<Food>().RPC_SetDrop();
+                foods.Add(food);
+            },
+            onNotAuthorized: () =>
+            {
+                Debug.Log("[ACounter AddFood] Not Authorized");
+            }
+        );
     }
 
     /// <summary>
     /// This function is used for removing food.
-    /// No restoring for rigidbody of food.
+    /// The caller (typically Player.AddFood) is responsible for re-assigning the food's Holder via Food.RPC_SetHolder
     /// </summary>
-    /// <returns>Food NetworkObject without rigidbody.</returns>
+    /// <returns>Food NetworkObject.</returns>
     protected NetworkObject RemoveFood()
     {
         if (foods.Count == 0) return null;
 
-        var temp = foods.Last();
-        foods.Remove(temp);
-        foodPositions.Remove(foodPositions.Last());
-        return Runner.FindObject(temp);
+        // var temp = GetLastFood();
+        // RPC_RemoveLastFood();
+        // return temp;
+
+        var fid = foods.Last();
+        var food = Runner.FindObject(fid);
+        GetComponent<AuthorityHandler>().RequestStateAuthority(
+            onAuthorized: () =>
+            {
+                Debug.Log("[ACounter AddFood] Authorized");
+
+                // food.transform.SetParent(foodPoint, false);
+                // food.transform.SetPositionAndRotation(position, Quaternion.identity);
+
+                food.GetComponent<Food>().RPC_SetDrop();
+                foods.Remove(fid);
+            },
+            onNotAuthorized: () =>
+            {
+                Debug.Log("[ACounter AddFood] Not Authorized");
+            }
+        );
+        return food;
+    }
+
+    protected NetworkObject GetLastFood()
+    {
+        return Runner.FindObject(foods.Last());
     }
 
     /// <summary>
-    /// This function is used for the player re-picking a food.
-    /// Restore the rigidbody of food.
+    /// Append a food entry (id + world position) to the counter's networked lists,
+    /// and assign this counter as the food's holder so Food.FixedUpdateNetwork
+    /// positions it at foodPoint + LocalOffset every tick.
     /// </summary>
-    /// <returns>Food NetworkObject with rigidbody.</returns>
-    protected NetworkObject RemoveFoodAndRestoreRigidBody()
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_AddFood(NetworkId foodId, Vector3 position)
     {
-        NetworkObject foodNO = RemoveFood();
-        if(foodNO == null) return null;
+        Debug.Log("[ACounter RPC_AddFood] Called.");
+        foods.Add(foodId);
+        foodPositions.Add(position);
 
-        foreach (var rb in foodNO.GetComponentsInChildren<Rigidbody>())
-            rb.isKinematic = false;
+        var foodNO = Runner.FindObject(foodId);
+        Debug.Log("[ACounter RPC_AddFood] foodNO == null is " + (foodNO == null).ToString());
+        if (foodNO == null) return;
 
-        foreach (var col in foodNO.GetComponentsInChildren<Collider>())
-            col.enabled = true;
+        var food = foodNO.GetComponent<Food>();
+        Debug.Log("[ACounter RPC_AddFood] food == null is " + (food == null).ToString());
+        if (food == null) return;
 
-        return foodNO;
+        Debug.Log("[ACounter RPC_AddFood] Call Food RPC_SetHolder.");
+        // food.RPC_SetHolder(Food.HolderKind.Counter, this, position - foodPoint.position);
+
+
+    }
+
+    /// <summary>
+    /// Remove the last food entry (id + position) from the counter's networked lists.
+    /// Holder is intentionally NOT cleared here; the caller (Player.AddFood) re-assigns it.
+    /// </summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_RemoveLastFood()
+    {
+        if (foods.Count == 0) return;
+        foods.Remove(foods.Last());
+        foodPositions.Remove(foodPositions.Last());
+        Assert.Check(foods.Count == foodPositions.Count);
+        Debug.Log("[ACounter RPC_RemoveLastFood] Food count is now " + foods.Count);
+    }
+
+    /// <summary>
+    /// Remove the all networked list (id + position) of the counter.
+    /// Executed on the counter's State Authority; safe to call from any peer.
+    /// </summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_ClearFood()
+    {
+        if (foods.Count == 0) return;
+
+        foreach (var food in foods)
+        {
+            foodSpawner.Despawn(food);
+        }
+        foods.Clear();
+        foodPositions.Clear();
+        Debug.Log("[ACounter RPC_ClearFood] Foods cleared");
     }
 
     /// <summary>
@@ -127,25 +209,54 @@ public abstract class ACounter : NetworkBehaviour, IInteractable
         return !player.HasFood() && HasFood();
     }
 
-    public override void FixedUpdateNetwork()
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_SetParent(NetworkObject food, Vector3 pos)
     {
-        for(int i = 0; i < foods.Count; ++i)
-        {
-            NetworkObject foodNO = Runner.FindObject(foods[i]);
-            foreach(Rigidbody rb in foodNO.GetComponentsInChildren<Rigidbody>())
-            {
-                if(!rb.isKinematic)
-                {
-                    rb.linearVelocity = Vector3.zero;
-                    rb.angularVelocity = Vector3.zero;
-                }
-                rb.isKinematic = true;
-            }
+        var foodName = food != null ? food.name : "null";
+        Debug.Log($"[Counter/{name}] RPC_SetParent received on local. food={foodName} pos={pos} foodPoint={foodPoint.position}");
+        food.transform.SetParent(foodPoint, false);
+        food.transform.SetLocalPositionAndRotation(pos, Quaternion.identity);
+    }
 
-            foreach (var col in foodNO.GetComponentsInChildren<Collider>())
-                col.enabled = false;
+    public virtual void OnAdded(NetworkObject food, Vector3 pos)
+    {
+        var foodName = food != null ? food.name : "null";
+        Debug.Log($"[Counter/{name}] OnAdded called. food={foodName} pos={pos} HasFoodAuth={(food != null && food.HasStateAuthority)} HasCounterAuth={HasStateAuthority} foodsCount(before)={foods.Count}");
 
-            foodNO.transform.position = foodPositions[i];
-        }
+        // food.transform.SetParent(foodPoint, false);
+        // food.transform.SetPositionAndRotation(pos, Quaternion.identity);
+        RPC_SetParent(food, pos);
+
+        food.GetComponent<Food>().SetDrop();
+        foods.Add(food);
+
+        Debug.Log($"[Counter/{name}] OnAdded done. foodsCount(after)={foods.Count}");
+    }
+
+    public virtual void OnRemoved(NetworkObject food)
+    {
+        var foodName = food != null ? food.name : "null";
+        Debug.Log($"[Counter/{name}] OnRemoved called. food={foodName} HasFoodAuth={(food != null && food.HasStateAuthority)} HasCounterAuth={HasStateAuthority} foodsCount(before)={foods.Count}");
+
+        food.GetComponent<Food>().SetDrop();
+        foods.Remove(food);
+
+        Debug.Log($"[Counter/{name}] OnRemoved done. foodsCount(after)={foods.Count}");
+    }
+
+    public virtual bool CanAdd(Food food)
+    {
+        var accept = food != null && AcceptsFood(food.Data);
+        var ok = !HasFood() && accept;
+        var foodDesc = food != null && food.Data != null ? food.Data.FoodName : "null";
+        Debug.Log($"[Counter/{name}] CanAdd({foodDesc}) = {ok} (HasFood={HasFood()} AcceptsFood={accept})");
+        return ok;
+    }
+
+    public virtual bool CanRemove()
+    {
+        var ok = HasFood();
+        Debug.Log($"[Counter/{name}] CanRemove() = {ok} (foodsCount={foods.Count})");
+        return ok;
     }
 }

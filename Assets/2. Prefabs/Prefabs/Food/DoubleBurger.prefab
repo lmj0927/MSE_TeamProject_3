@@ -350,6 +350,7 @@ GameObject:
   - component: {fileID: -324667682083835461}
   - component: {fileID: -2725583954592707156}
   - component: {fileID: 6784757974062256369}
+  - component: {fileID: 6620266298489261177}
   m_Layer: 0
   m_Name: DoubleBurger
   m_TagString: Untagged
@@ -425,6 +426,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: -2725583954592707156}
   - {fileID: 6784757974062256369}
+  - {fileID: 6620266298489261177}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &-2725583954592707156
 MonoBehaviour:
@@ -438,8 +440,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Food
-  _IsHeld: 0
-  _HolderObject: {fileID: 0}
+  _Holder: 0
+  _HolderRef: {fileID: 0}
+  _LocalOffset: {x: 0, y: 0, z: 0}
   data: {fileID: 11400000, guid: d6169aea114a16e4a9ac582b4fbcf00b, type: 2}
 --- !u!114 &6784757974062256369
 MonoBehaviour:
@@ -458,6 +461,18 @@ MonoBehaviour:
   SyncParent: 0
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
+--- !u!114 &6620266298489261177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4706460075730594061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5c32f2cd570402f83de085663572a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AuthorityHandler
 --- !u!1 &5061155787512094798
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6832086721869917316}
   - component: {fileID: -6203668173743904308}
   - component: {fileID: -4999332155120180646}
+  - component: {fileID: 5134501426986771981}
   m_Layer: 0
   m_Name: burgerBun_Sesame_Top
   m_TagString: Untagged
@@ -163,6 +164,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: -6203668173743904308}
   - {fileID: -4999332155120180646}
+  - {fileID: 5134501426986771981}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &-6203668173743904308
 MonoBehaviour:
@@ -176,8 +178,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Food
-  _IsHeld: 0
-  _HolderObject: {fileID: 0}
+  _Holder: 0
+  _HolderRef: {fileID: 0}
+  _LocalOffset: {x: 0, y: 0, z: 0}
   data: {fileID: 0}
 --- !u!114 &-4999332155120180646
 MonoBehaviour:
@@ -196,3 +199,15 @@ MonoBehaviour:
   SyncParent: 0
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
+--- !u!114 &5134501426986771981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314658923573279028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5c32f2cd570402f83de085663572a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AuthorityHandler

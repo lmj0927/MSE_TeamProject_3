@@ -2,108 +2,98 @@
 using Fusion;
 using UnityEngine;
 
-public class PlayerController : NetworkBehaviour
+public class PlayerController : NetworkBehaviour, IFoodHolder
 {
     [Header("Food")]
     [Networked] public NetworkObject HeldFoodObject { get; set; }
-    [SerializeField] private Food heldFood;
     [SerializeField] private Transform holdAnchor;
 
-    public Food HeldFood => heldFood;
-    public bool HasFood() => heldFood != null;
+    public Transform HoldAnchor => holdAnchor;
+    public Food HeldFood => HeldFoodObject != null ? HeldFoodObject.GetComponent<Food>() : null;
+
+
+    public bool HasFood() => HeldFoodObject != null;
+    
+    public AuthorityHandler AuthorityHandler => GetComponent<AuthorityHandler>();
 
     public override void Spawned()
     {
         if (holdAnchor == null)
             holdAnchor = transform;
+
+        if (HasStateAuthority)
+            HeldFoodObject = null;
     }
 
     /// <summary>
     /// Add a food (networked) object to the player.
     /// </summary>
-    /// <param name="foodNO">A food object created by `FoodSpawner`.</param>
+    /// <param name="foodNO">A food object</param>
     /// <returns>Success or fail.</returns>
     public bool AddFood(NetworkObject foodNO)
     {
-        if (foodNO == null || heldFood != null)
-            return false;
-
-        var otherOwner = foodNO.GetComponentInParent<PlayerController>();
-        if (otherOwner != null && otherOwner != this)
+        if (foodNO == null || HeldFoodObject != null)
             return false;
 
         HeldFoodObject = foodNO;
-        HeldFoodObject.RequestStateAuthority();
-        if(!HeldFoodObject.HasStateAuthority)
-        {
-            Debug.LogError("[PlayerController AddFood] Failed to get authority!");
-        }
-        heldFood = foodNO.GetComponent<Food>();
-        // AttachHeldFood(heldFood);
+        // foodNO.RequestStateAuthority();
+
+        // var food = foodNO.GetComponent<Food>();
+        // if (food != null)
+        // {
+        //     Debug.Log("[PlayerController AddFood] HeldFoodObject try to call food RPC_SetHolder");
+        //     food.RPC_SetHolder(Food.HolderKind.Player, this, Vector3.zero);
+        // }
+
+        HeldFoodObject.GetComponent<AuthorityHandler>().RequestStateAuthority(
+            onAuthorized: () => 
+            {
+                Debug.Log("[PlayerController AddFood] Authorized.");
+
+                HeldFoodObject.transform.SetParent(holdAnchor, false);
+                HeldFoodObject.transform.SetPositionAndRotation(holdAnchor.position, holdAnchor.rotation);
+
+                HeldFood.RPC_SetHeld();
+            },
+            onNotAuthorized: () =>
+            {
+                Debug.Log("[PlayerController AddFood] Not Authorized.");
+            }
+        );
+        
+        Debug.Log("[PlayerController AddFood] HeldFoodObject is " + HeldFood.Data.FoodName);
         return true;
     }
 
     /// <summary>
-    /// Remove food player is holding.
+    /// Remove the food the player is holding. The next holder (counter) is responsible
+    /// for re-assigning the food's Holder via its own RPC; the food keeps following the
+    /// player until that happens, which prevents a one-tick "Holder=None" gap.
     /// </summary>
-    /// <returns>Removed food without rigidbody.</returns>
     public NetworkObject RemoveFood()
     {
-        Food removed = heldFood;
-        if (removed == null)
-            return null;
+        if (HeldFoodObject == null) return null;
 
-        // DetachHeldFood(removed);
+        HeldFoodObject.GetComponent<AuthorityHandler>().RequestStateAuthority(
+            onAuthorized: () => 
+            {
+                Debug.Log("[PlayerController RemoveFood] Authorized.");
+
+                // HeldFoodObject.transform.SetParent(holdAnchor);
+                // HeldFoodObject.transform.SetPositionAndRotation(holdAnchor.position, holdAnchor.rotation);
+
+                HeldFood.RPC_SetDrop();
+            },
+            onNotAuthorized: () =>
+            {
+                Debug.Log("[PlayerController RemoveFood] Not Authorized.");
+            }
+        );
+
+        var removed = HeldFoodObject;
         HeldFoodObject = null;
-        heldFood = null;
-        return removed.Object;
-    }
 
-    /// <summary>
-    /// Remove food player is holding after restoring rigidbody.
-    /// </summary>
-    /// <returns>Removed food with rigidbody.</returns>
-    public NetworkObject RemoveFoodAndRestoreRigidbody()
-    {
-        NetworkObject foodNO = RemoveFood();
-        if(foodNO == null) return null;
-
-        // restore the rigidbody
-        foreach (var rb in foodNO.GetComponentsInChildren<Rigidbody>())
-            rb.isKinematic = false;
-        foreach (var col in foodNO.GetComponentsInChildren<Collider>())
-            col.enabled = true;
-
-        return foodNO;
-    }
-
-    private void AttachHeldFood(Food food)
-    {
-        food.transform.SetParent(holdAnchor, true);
-        food.transform.localPosition = Vector3.zero;
-        food.transform.localRotation = Quaternion.identity;
-
-        foreach (var rb in food.GetComponentsInChildren<Rigidbody>())
-        {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            rb.isKinematic = true;
-            
-        }
-
-        foreach (var col in food.GetComponentsInChildren<Collider>())
-            col.enabled = false;
-    }
-
-    private void DetachHeldFood(Food food)
-    {
-        food.transform.SetParent(null, true);
-
-        foreach (var rb in food.GetComponentsInChildren<Rigidbody>())
-            rb.isKinematic = false;
-
-        foreach (var col in food.GetComponentsInChildren<Collider>())
-            col.enabled = true;
+        return removed;
     }
 
     public void FreezeMovement(bool apply)
@@ -111,24 +101,52 @@ public class PlayerController : NetworkBehaviour
         GetComponent<PlayerMovement>().SetInteracting(apply);
     }
 
-    public override void FixedUpdateNetwork()
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_SetParent(NetworkObject food, Vector3 pos)
     {
-        base.FixedUpdateNetwork();
+        var foodName = food != null ? food.name : "null";
+        Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] RPC_SetParent received on local. food={foodName} pos={pos} holdAnchor={holdAnchor.position}");
+        food.transform.SetParent(holdAnchor, false);
+        food.transform.SetLocalPositionAndRotation(pos, Quaternion.identity);
+    }
 
-        if(HeldFoodObject == null) return;
+    public void OnAdded(NetworkObject food, Vector3 pos)
+    {
+        var foodName = food != null ? food.name : "null";
+        Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] OnAdded called. food={foodName} pos={pos} HasFoodAuth={(food != null && food.HasStateAuthority)} HasPlayerAuth={HasStateAuthority}");
+        HeldFoodObject = food;
+        // HeldFoodObject.transform.SetParent(holdAnchor, false);
+        // HeldFoodObject.transform.SetPositionAndRotation(holdAnchor.position, holdAnchor.rotation);
+        RPC_SetParent(HeldFoodObject, pos);
+        HeldFood.SetHeld();
+        var heldName = HeldFoodObject != null ? HeldFoodObject.name : "null";
+        Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] OnAdded done. HeldFoodObject={heldName} food.IsHeld={HeldFood.IsHeld}");
+    }
 
-        // follow the hold anchor
-        HeldFoodObject.transform.position = holdAnchor.position;
-        HeldFoodObject.transform.rotation = holdAnchor.rotation;
+    public void OnRemoved(NetworkObject food)
+    {
+        var foodName = food != null ? food.name : "null";
+        Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] OnRemoved called. food={foodName} HasFoodAuth={(food != null && food.HasStateAuthority)} HasPlayerAuth={HasStateAuthority}");
+        HeldFood.SetDrop();
+        HeldFoodObject = null;
+        Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] OnRemoved done. HeldFoodObject=null");
+    }
 
-        // disable the collisions
-        foreach (var rb in HeldFoodObject.GetComponentsInChildren<Rigidbody>())
-        {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            rb.isKinematic = true;
-        }
-        foreach (var col in HeldFoodObject.GetComponentsInChildren<Collider>())
-            col.enabled = false;
+    public bool CanAdd(Food food)
+    {
+        var ok = food != null && HeldFoodObject == null;
+        var foodName = food != null ? food.name : "null";
+        var heldName = HeldFoodObject != null ? HeldFoodObject.name : "null";
+        Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] CanAdd({foodName}) = {ok} (HeldFoodObject={heldName})");
+        return ok;
+    }
+
+    public bool CanRemove()
+    {
+        var ok = HeldFoodObject != null;
+        var heldName = HeldFoodObject != null ? HeldFoodObject.name : "null";
+        Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] CanRemove() = {ok} (HeldFoodObject={heldName})");
+        return ok;
     }
 }

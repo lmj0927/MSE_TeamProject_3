@@ -25,7 +25,7 @@ public class SliceCounter : ACounter
     {
         if (CanAddFood(player))
         {
-            AddFood(player.RemoveFood());
+            RPC_AddFood(player.RemoveFood(), foodPoint.position);
             recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Slice);
             if (recipe != null)
             {
@@ -59,7 +59,7 @@ public class SliceCounter : ACounter
                 var food = RemoveFood();
                 // Destroy(food.gameObject);
                 foodSpawner.Despawn(food);
-                AddFood(foodSpawner.SpawnFood(recipe.Result));
+                RPC_AddFood(foodSpawner.SpawnFood(recipe.Result), foodPoint.position);
                 recipe = null;
             }
         }

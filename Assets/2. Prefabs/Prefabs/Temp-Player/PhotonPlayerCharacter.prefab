@@ -1417,6 +1417,7 @@ GameObject:
   - component: {fileID: 9186479428773898570}
   - component: {fileID: 6016771843936789690}
   - component: {fileID: 4357989616459138187}
+  - component: {fileID: 4769050047508473582}
   m_Layer: 0
   m_Name: PhotonPlayerCharacter
   m_TagString: Untagged
@@ -1486,6 +1487,7 @@ MonoBehaviour:
   isRunningParam: isRunning
   isCarryingParam: isCarrying
   stamina: {fileID: 8703147238739481963}
+  staminaUI: {fileID: 0}
   Camera: {fileID: 0}
 --- !u!114 &8703147238739481963
 MonoBehaviour:
@@ -1551,13 +1553,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77a3dc3dff9d68b47944a73e030f0766, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  heldFood: {fileID: 0}
+  _HeldFoodObject: {fileID: 0}
   holdAnchor: {fileID: 5481090981239085226}
-  pickupRadius: 1.25
-  pickupProbeOffset: {x: 0, y: 0.5, z: 0}
-  pickupLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!143 &9186479428773898570
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1604,6 +1601,7 @@ MonoBehaviour:
   - {fileID: 8703147238739481963}
   - {fileID: 2338618378719261916}
   - {fileID: 4357989616459138187}
+  - {fileID: 4769050047508473582}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &4357989616459138187
 MonoBehaviour:
@@ -1622,6 +1620,18 @@ MonoBehaviour:
   SyncParent: 0
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
+--- !u!114 &4769050047508473582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5576661620642222183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5c32f2cd570402f83de085663572a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AuthorityHandler
 --- !u!1 &5973376885861599922
 GameObject:
   m_ObjectHideFlags: 0

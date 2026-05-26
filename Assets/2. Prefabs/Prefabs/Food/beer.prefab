@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: -5708285393876776054}
   - component: {fileID: -5709867270604664781}
   - component: {fileID: 6338921936835578974}
+  - component: {fileID: 6121735546111372754}
   m_Layer: 0
   m_Name: beer
   m_TagString: Untagged
@@ -227,6 +228,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: -5709867270604664781}
   - {fileID: 6338921936835578974}
+  - {fileID: 6121735546111372754}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &-5709867270604664781
 MonoBehaviour:
@@ -240,8 +242,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Food
-  _IsHeld: 0
-  _HolderObject: {fileID: 0}
+  _Holder: 0
+  _HolderRef: {fileID: 0}
+  _LocalOffset: {x: 0, y: 0, z: 0}
   data: {fileID: 0}
 --- !u!114 &6338921936835578974
 MonoBehaviour:
@@ -260,6 +263,18 @@ MonoBehaviour:
   SyncParent: 0
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
+--- !u!114 &6121735546111372754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5862168548408083788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5c32f2cd570402f83de085663572a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AuthorityHandler
 --- !u!1 &7081990746153059635
 GameObject:
   m_ObjectHideFlags: 0

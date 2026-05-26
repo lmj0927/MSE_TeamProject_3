@@ -26,7 +26,7 @@ public class DrinkCounter : ACounter
     public override void Spawned()
     {
         base.Spawned();
-        
+
         if (progressBar != null)
         {
             progressBar.gameObject.SetActive(false);
@@ -77,7 +77,7 @@ public class DrinkCounter : ACounter
         currentUser.FreezeMovement(true);
         progressBar.gameObject.SetActive(true);
 
-        AddFood(foodSpawner.SpawnFood(drinks[selected]));
+        RPC_AddFood(foodSpawner.SpawnFood(drinks[selected]), foodPoint.position);
 
         recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Beverage);
         maxTimingRange = recipe.Value;
@@ -107,11 +107,11 @@ public class DrinkCounter : ACounter
 
         if (isSuccess)
         {
-            currentUser.AddFood(RemoveFoodAndRestoreRigidBody());
+            currentUser.AddFood(RemoveFood());
         }
         else
         {
-            ClearFood();
+            RPC_ClearFood();
         }
     }
 

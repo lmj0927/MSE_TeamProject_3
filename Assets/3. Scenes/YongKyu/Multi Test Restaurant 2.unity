@@ -12700,6 +12700,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 987877775518127341, guid: 3d4e26bfea0879d438a9b2c3ff199a12, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1989165714}
+    - targetCorrespondingSourceObject: {fileID: 987877775518127341, guid: 3d4e26bfea0879d438a9b2c3ff199a12, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1989165719}
   m_SourcePrefab: {fileID: 100100000, guid: 3d4e26bfea0879d438a9b2c3ff199a12, type: 3}
 --- !u!4 &1989165708 stripped
 Transform:
@@ -12731,11 +12734,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
   SortKey: 2954489701
   ObjectInterest: 1
-  Flags: 262145
+  Flags: 786433
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 1989165709}
+  - {fileID: 1989165719}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &1989165719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964648973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5c32f2cd570402f83de085663572a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AuthorityHandler
 --- !u!114 &1995964170 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5848849794423108105, guid: 4cef5a0e5fb8a554f9a57d574c4af702, type: 3}

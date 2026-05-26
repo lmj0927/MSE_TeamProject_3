@@ -28,8 +28,10 @@ public class TrayCounter : ACounter
 
             if (type == FoodSO.FoodType.Main)
             {
-                mainFood = player.RemoveFoodAndRestoreRigidbody();
-                mainFood.transform.position = foodPoint.position;
+                mainFood = player.RemoveFood();
+                var mainFoodComp = mainFood.GetComponent<Food>();
+                // if (mainFoodComp != null)
+                //     mainFoodComp.RPC_SetHolder(Food.HolderKind.Counter, this, Vector3.zero);
 
                 currentTray = Instantiate(Tray).transform;
                 currentTray.SetParent(mainFood.transform, true);
@@ -41,14 +43,14 @@ public class TrayCounter : ACounter
             {
                 if (mainFood != null)
                 {
-                    var food = player.RemoveFoodAndRestoreRigidbody();
+                    var food = player.RemoveFood();
                     
                     food.transform.SetParent(currentTray, true);
-                    AddFood(food);
+                    RPC_AddFood(food, foodPoint.position);
                 }
                 else
                 {
-                    AddFood(player.RemoveFood());
+                    RPC_AddFood(player.RemoveFood(), foodPoint.position);
                 }
             }
         }
@@ -76,28 +78,32 @@ public class TrayCounter : ACounter
         {
             Runner.FindObject(food).transform.SetParent(currentTray, true);
         }
-        foods.Clear();
+        // foods.Clear();
+        RPC_ClearFood();
     }
 
     protected override void AddFood(NetworkObject food)
     {
-        foods.Add(food);
+        // foods.Add(food);
 
         var foodDataType = food.GetComponent<Food>().Data.Type;
         if (foodDataType == FoodSO.FoodType.Main)
         {
             // food.transform.position = foodPoint.position;
-            foodPositions.Add(foodPoint.position);
+            // foodPositions.Add(foodPoint.position);
+            RPC_AddFood(food, foodPoint.position);
         }
         else if (foodDataType == FoodSO.FoodType.Side)
         {
             // food.transform.position = subPoints[0].position;
-            foodPositions.Add(subPoints[0].position);
+            // foodPositions.Add(subPoints[0].position);
+            RPC_AddFood(food, subPoints[0].position);
         }
         else if (foodDataType == FoodSO.FoodType.Beverage)
         {
             // food.transform.position = subPoints[1].position;
-            foodPositions.Add(subPoints[1].position);
+            // foodPositions.Add(subPoints[1].position);
+            RPC_AddFood(food, subPoints[1].position);
         }
     }
 }

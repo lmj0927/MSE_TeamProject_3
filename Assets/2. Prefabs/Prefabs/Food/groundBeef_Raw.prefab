@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7984626924244575578}
   - component: {fileID: 3625323664175717787}
   - component: {fileID: 321603724162291867}
+  - component: {fileID: 3340706419564211224}
   m_Layer: 0
   m_Name: groundBeef_Raw
   m_TagString: Untagged
@@ -163,6 +164,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 3625323664175717787}
   - {fileID: 321603724162291867}
+  - {fileID: 3340706419564211224}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &3625323664175717787
 MonoBehaviour:
@@ -176,8 +178,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Food
-  _IsHeld: 0
-  _HolderObject: {fileID: 0}
+  _Holder: 0
+  _HolderRef: {fileID: 0}
+  _LocalOffset: {x: 0, y: 0, z: 0}
   data: {fileID: 11400000, guid: c713607e84def4676acdc9357bf1759b, type: 2}
 --- !u!114 &321603724162291867
 MonoBehaviour:
@@ -196,3 +199,15 @@ MonoBehaviour:
   SyncParent: 0
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
+--- !u!114 &3340706419564211224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6808599801469802662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5c32f2cd570402f83de085663572a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AuthorityHandler
