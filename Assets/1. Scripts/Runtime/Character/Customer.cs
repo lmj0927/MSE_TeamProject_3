@@ -430,7 +430,7 @@ public class Customer : MonoBehaviour, IInteractable
         food.transform.localRotation = Quaternion.identity;
     }
 
-    private bool CheckOrder(NetworkObject served)
+    private int CheckOrder(NetworkObject served)
     {
         List<FoodSO> orders = new List<FoodSO>();
         int points = 0;

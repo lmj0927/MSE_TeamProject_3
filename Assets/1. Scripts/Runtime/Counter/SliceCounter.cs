@@ -58,10 +58,10 @@ public class SliceCounter : ACounter
                 }
                 var food = RemoveFood();
                 foodSpawner.Despawn(food);
-                if (recipe == null) AddFood(RecipeManager.Instance.GetTrashFood().CreateFood());
+                if (recipe == null) AddFood(foodSpawner.SpawnFood(RecipeManager.Instance.GetTrashFood()));
                 else
                 {
-                    AddFood(recipe.Result.CreateFood());
+                    AddFood(foodSpawner.SpawnFood(recipe.Result));
                     recipe = null;
                 }
             }

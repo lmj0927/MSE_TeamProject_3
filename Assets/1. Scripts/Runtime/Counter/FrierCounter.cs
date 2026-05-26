@@ -1,4 +1,5 @@
 // Owned by JunYoung Park
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -52,7 +53,7 @@ public class FrierCounter : AFireCounter
         if (HasFood())
         {
             SoundManager.Instance.FryStart(this);
-            foreach (Food f in foods)
+            foreach (Food f in foods.Select(food => Runner.FindObject(food).GetComponent<Food>()))
             {
                 f.transform.position += offset;
             }
@@ -72,7 +73,7 @@ public class FrierCounter : AFireCounter
         if (HasFood())
         {
             OnCookFinished?.Invoke();
-            foreach (Food f in foods)
+            foreach (Food f in foods.Select(food => Runner.FindObject(food).GetComponent<Food>()))
             {
                 f.transform.position = foodPoint.position;
             }

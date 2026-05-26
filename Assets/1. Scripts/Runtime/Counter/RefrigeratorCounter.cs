@@ -39,7 +39,7 @@ public class RefrigeratorCounter : ACounter
             ingredientPopupUI.Show();
         } else if(interactionCooltime <= 0 && player.HasFood())
         {
-            var tmp =  player.HeldFood.data;
+            var tmp =  player.HeldFood.Data;
             if ( tmp.FoodName == "Trash" || tmp.Type != FoodSO.FoodType.Raw) return;
 
             SetDoors(true);

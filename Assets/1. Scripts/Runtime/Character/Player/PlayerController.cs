@@ -39,7 +39,7 @@ public class PlayerController : NetworkBehaviour, IFoodHolder
         GameManager.Instance.OnStageStart -= HandleStageStart;
         GameManager.Instance.OnResult -= HandleStageEnd;
     }
-    public bool AddFood(NetworkObject food)
+    public bool AddFood(NetworkObject foodNO)
     {
         if (foodNO == null || HeldFoodObject != null)
             return false;
