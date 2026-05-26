@@ -1,4 +1,5 @@
 ﻿// Owned by JunYoung Park
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ public class DrinkCounter : ACounter
     [Header("Mini Game UI")]
     [SerializeField] private RectTransform range;
     [SerializeField] private float acceptableRatio = 0.1f;
+
+    public Action OnDrinkFinished;
 
     private int selected = 0;
     private bool isUsing;
@@ -57,13 +60,14 @@ public class DrinkCounter : ACounter
 
         if (!isUsing)
         {
+            SoundManager.Instance.DrinkStart(this);
             StartDispensing(player);
         }
         else if (player == currentUser)
         {
             float tolerance = maxTimingRange * acceptableRatio;
             bool isSuccess = Mathf.Abs(current - interactingTiming) <= tolerance;
-
+;
             EndDispensing(isSuccess);
         }
     }
@@ -80,9 +84,9 @@ public class DrinkCounter : ACounter
         RPC_AddFood(foodSpawner.SpawnFood(drinks[selected]), foodPoint.position);
 
         recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Beverage);
-        maxTimingRange = recipe.Value;
+        maxTimingRange = recipe.Value;         // Should be lower than 2sec (depending on sfx)
 
-        interactingTiming = Random.Range(maxTimingRange * 0.1f, maxTimingRange * 0.9f);
+        interactingTiming = UnityEngine.Random.Range(maxTimingRange * 0.1f, maxTimingRange * 0.9f);
 
         SetRangeUI();
 
@@ -95,6 +99,7 @@ public class DrinkCounter : ACounter
 
     private void EndDispensing(bool isSuccess)
     {
+        OnDrinkFinished?.Invoke();
         isUsing = false;
         currentUser.FreezeMovement(false);
         progressBar.gameObject.SetActive(false);

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8749464089968868607}
   - component: {fileID: 8791391511422652480}
   - component: {fileID: 819615602156930207}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: cheeseSlice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 1174460938026624748}
   - component: {fileID: 7997129452788187527}
   - component: {fileID: 5879248792161957721}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: burgerBun_Sesame_Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,7 +237,7 @@ GameObject:
   - component: {fileID: 2026842520000254902}
   - component: {fileID: 8823417906558546959}
   - component: {fileID: 1167158318946190214}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: lettuce_square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -347,11 +347,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2526414618853721654}
   - component: {fileID: 6851906953106736970}
-  - component: {fileID: -324667682083835461}
-  - component: {fileID: -2725583954592707156}
-  - component: {fileID: 6784757974062256369}
-  - component: {fileID: 6620266298489261177}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: DoubleBurger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -405,74 +401,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 10
+  m_Constraints: 122
   m_CollisionDetection: 0
---- !u!114 &-324667682083835461
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4706460075730594061}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
-  SortKey: 833273932
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: -2725583954592707156}
-  - {fileID: 6784757974062256369}
-  - {fileID: 6620266298489261177}
-  ForceRemoteRenderTimeframe: 0
---- !u!114 &-2725583954592707156
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4706460075730594061}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Food
-  _Holder: 0
-  _HolderRef: {fileID: 0}
-  _LocalOffset: {x: 0, y: 0, z: 0}
-  data: {fileID: 11400000, guid: d6169aea114a16e4a9ac582b4fbcf00b, type: 2}
---- !u!114 &6784757974062256369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4706460075730594061}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
-  _stateAuthorityChangeErrorCorrectionDelta: 0
-  SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
---- !u!114 &6620266298489261177
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4706460075730594061}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f5c32f2cd570402f83de085663572a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AuthorityHandler
 --- !u!1 &5061155787512094798
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,7 +415,7 @@ GameObject:
   - component: {fileID: 7180342991285354370}
   - component: {fileID: 742276722489202261}
   - component: {fileID: 5136901488447059801}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: burgerBun_Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -598,7 +528,7 @@ GameObject:
   - component: {fileID: 5671384286570371276}
   - component: {fileID: 895723985688061542}
   - component: {fileID: 6586183802675531541}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: burgerBun_Middle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -711,7 +641,7 @@ GameObject:
   - component: {fileID: 4560055221014219582}
   - component: {fileID: 1073256366481574314}
   - component: {fileID: 4362867717255987168}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: groundBeef_Cooked 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -824,7 +754,7 @@ GameObject:
   - component: {fileID: 3997882413936219373}
   - component: {fileID: 5069484066505389012}
   - component: {fileID: 3066178218361939281}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: groundBeef_Cooked
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -20,11 +20,14 @@ public class FoodSO : ScriptableObject
     [SerializeField] private GameObject prefab;
     [SerializeField] private Sprite sprite;
     [SerializeField] private FoodType type;
+    [SerializeField] private int point = 0;
+
 
     public string FoodName => foodName;
     public GameObject Prefab => prefab;
     public Sprite Sprite => sprite;
     public FoodType Type => type;
+    public int Point => point;
 
 
     public Food CreateFood()

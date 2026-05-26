@@ -40,6 +40,9 @@ public abstract class ACounter : NetworkBehaviour, IInteractable, IFoodHolder
         }
     }
 
+    [SerializeField] private Transform outlineRoot;
+
+    public Transform OutlineRoot => outlineRoot;
     public virtual void Interact(PlayerController player) { }
 
     protected bool HasFood()

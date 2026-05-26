@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7760622306605922137}
   - component: {fileID: 3011966962075449102}
   - component: {fileID: 25922444542061118}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lettuceIceberg_Leaf (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 7222004808922892625}
   - component: {fileID: 8890484425501962154}
   - component: {fileID: 434381880103855124}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lettuceIceberg_Leaf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -193,11 +193,7 @@ GameObject:
   - component: {fileID: 5283123229937692164}
   - component: {fileID: 3740414693022737053}
   - component: {fileID: -4150949077822866747}
-  - component: {fileID: -8106131015963250317}
-  - component: {fileID: 2648956357858569915}
-  - component: {fileID: 7450771378144017840}
-  - component: {fileID: -8941949985175862724}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lettuceIceberg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -305,7 +301,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 10
+  m_Constraints: 122
   m_CollisionDetection: 0
 --- !u!64 &-4150949077822866747
 MeshCollider:
@@ -329,72 +325,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 6039318369386548323, guid: e478cd1b0134c47f3a85030c8eecfb8f, type: 3}
---- !u!114 &-8106131015963250317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3284953982482233977}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
-  SortKey: 1898482327
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 2648956357858569915}
-  - {fileID: 7450771378144017840}
-  - {fileID: -8941949985175862724}
-  ForceRemoteRenderTimeframe: 0
---- !u!114 &2648956357858569915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3284953982482233977}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Food
-  _Holder: 0
-  _HolderRef: {fileID: 0}
-  _LocalOffset: {x: 0, y: 0, z: 0}
-  data: {fileID: 11400000, guid: f3e22cbb482a74764a7a768e65fe6d27, type: 2}
---- !u!114 &7450771378144017840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3284953982482233977}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
-  _stateAuthorityChangeErrorCorrectionDelta: 0
-  SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
---- !u!114 &-8941949985175862724
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3284953982482233977}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f5c32f2cd570402f83de085663572a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AuthorityHandler
 --- !u!1 &4200578862663689088
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,7 +336,7 @@ GameObject:
   - component: {fileID: 2569584533274820274}
   - component: {fileID: 3433354780042839788}
   - component: {fileID: 3523863560919049469}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lettuceIceberg_Leaf (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -496,7 +426,7 @@ GameObject:
   - component: {fileID: 2485368436225657203}
   - component: {fileID: 5399160566949514453}
   - component: {fileID: 3605176438298121917}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lettuceIceberg_Leaf (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

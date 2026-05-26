@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SliceCounter : ACounter
 {
-    [SerializeField] private int sliceCount = 5;
+    private int sliceCount = 5;
     [SerializeField] private ProgressBar progressBar;
 
     private bool isSlicing = false;
@@ -27,13 +27,13 @@ public class SliceCounter : ACounter
         {
             RPC_AddFood(player.RemoveFood(), foodPoint.position);
             recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Slice);
-            if (recipe != null)
-            {
-                sliceCount = recipe.Value;
-                isSlicing = true;
-                if (progressBar != null)
-                    progressBar.gameObject.SetActive(true);
-            }
+            if (recipe == null) return;
+
+            sliceCount = recipe.Value;
+
+            isSlicing = true;
+            if (progressBar != null)
+                progressBar.gameObject.SetActive(true);
             return;
         }
         else if (CanRemoveFood(player) && !isSlicing)
@@ -57,10 +57,13 @@ public class SliceCounter : ACounter
                     progressBar.SetProgress(0f);
                 }
                 var food = RemoveFood();
-                // Destroy(food.gameObject);
                 foodSpawner.Despawn(food);
-                RPC_AddFood(foodSpawner.SpawnFood(recipe.Result), foodPoint.position);
-                recipe = null;
+                if (recipe == null) AddFood(RecipeManager.Instance.GetTrashFood().CreateFood());
+                else
+                {
+                    AddFood(recipe.Result.CreateFood());
+                    recipe = null;
+                }
             }
         }
     }

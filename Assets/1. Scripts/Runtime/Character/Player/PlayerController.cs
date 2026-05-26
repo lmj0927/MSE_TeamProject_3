@@ -1,6 +1,7 @@
 // Owned by SeungYeon Jung
 using Fusion;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerController : NetworkBehaviour, IFoodHolder
 {
@@ -24,13 +25,21 @@ public class PlayerController : NetworkBehaviour, IFoodHolder
         if (HasStateAuthority)
             HeldFoodObject = null;
     }
+    private void Start()
+    {
+        FreezeMovement(true);
+        GameManager.Instance.OnStageStart += HandleStageStart;
+        GameManager.Instance.OnResult += HandleStageEnd;
+    }
 
-    /// <summary>
-    /// Add a food (networked) object to the player.
-    /// </summary>
-    /// <param name="foodNO">A food object</param>
-    /// <returns>Success or fail.</returns>
-    public bool AddFood(NetworkObject foodNO)
+    private void OnDestroy()
+    {
+        if (GameManager.Instance == null) return;
+
+        GameManager.Instance.OnStageStart -= HandleStageStart;
+        GameManager.Instance.OnResult -= HandleStageEnd;
+    }
+    public bool AddFood(NetworkObject food)
     {
         if (foodNO == null || HeldFoodObject != null)
             return false;
@@ -44,6 +53,20 @@ public class PlayerController : NetworkBehaviour, IFoodHolder
         //     Debug.Log("[PlayerController AddFood] HeldFoodObject try to call food RPC_SetHolder");
         //     food.RPC_SetHolder(Food.HolderKind.Player, this, Vector3.zero);
         // }
+
+		// TODO-Photon: What it means? 
+		//List<FoodSO> holding = new List<FoodSO>();
+
+        //holding.Add(food.data); 
+        //var recipe = RecipeManager.Instance.Cook(holding, RecipeType.Side);
+        //if (recipe != null)
+        //{
+        //    Destroy(food.gameObject);
+        //    food = recipe.Result.CreateFood();
+        //}
+
+        //heldFood = food;
+        //AttachHeldFood(food);
 
         HeldFoodObject.GetComponent<AuthorityHandler>().RequestStateAuthority(
             onAuthorized: () => 
@@ -149,4 +172,6 @@ public class PlayerController : NetworkBehaviour, IFoodHolder
         Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] CanRemove() = {ok} (HeldFoodObject={heldName})");
         return ok;
     }
+    private void HandleStageStart() => FreezeMovement(false);
+    private void HandleStageEnd() => FreezeMovement(true);
 }

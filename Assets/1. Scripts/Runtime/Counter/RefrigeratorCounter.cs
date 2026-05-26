@@ -10,6 +10,7 @@ public class RefrigeratorCounter : ACounter
     [SerializeField] private GameObject[] hinges;
     [SerializeField] private float openAngle = 40f;
     [SerializeField] private float doorAnimDuration = 0.5f;
+    private float interactionCooltime = 0.2f;
     public override void Spawned()
     {
         base.Spawned();
@@ -19,16 +20,11 @@ public class RefrigeratorCounter : ACounter
 
     public override void FixedUpdateNetwork()
     {
-        base.FixedUpdateNetwork();
+        if (interactionCooltime > 0) interactionCooltime -= Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (interactPlayer != null)
-            {
-                interactPlayer.FreezeMovement(false);
-                interactPlayer = null;
-            }
-            SetDoors(false);
+            UnuseReset();
             ingredientPopupUI.Hide();
         }
     }
@@ -41,6 +37,19 @@ public class RefrigeratorCounter : ACounter
             interactPlayer.FreezeMovement(true);
             SetDoors(true);
             ingredientPopupUI.Show();
+        } else if(interactionCooltime <= 0 && player.HasFood())
+        {
+            var tmp =  player.HeldFood.data;
+            if ( tmp.FoodName == "Trash" || tmp.Type != FoodSO.FoodType.Raw) return;
+
+            SetDoors(true);
+
+            Destroy(player.RemoveFood().gameObject);
+
+            DOVirtual.DelayedCall(doorAnimDuration * 0.7f, () =>
+            {
+                SetDoors(false);
+            });
         }
     }
 
@@ -48,15 +57,26 @@ public class RefrigeratorCounter : ACounter
     {
         NetworkObject food = foodSpawner.SpawnFood(foodSO);
         if(food != null)
-            // interactPlayer.AddFood(food);
             FoodTransfer.Transfer(this, interactPlayer, food, Vector3.zero);
-        interactPlayer.FreezeMovement(false);
-        interactPlayer = null;
-        SetDoors(false);
 
+        UnuseReset();
+    }
+
+    private void UnuseReset()
+    {
+        if (interactPlayer != null)
+        {
+            interactPlayer.FreezeMovement(false);
+            interactPlayer = null;
+        }
+        SetDoors(false);
+        interactionCooltime = 0.2f;
     }
     private void SetDoors(bool isOpen)
     {
+        hinges[0].transform.DOKill();
+        hinges[1].transform.DOKill();
+
         float targetAngle = isOpen ? openAngle : 0f;
 
         hinges[0].transform.DOLocalRotate(new Vector3(0, targetAngle, 0), doorAnimDuration)

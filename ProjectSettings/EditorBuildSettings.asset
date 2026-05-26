@@ -14,6 +14,18 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/3. Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/3. Scenes/MinJun/NetworkTest.unity
+    guid: 35064c81a179c6a4683f6187849c0243
+  - enabled: 1
+    path: Assets/3. Scenes/MinJun/JoinRoom.unity
+    guid: e8f99d9e59e07c24ca46414c780be27b
+  - enabled: 1
+    path: Assets/3. Scenes/MinJun/InRoom.unity
+    guid: 42fd374ffd2fcba4a887382b22bec715
+  - enabled: 1
+    path: Assets/3. Scenes/JunYoung/Test Restaurant.unity
+    guid: 69307629b1b0a5f4cbbb57fc8ec8269e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -1,124 +1,39 @@
 // Owned by MinJun Lee
+
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class GrillCounter : ACounter
+public class GrillCounter : AFireCounter
 {
-    private float grillTime;
-    [SerializeField] private float burnTime;
-    [FormerlySerializedAs("grilProgressBar")]
-    [SerializeField] private RadialProgressBar grillProgressBar;
-    [SerializeField] private RadialProgressBar burnProgressBar;
-
-    public GrillCounter_NoneState NoneState { get; private set; }
-    public GrillCounter_GrillState GrillState { get; private set; }
-    public GrillCounter_BurnState BurnState { get; private set; }
-
-    public float GrillTime => grillTime;
-    public float BurnTime => burnTime;
-
-    private StateMachine stateMachine;
-
-    public FoodSO resultFood;
-
-    public override void Spawned()
-    {
-        base.Spawned();
-
-        InitState();
-    }
-
-    public override void FixedUpdateNetwork()
-    {
-        base.FixedUpdateNetwork();
-
-        stateMachine.Update();
-    }
-
-    private void InitState()
-    {
-        stateMachine = new StateMachine();
-
-        NoneState = new GrillCounter_NoneState(this);
-        GrillState = new GrillCounter_GrillState(this);
-        BurnState = new GrillCounter_BurnState(this);
-
-        stateMachine.ChangeState(NoneState);
-    }
-
+    [SerializeField] private ParticleSystem smoke;
     public override void Interact(PlayerController player)
     {
         if (CanAddFood(player))
         {
-            RPC_AddFood(player.RemoveFood(), foodPoint.position);
-            var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Fire);
+            AddFood(player.RemoveFood());
+
+            SoundManager.Instance.GrillStart(this);
+
+            var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Grill);
             if (recipe != null)
             {
-                grillTime = recipe.Value;
+                cookTime = recipe.Value;
                 resultFood = recipe.Result;
-                SetState(GrillState);
-                SoundManager.Instance.GrillStart();
             }
+
+            SetState(CookState);
+            smoke.Play();
         }
-        else if (CanRemoveFood(player))
+        else if (isDone && CanRemoveFood(player))
         {
-            SoundManager.Instance.GrillEnd();
+            OnCookFinished?.Invoke();
             player.AddFood(RemoveFood());
             SetState(NoneState);
+            smoke.Stop();
+
+            isDone = false;
+            resultFood = null;
         }
     }
 
-    public void SetState(IState newState)
-    {
-        stateMachine.ChangeState(newState);
-    }
-
-    public void ShowGrillProgress()
-    {
-        if (grillProgressBar == null)
-        {
-            return;
-        }
-
-        grillProgressBar.gameObject.SetActive(true);
-    }
-
-    public void HideGrillProgress()
-    {
-        if (grillProgressBar == null)
-        {
-            return;
-        }
-
-        grillProgressBar.gameObject.SetActive(false);
-    }
-
-    public void SetGrillProgress(float normalizedValue)
-    {
-        if (grillProgressBar == null)
-        {
-            return;
-        }
-
-        grillProgressBar.SetProgress(normalizedValue);
-    }
-
-    public void SetBurnProgress(float normalizedValue)
-    {
-        if (burnProgressBar == null)
-        {
-            return;
-        }
-
-        burnProgressBar.SetProgress(normalizedValue);
-    }
-
-    public void AddResultFood(FoodSO resultFood)
-    {
-        if (resultFood == null) return;
-        var food = RemoveFood();
-        // Destroy(food.gameObject);
-        foodSpawner.Despawn(food);
-        RPC_AddFood(foodSpawner.SpawnFood(resultFood), foodPoint.position);
-    }
+    
 }

@@ -26,38 +26,27 @@ public class TrayCounter : ACounter
 
             if (type == FoodSO.FoodType.Main && mainFood != null) return;
 
-            if (type == FoodSO.FoodType.Main)
+            if (type == FoodSO.FoodType.Main || type == FoodSO.FoodType.Side || type == FoodSO.FoodType.Beverage)
             {
-                mainFood = player.RemoveFood();
-                var mainFoodComp = mainFood.GetComponent<Food>();
-                // if (mainFoodComp != null)
-                //     mainFoodComp.RPC_SetHolder(Food.HolderKind.Counter, this, Vector3.zero);
-
-                currentTray = Instantiate(Tray).transform;
-                currentTray.SetParent(mainFood.transform, true);
-                currentTray.localPosition = Vector3.zero;
-
-                CombineAllToMain();
-            }
-            else if (type == FoodSO.FoodType.Side || type == FoodSO.FoodType.Beverage)
-            {
-                if (mainFood != null)
-                {
-                    var food = player.RemoveFood();
-                    
-                    food.transform.SetParent(currentTray, true);
-                    RPC_AddFood(food, foodPoint.position);
-                }
-                else
-                {
-                    RPC_AddFood(player.RemoveFood(), foodPoint.position);
-                }
+                AddFood(player.RemoveFood());
             }
         }
         else
         {
             if (mainFood != null)
             {
+                currentTray = mainFood.transform.Find("Tray_Root");
+
+                if (currentTray == null)
+                {
+                    currentTray = Instantiate(Tray).transform;
+                    currentTray.name = "Tray_Root";
+                    currentTray.SetParent(mainFood.transform, true);
+                    currentTray.localPosition = Vector3.zero;
+                }
+
+                CombineAllToMain();
+
                 player.AddFood(mainFood);
 
                 mainFood = null;
@@ -89,6 +78,8 @@ public class TrayCounter : ACounter
         var foodDataType = food.GetComponent<Food>().Data.Type;
         if (foodDataType == FoodSO.FoodType.Main)
         {
+            mainFood = food;
+            food.transform.position = foodPoint.position;
             // food.transform.position = foodPoint.position;
             // foodPositions.Add(foodPoint.position);
             RPC_AddFood(food, foodPoint.position);
@@ -105,5 +96,7 @@ public class TrayCounter : ACounter
             // foodPositions.Add(subPoints[1].position);
             RPC_AddFood(food, subPoints[1].position);
         }
+
+        food.transform.rotation = Quaternion.identity;
     }
 }

@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &328878238602603927
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2044852988719441105}
+  - component: {fileID: 962394777164396506}
+  m_Layer: 0
+  m_Name: RecipeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2044852988719441105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328878238602603927}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.99257016, y: 7.1228995, z: 5.72653}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &962394777164396506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328878238602603927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f231a13eac904aa58284c2924a75eb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeManager
+  isDontDestroyOnLoad: 1
+  sideMenuRecipes:
+  - {fileID: 11400000, guid: af35eca2de76ba745b01fefc4e495831, type: 2}
+  - {fileID: 11400000, guid: da74f0f3c86674d408893227dd341af0, type: 2}
+  beverageRecipes:
+  - {fileID: 11400000, guid: 9a880120662d27a409a2ff3b9f52e13e, type: 2}
+  assembleRecipes: []
+  grillRecipes:
+  - {fileID: 11400000, guid: df066a4f617134f5ca5093364f1ce026, type: 2}
+  - {fileID: 11400000, guid: 8fc058ec95da913458f02c7dd004e2e1, type: 2}
+  - {fileID: 11400000, guid: fa5245b2f29c222429caefaaf0657f6b, type: 2}
+  sliceRecipes:
+  - {fileID: 11400000, guid: 2d8883842888d4e3a88538c247e47af4, type: 2}
+  - {fileID: 11400000, guid: 11f0a40084e49c4438f6cb29845ab9dd, type: 2}
+  - {fileID: 11400000, guid: 2b6bf48e91b94d240bb9f8ef6b536707, type: 2}
+  - {fileID: 11400000, guid: 12b4efa7acb403c4693d21ae964a9060, type: 2}
+  - {fileID: 11400000, guid: 6f39f5aeb4be9074a959ca98c8f40fd9, type: 2}
+  oilRecipes:
+  - {fileID: 11400000, guid: aed579b03117af742b11f3fe19d9b09c, type: 2}
+  - {fileID: 11400000, guid: 159976e8db19df34887adf5d44438bf5, type: 2}
+  ingredients: []
+  trashFood: {fileID: 11400000, guid: 509d46e9af02c47a1b5000f361bf8252, type: 2}
+  debugRecipes:
+  - {fileID: 11400000, guid: 394a1f53939274e1792ab9d209e5ccf5, type: 2}
+  - {fileID: 11400000, guid: 483349d683bf44a409b8799e9760e500, type: 2}
+  - {fileID: 0}

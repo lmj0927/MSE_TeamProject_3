@@ -3,29 +3,50 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using DG.Tweening;
+using TMPro;
+using UnityEngine.UIElements.Experimental;
 
 public class OrderManager : Singleton<OrderManager>
 {
     [SerializeField] private GameObject orderUI;
-    [SerializeField] private OrderItem[] uiSlots;
+    private OrderItem[] uiSlots;
+    [SerializeField] private RadialProgressBar timerUI;
+    [SerializeField] private TextMeshProUGUI point;
+    [SerializeField] private GameManager starParent;
 
+    private bool isPlaying = false;
     private List<Customer> orders = new List<Customer>();
     private HashSet<Customer> animatedCustomers = new HashSet<Customer>();
 
-    private void Awake()
-    {
-        orderUI = transform.GetChild(0).gameObject;
-        uiSlots = orderUI.GetComponentsInChildren<OrderItem>(true);
-    }
-
     private void Start()
     {
-        CloseUI();
+        uiSlots = orderUI.GetComponentsInChildren<OrderItem>(true);
+        CloseOrder();
+        timerUI.gameObject.SetActive(false);
+
+        GameManager.Instance.OnStageStart += HandleStageStart;
+        GameManager.Instance.OnStageEnd += HandleStageEnd;
+        GameManager.Instance.OnPointUpdated += UpdatePoint;
+    }
+
+    private void Update()
+    {
+        if (!isPlaying) return;
+
+        timerUI.SetProgress(GameManager.Instance.stageTimer / GameManager.Instance.StageT);
+    }
+    private void OnDestroy()
+    {
+        if (GameManager.Instance == null) return;
+
+        GameManager.Instance.OnStageStart -= HandleStageStart;
+        GameManager.Instance.OnStageEnd -= HandleStageEnd;
+        GameManager.Instance.OnPointUpdated -= UpdatePoint;
     }
 
     public void AddOrder(Customer customer)
     {
-        if (orders.Contains(customer)) return;
+        if (!isPlaying || orders.Contains(customer)) return;
 
         orders.Add(customer);
         SoundManager.Instance.Order();
@@ -36,12 +57,9 @@ public class OrderManager : Singleton<OrderManager>
     {
         orders.Remove(customer);
 
-        if (animatedCustomers.Contains(customer))
-        {
-            animatedCustomers.Remove(customer);
-        }
+        animatedCustomers.Remove(customer);
 
-        Resort();
+        if (isPlaying) Resort();
     }
 
     public void Resort()
@@ -53,11 +71,11 @@ public class OrderManager : Singleton<OrderManager>
 
         if (waitingOrders.Count == 0)
         {
-            CloseUI();
+            CloseOrder();
             return;
         }
 
-        if (!orderUI.activeSelf) ShowUI();
+        if (!orderUI.activeSelf) ShowOrder();
 
         for (int i = 0; i < uiSlots.Length; i++)
         {
@@ -83,6 +101,43 @@ public class OrderManager : Singleton<OrderManager>
             }
         }
     }
-    public void ShowUI() => orderUI.SetActive(true);
-    public void CloseUI() => orderUI.SetActive(false);
+    public void ShowOrder() => orderUI.SetActive(true);
+    public void CloseOrder() => orderUI.SetActive(false);
+
+    private void HandleStageStart()
+    {
+        CloseOrder();
+        timerUI.gameObject.SetActive(true);
+
+        timerUI.SetProgress(0);
+        isPlaying = true;
+    }
+    private void HandleStageEnd()
+    {
+        isPlaying = false;
+        CloseOrder();
+        timerUI.gameObject.SetActive(false);
+        orders.Clear(); 
+        animatedCustomers.Clear();
+
+        foreach (var slot in uiSlots)
+        {
+            slot.transform.DOKill(true);
+            slot.transform.localScale = Vector3.one;
+        }
+    }
+
+    private void UpdatePoint(int p, int grade)
+    {
+        point.text = "Point: " + p;
+
+       foreach (GameObject star in starParent.transform)
+        {
+            if (grade > 0)
+            {
+                star.SetActive(true);
+                grade--;
+            } else star.SetActive(false);
+        }
+    }
 }

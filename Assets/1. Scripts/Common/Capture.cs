@@ -4,12 +4,55 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using System.IO;
 
-public class PrefabPreviewCapture
+public class PrefabPreviewCaptureWindow : EditorWindow
 {
     private const int PreviewLayer = 31;
 
-    [MenuItem("Tools/Capture Selected Prefab Preview Transparent")]
-    public static void CaptureSelectedPrefab()
+    // 조절 가능한 옵션들
+    private int resolution = 512;
+    private float zoomPadding = 1.1f;
+    private Vector3 cameraAngles = new Vector3(19f, 149f, 0f);
+    private Vector2 cameraOffset = Vector2.zero;
+
+    private float keyLightIntensity = 0.23f;
+    private float fillLightIntensity = 0.1f;
+
+    [MenuItem("Tools/Prefab Preview Capturer")]
+    public static void ShowWindow()
+    {
+        // 에디터 윈도우 띄우기
+        GetWindow<PrefabPreviewCaptureWindow>("Preview Capturer");
+    }
+
+    private void OnGUI()
+    {
+        GUILayout.Label("Capture Settings", EditorStyles.boldLabel);
+
+        resolution = EditorGUILayout.IntField("Resolution (Size)", resolution);
+
+        GUILayout.Space(10);
+        GUILayout.Label("Camera Settings", EditorStyles.boldLabel);
+        // 줌 조절 (숫자가 작을수록 확대됨)
+        zoomPadding = EditorGUILayout.Slider("Zoom Padding (크기 조절)", zoomPadding, 0.1f, 5f);
+        // 상하좌우 미세 조정
+        cameraOffset = EditorGUILayout.Vector2Field("Camera Offset (위치 조정)", cameraOffset);
+        // 카메라 각도 조절
+        cameraAngles = EditorGUILayout.Vector3Field("Camera Rotation (각도)", cameraAngles);
+
+        GUILayout.Space(10);
+        GUILayout.Label("Light Settings", EditorStyles.boldLabel);
+        keyLightIntensity = EditorGUILayout.Slider("Key Light (주 조명)", keyLightIntensity, 0f, 2f);
+        fillLightIntensity = EditorGUILayout.Slider("Fill Light (보조 조명)", fillLightIntensity, 0f, 2f);
+
+        GUILayout.Space(20);
+
+        if (GUILayout.Button("Capture Selected Prefab", GUILayout.Height(40)))
+        {
+            CaptureSelectedPrefab();
+        }
+    }
+
+    private void CaptureSelectedPrefab()
     {
         GameObject selectedPrefab = Selection.activeGameObject;
 
@@ -18,9 +61,6 @@ public class PrefabPreviewCapture
             Debug.LogWarning("Select a prefab in the project window.");
             return;
         }
-
-        int width = 512;
-        int height = 512;
 
         string folderPath = "Assets/PrefabPreviews";
 
@@ -32,12 +72,12 @@ public class PrefabPreviewCapture
         string assetPath = $"{folderPath}/{selectedPrefab.name}_Preview.png";
         string fullPath = Path.Combine(Application.dataPath, $"PrefabPreviews/{selectedPrefab.name}_Preview.png");
 
-        Texture2D texture = RenderPrefabToTexture(selectedPrefab, width, height);
+        Texture2D texture = RenderPrefabToTexture(selectedPrefab, resolution, resolution);
 
         byte[] bytes = texture.EncodeToPNG();
         File.WriteAllBytes(fullPath, bytes);
 
-        Object.DestroyImmediate(texture);
+        DestroyImmediate(texture);
 
         AssetDatabase.ImportAsset(assetPath);
 
@@ -58,9 +98,9 @@ public class PrefabPreviewCapture
         Debug.Log($"Sprite preview saved: {assetPath}");
     }
 
-    private static Texture2D RenderPrefabToTexture(GameObject prefab, int width, int height)
+    private Texture2D RenderPrefabToTexture(GameObject prefab, int width, int height)
     {
-        GameObject instance = Object.Instantiate(prefab);
+        GameObject instance = Instantiate(prefab);
 
         instance.name = prefab.name + "_PreviewInstance";
         instance.transform.position = Vector3.zero;
@@ -73,11 +113,7 @@ public class PrefabPreviewCapture
         Bounds bounds = CalculateBounds(instance);
 
         float maxSize = Mathf.Max(bounds.size.x, bounds.size.y, bounds.size.z);
-
-        if (maxSize <= 0.0001f)
-        {
-            maxSize = 1f;
-        }
+        if (maxSize <= 0.0001f) maxSize = 1f;
 
         Vector3 center = bounds.center;
 
@@ -87,45 +123,45 @@ public class PrefabPreviewCapture
         camera.clearFlags = CameraClearFlags.SolidColor;
         camera.backgroundColor = new Color(0f, 0f, 0f, 0f);
         camera.orthographic = true;
-        camera.nearClipPlane = 0.01f;
+        camera.nearClipPlane = -maxSize * 10f; // 오브젝트가 잘리지 않게 넉넉히
         camera.farClipPlane = maxSize * 20f;
         camera.cullingMask = 1 << PreviewLayer;
         camera.allowMSAA = false;
         camera.aspect = (float)width / height;
 
-        // Bounds 크기에 비례해서 살짝 위에서 내려다보는 3/4 view.
-        Vector3 viewDirection = new Vector3(0.6f, -0.4f, -1f).normalized;
+        // ⭐ UI에서 설정한 값으로 카메라 위치와 각도 세팅
+        Quaternion camRotation = Quaternion.Euler(cameraAngles);
+        Vector3 viewDirection = camRotation * Vector3.forward;
         float cameraDistance = maxSize * 3.0f;
 
+        cameraObject.transform.rotation = camRotation;
         cameraObject.transform.position = center - viewDirection * cameraDistance;
-        cameraObject.transform.rotation = Quaternion.LookRotation(viewDirection, Vector3.up);
 
-        // 프리팹 전체가 화면 안에 들어오도록 orthographic size 자동 계산.
-        //float padding = 1.25f;
-        //camera.orthographicSize = GetOrthographicSizeForBounds(bounds, camera, padding);
-        camera.orthographicSize = 1.2f;
+        // 수동 오프셋(Offset) 적용 (너무 쏠려있을 때 중심을 맞추는 용도)
+        cameraObject.transform.position += cameraObject.transform.right * cameraOffset.x;
+        cameraObject.transform.position += cameraObject.transform.up * cameraOffset.y;
 
-        // 기존 씬 조명/환경 설정 백업.
+        // 수동 줌 패딩 적용
+        camera.orthographicSize = GetOrthographicSizeForBounds(bounds, camera, zoomPadding);
+
         AmbientMode previousAmbientMode = RenderSettings.ambientMode;
         Color previousAmbientLight = RenderSettings.ambientLight;
 
         RenderSettings.ambientMode = AmbientMode.Flat;
         RenderSettings.ambientLight = new Color(0.62f, 0.62f, 0.62f, 1f);
 
-        // 은은한 키 라이트.
         GameObject keyLightObject = new GameObject("Preview Soft Key Light");
         Light keyLight = keyLightObject.AddComponent<Light>();
         keyLight.type = LightType.Directional;
-        keyLight.intensity = 0.55f;
+        keyLight.intensity = keyLightIntensity; // UI 값 적용
         keyLight.color = Color.white;
         keyLight.cullingMask = 1 << PreviewLayer;
         keyLightObject.transform.rotation = Quaternion.Euler(45f, -35f, 0f);
 
-        // 약한 필 라이트.
         GameObject fillLightObject = new GameObject("Preview Soft Fill Light");
         Light fillLight = fillLightObject.AddComponent<Light>();
         fillLight.type = LightType.Directional;
-        fillLight.intensity = 0.1f;
+        fillLight.intensity = fillLightIntensity; // UI 값 적용
         fillLight.color = Color.white;
         fillLight.cullingMask = 1 << PreviewLayer;
         fillLightObject.transform.rotation = Quaternion.Euler(25f, 140f, 0f);
@@ -138,7 +174,6 @@ public class PrefabPreviewCapture
         };
 
         renderTexture.Create();
-
         camera.targetTexture = renderTexture;
 
         RenderTexture previousRT = RenderTexture.active;
@@ -155,31 +190,28 @@ public class PrefabPreviewCapture
         RenderTexture.active = previousRT;
         camera.targetTexture = null;
 
-        // RenderSettings 복구.
         RenderSettings.ambientMode = previousAmbientMode;
         RenderSettings.ambientLight = previousAmbientLight;
 
-        Object.DestroyImmediate(renderTexture);
-        Object.DestroyImmediate(fillLightObject);
-        Object.DestroyImmediate(keyLightObject);
-        Object.DestroyImmediate(cameraObject);
-        Object.DestroyImmediate(instance);
+        DestroyImmediate(renderTexture);
+        DestroyImmediate(fillLightObject);
+        DestroyImmediate(keyLightObject);
+        DestroyImmediate(cameraObject);
+        DestroyImmediate(instance);
 
         return result;
     }
 
-    private static Bounds CalculateBounds(GameObject obj)
+    private Bounds CalculateBounds(GameObject obj)
     {
         Renderer[] renderers = obj.GetComponentsInChildren<Renderer>(true);
 
         if (renderers.Length == 0)
         {
-            Debug.LogWarning("No renderer in the selected prefab.");
             return new Bounds(obj.transform.position, Vector3.one);
         }
 
         Bounds bounds = renderers[0].bounds;
-
         foreach (Renderer renderer in renderers)
         {
             bounds.Encapsulate(renderer.bounds);
@@ -188,10 +220,9 @@ public class PrefabPreviewCapture
         return bounds;
     }
 
-    private static float GetOrthographicSizeForBounds(Bounds bounds, Camera camera, float padding)
+    private float GetOrthographicSizeForBounds(Bounds bounds, Camera camera, float padding)
     {
         Vector3[] corners = GetBoundsCorners(bounds);
-
         Matrix4x4 worldToCamera = camera.worldToCameraMatrix;
 
         float minX = float.PositiveInfinity;
@@ -202,7 +233,6 @@ public class PrefabPreviewCapture
         foreach (Vector3 corner in corners)
         {
             Vector3 cameraSpacePoint = worldToCamera.MultiplyPoint(corner);
-
             minX = Mathf.Min(minX, cameraSpacePoint.x);
             maxX = Mathf.Max(maxX, cameraSpacePoint.x);
             minY = Mathf.Min(minY, cameraSpacePoint.y);
@@ -218,7 +248,7 @@ public class PrefabPreviewCapture
         return Mathf.Max(sizeByHeight, sizeByWidth) * padding;
     }
 
-    private static Vector3[] GetBoundsCorners(Bounds bounds)
+    private Vector3[] GetBoundsCorners(Bounds bounds)
     {
         Vector3 center = bounds.center;
         Vector3 extents = bounds.extents;
@@ -236,20 +266,18 @@ public class PrefabPreviewCapture
         };
     }
 
-    private static void SetLayerRecursively(GameObject obj, int layer)
+    private void SetLayerRecursively(GameObject obj, int layer)
     {
         obj.layer = layer;
-
         foreach (Transform child in obj.transform)
         {
             SetLayerRecursively(child.gameObject, layer);
         }
     }
 
-    private static void SetActiveRecursively(GameObject obj, bool active)
+    private void SetActiveRecursively(GameObject obj, bool active)
     {
         obj.SetActive(active);
-
         foreach (Transform child in obj.transform)
         {
             SetActiveRecursively(child.gameObject, active);
