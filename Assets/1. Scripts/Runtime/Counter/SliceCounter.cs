@@ -57,11 +57,11 @@ public class SliceCounter : ACounter
                     progressBar.SetProgress(0f);
                 }
                 var food = RemoveFood();
-                foodSpawner.Despawn(food);
-                if (recipe == null) AddFood(foodSpawner.SpawnFood(RecipeManager.Instance.GetTrashFood()));
+                FoodSpawner.Despawn(Runner, food);
+                if (recipe == null) AddFood(FoodSpawner.SpawnFood(Runner, RecipeManager.Instance.GetTrashFood()));
                 else
                 {
-                    AddFood(foodSpawner.SpawnFood(recipe.Result));
+                    AddFood(FoodSpawner.SpawnFood(Runner, recipe.Result));
                     recipe = null;
                 }
             }

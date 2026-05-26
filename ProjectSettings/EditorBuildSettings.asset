@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/3. Scenes/YongKyu/Multi Main Test.unity
+    guid: 7496f67aa7aa249618402d69a72eecc4
+  - enabled: 1
+    path: Assets/3. Scenes/YongKyu/Multi Test Restaurant 3.unity
+    guid: a618ab376b2c44cec86dd39d48af0147
+  - enabled: 0
     path: Assets/3. Scenes/YongKyu/Multi Test Restaurant 2.unity
     guid: 30118f3701efa40c4881b0223275e73e
   - enabled: 0

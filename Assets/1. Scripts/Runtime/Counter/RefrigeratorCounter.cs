@@ -55,7 +55,7 @@ public class RefrigeratorCounter : ACounter
 
     private void OnIngredientSelected(FoodSO foodSO)
     {
-        NetworkObject food = foodSpawner.SpawnFood(foodSO);
+        NetworkObject food = FoodSpawner.SpawnFood(Runner, foodSO);
         if(food != null)
             FoodTransfer.Transfer(this, interactPlayer, food, Vector3.zero);
 

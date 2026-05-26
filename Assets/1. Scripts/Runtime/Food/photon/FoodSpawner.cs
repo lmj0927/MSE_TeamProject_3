@@ -1,14 +1,15 @@
+// owned by Yongkyu Lee
 using Fusion;
 using UnityEngine;
 
-public class FoodSpawner : SimulationBehaviour
+public static class FoodSpawner
 {
 
-    public NetworkObject SpawnFood(FoodSO foodSO, PlayerRef? inputAuthority = null)
+    public static NetworkObject SpawnFood(NetworkRunner runner, FoodSO foodSO, PlayerRef? inputAuthority = null)
     {
-        return SpawnFood(foodSO, Vector3.zero, Quaternion.identity, inputAuthority);
+        return SpawnFood(runner, foodSO, Vector3.zero, Quaternion.identity, inputAuthority);
     }
-    public NetworkObject SpawnFood(FoodSO foodSO, Vector3 position, Quaternion rotation, PlayerRef? inputAuthority = null)
+    public static NetworkObject SpawnFood(NetworkRunner runner, FoodSO foodSO, Vector3 position, Quaternion rotation, PlayerRef? inputAuthority = null)
     {
         if (foodSO == null)
         {
@@ -28,14 +29,14 @@ public class FoodSpawner : SimulationBehaviour
         //     return null;
         // }
 
-        if(Runner == null)
+        if(runner == null)
         {
             Debug.Log("[FoodSpawner SpawnFood] Runner is null.");
             return null;
         }
         // Debug.Log(Runner.CanSpawn + " runner can spawn");
 
-        NetworkObject obj = Runner.Spawn(
+        NetworkObject obj = runner.Spawn(
             foodSO.Prefab,
             position,
             rotation,
@@ -52,19 +53,19 @@ public class FoodSpawner : SimulationBehaviour
         return obj;
     }
 
-    public void Despawn(NetworkId foodObjectId)
+    public static void Despawn(NetworkRunner runner, NetworkId foodObjectId)
     {
-        Runner.Despawn(Runner.FindObject(foodObjectId));
+        runner.Despawn(runner.FindObject(foodObjectId));
     }
 
-    public void Despawn(NetworkObject foodObject)
-    {
-        Runner.Despawn(foodObject);
-    }
+    // public static void Despawn(NetworkObject foodObject)
+    // {
+    //     Runner.Despawn(foodObject);
+    // }
 
 
-    public bool CanSpawn()
+    public static bool CanSpawn(NetworkRunner runner)
     {
-        return Runner != null || Runner.CanSpawn;
+        return runner != null || runner.CanSpawn;
     }
 }

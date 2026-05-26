@@ -10,10 +10,7 @@ public abstract class ACounter : NetworkBehaviour, IInteractable, IFoodHolder
 
     public Transform FoodPoint => foodPoint;
 
-    /// <summary>
-    /// Food spawner/despawner for networked food object.
-    /// </summary>
-    [SerializeField] protected FoodSpawner foodSpawner;
+
 
     /// <summary>
     /// List of the network object ids for each of the food object.
@@ -29,15 +26,6 @@ public abstract class ACounter : NetworkBehaviour, IInteractable, IFoodHolder
 
     public override void Spawned()
     {
-        foodSpawner = NetworkRunner.GetRunnerForGameObject(gameObject).GetComponent<FoodSpawner>();
-        if (foodSpawner == null)
-        {
-            Debug.LogError("[ACounter Spawned] foodSpawner is null.");
-        }
-        else if (!foodSpawner.CanSpawn())
-        {
-            Debug.LogError("[ACounter Spawned] foodSpawner cannot spawn since it is null or Runner.CanSpawn is false.");
-        }
     }
 
     [SerializeField] private Transform outlineRoot;
@@ -172,7 +160,7 @@ public abstract class ACounter : NetworkBehaviour, IInteractable, IFoodHolder
 
         foreach (var food in foods)
         {
-            foodSpawner.Despawn(food);
+            FoodSpawner.Despawn(Runner, food);
         }
         foods.Clear();
         foodPositions.Clear();
@@ -186,7 +174,7 @@ public abstract class ACounter : NetworkBehaviour, IInteractable, IFoodHolder
     {
         foreach (var food in foods)
         {
-            foodSpawner.Despawn(food);
+            FoodSpawner.Despawn(Runner, food);
         }
         foods.Clear();
         foodPositions.Clear();

@@ -91,8 +91,9 @@ public abstract class AFireCounter : ACounter
     {
         if (resultFood == null) return;
         var food = RemoveFood();
-        Destroy(food.gameObject);
-        AddFood(foodSpawner.SpawnFood(resultFood));
+        // Destroy(food.gameObject);
+        FoodSpawner.Despawn(Runner, food);
+        AddFood(FoodSpawner.SpawnFood(Runner, resultFood));
     }
 
     public void SetDone(bool val)

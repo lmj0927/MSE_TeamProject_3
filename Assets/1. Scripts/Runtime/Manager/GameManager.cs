@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using Fusion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
 {
     public enum GameState {
         MainMenu,
@@ -15,7 +16,7 @@ public class GameManager : Singleton<GameManager>
         Result
     }
 
-    private GameState state = GameState.MainMenu;
+    [Networked] private GameState state { get; set; }
     [SerializeField] private StageSO[] stages;
     private StageSO reading;
 
@@ -30,15 +31,24 @@ public class GameManager : Singleton<GameManager>
 
     private float stageT = 60f;
     public float StageT => stageT;
-    public float stageTimer { get; private set; } = 0f;    
+    [Networked] public float stageTimer { get; private set; } = 0f;    
 
-    public int currentP { get; private set; } = 0;
+    [Networked] public int currentP { get; private set; } = 0;
+
+    public bool IsBusy => throw new NotImplementedException();
+
+    public Scene MainRunnerScene => throw new NotImplementedException();
+
     private int pastP = 0;       
 
-    private void Start()
+    public override void Spawned()
     {
+        base.Spawned();
+        state = GameState.MainMenu;
+        stageTimer = 0f;
+        currentP = 0;
     }
-    private void Update()
+    public override void FixedUpdateNetwork()
     {
         if (isPaused) return;
         switch(state)
@@ -47,7 +57,7 @@ public class GameManager : Singleton<GameManager>
                 if (true) ChangeState(GameState.Playing);               // 모든 플레이어 로딩완료 체크하는 것으로 수정 예정
                 break;
             case GameState.Playing:
-                stageTimer += Time.deltaTime;
+                stageTimer += Runner.DeltaTime;
 
                 if (stageTimer >= stageT)
                 {
@@ -80,6 +90,9 @@ public class GameManager : Singleton<GameManager>
 
     public void ChangeState(GameState newState)
     {
+        if(!HasStateAuthority) return;
+
+        Debug.Log($"[GameManager ChangeState] {state} to {newState}");
         state = newState;
 
         switch(state)
@@ -89,17 +102,22 @@ public class GameManager : Singleton<GameManager>
                 if (reading != null) stageT = reading.stageTimeLimit;
 
 
-                UnityEngine.Events.UnityAction<Scene, LoadSceneMode> OnLoad = null;
-                OnLoad = (scene, mode) =>
+                // UnityEngine.Events.UnityAction<Scene, LoadSceneMode> OnLoad = null;
+                // OnLoad = (scene, mode) =>
+                // {
+                //     ChangeState(GameState.WaitSync);
+
+                //     SceneManager.sceneLoaded -= OnLoad;
+                // };
+
+                // SceneManager.sceneLoaded += OnLoad;
+
+                // SceneManager.LoadScene(reading.sceneName);
+                if(HasStateAuthority)
                 {
-                    ChangeState(GameState.WaitSync);
-
-                    SceneManager.sceneLoaded -= OnLoad;
-                };
-
-                SceneManager.sceneLoaded += OnLoad;
-
-                SceneManager.LoadScene(reading.sceneName);
+                    var sceneRef = SceneRef.FromIndex(SceneUtility.GetBuildIndexByScenePath("Assets/3. Scenes/YongKyu/" + reading.sceneName + ".unity"));
+                    Runner.LoadScene(sceneRef, LoadSceneMode.Single);
+                }
                 break;
 
             case GameState.Playing:
@@ -186,5 +204,10 @@ public class GameManager : Singleton<GameManager>
     public void LeaveStage()               // 버튼에서 구독할 함수
     {
         ChangeState(GameState.MainMenu);
+    }
+
+    public void SceneLoadDone(in SceneLoadDoneArgs sceneInfo)
+    {
+        ChangeState(GameState.WaitSync);
     }
 }

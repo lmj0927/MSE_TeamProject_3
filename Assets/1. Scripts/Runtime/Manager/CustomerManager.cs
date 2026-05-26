@@ -1,8 +1,9 @@
 // Owned by JunYoung Park
 using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 
-public class CustomerManager : MonoBehaviour
+public class CustomerManager : NetworkBehaviour
 {
     private bool isPlaying = false;
 
@@ -44,7 +45,7 @@ public class CustomerManager : MonoBehaviour
 
     [Tooltip("Probability of ordering wiht sidemenu (0.0 ~ 1.0)")]
     [SerializeField] private float sideRatio = 0.5f;
-    private void Awake()
+    public override void Spawned()
     {
         kioskState = new bool[waitingPoint.Length];
         kCustomers = new Customer[waitingPoint.Length];
@@ -57,14 +58,17 @@ public class CustomerManager : MonoBehaviour
         }
         useState = new bool[chairs.Length];
         customers = new Customer[chairs.Length];
+
+        if(GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
+        else GameManagerActionsSetup();
     }
 
-    private void Start()
+    private void GameManagerActionsSetup()
     {
         GameManager.Instance.OnStageStart += HandleStageStart;
         GameManager.Instance.OnStageEnd += HandleStageEnd;
     }
-    void Update()
+    public override void FixedUpdateNetwork()
     {
         if (!isPlaying) return;
 

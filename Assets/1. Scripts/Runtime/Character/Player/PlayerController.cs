@@ -24,10 +24,14 @@ public class PlayerController : NetworkBehaviour, IFoodHolder
 
         if (HasStateAuthority)
             HeldFoodObject = null;
+
+        if(GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
+        else GameManagerActionsSetup();
     }
-    private void Start()
+    private void GameManagerActionsSetup()
     {
-        FreezeMovement(true);
+        // TODO: do not freeze at first.
+        // FreezeMovement(true);
         GameManager.Instance.OnStageStart += HandleStageStart;
         GameManager.Instance.OnResult += HandleStageEnd;
     }
@@ -172,6 +176,9 @@ public class PlayerController : NetworkBehaviour, IFoodHolder
         Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] CanRemove() = {ok} (HeldFoodObject={heldName})");
         return ok;
     }
-    private void HandleStageStart() => FreezeMovement(false);
+    private void HandleStageStart() {
+        Debug.Log("[PlayerController HandleStageStart] called to unfreeze player.");
+        FreezeMovement(false);
+    }
     private void HandleStageEnd() => FreezeMovement(true);
 }

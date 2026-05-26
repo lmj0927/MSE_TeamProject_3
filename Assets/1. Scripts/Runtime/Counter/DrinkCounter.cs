@@ -81,7 +81,7 @@ public class DrinkCounter : ACounter
         currentUser.FreezeMovement(true);
         progressBar.gameObject.SetActive(true);
 
-        RPC_AddFood(foodSpawner.SpawnFood(drinks[selected]), foodPoint.position);
+        RPC_AddFood(FoodSpawner.SpawnFood(Runner, drinks[selected]), foodPoint.position);
 
         recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Beverage);
         maxTimingRange = recipe.Value;         // Should be lower than 2sec (depending on sfx)

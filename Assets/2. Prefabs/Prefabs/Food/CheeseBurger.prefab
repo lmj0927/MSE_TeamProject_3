@@ -438,9 +438,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Food
-  _Holder: 0
-  _HolderRef: {fileID: 0}
-  _LocalOffset: {x: 0, y: 0, z: 0}
   data: {fileID: 11400000, guid: fa44b1c3a2c554108a53c334cd57a0a0, type: 2}
 --- !u!114 &3388136381475492188
 MonoBehaviour:

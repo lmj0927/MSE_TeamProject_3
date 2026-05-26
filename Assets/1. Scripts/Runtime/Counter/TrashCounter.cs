@@ -7,7 +7,7 @@ public class TrashCounter : ACounter
     {
         if (player.HasFood())
         {
-            foodSpawner.Despawn(player.RemoveFood());
+            FoodSpawner.Despawn(Runner, player.RemoveFood());
             SoundManager.Instance.Trash();
         }
     }

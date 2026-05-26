@@ -18,7 +18,7 @@ public class CookingCounter : ACounter
             if (recipe != null)
             {
                 RPC_ClearFood();
-                player.AddFood(foodSpawner.SpawnFood(recipe.Result));
+                player.AddFood(FoodSpawner.SpawnFood(Runner, recipe.Result));
                 recipe = null;
             }
             else
@@ -28,6 +28,36 @@ public class CookingCounter : ACounter
                 if (temp != null) player.AddFood(temp);
             }
         }
+        AuthorityHandler.RequestStateAuthority(
+            onAuthorized: () =>
+            {
+                if(player.HasFood() && AcceptsFood(player.HeldFood.Data))
+                {
+                    FoodTransfer.Transfer(player, this, player.HeldFoodObject, foodPoint.position + (Vector3.up * foods.Count * 0.1f));
+                }
+                else if(CanRemoveFood(player))
+                {
+                    recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Assemble);
+
+                    if (recipe != null)
+                    {
+                        RPC_ClearFood();
+                        player.AddFood(FoodSpawner.SpawnFood(Runner, recipe.Result));
+                        recipe = null;
+                        
+                    }
+                    else
+                    {
+                        var temp = RemoveFood();
+                        
+                        if (temp != null) player.AddFood(temp);
+                    }
+                }
+            },
+            onNotAuthorized: () =>
+            {
+            }
+        );
     }
 
     protected override void AddFood(NetworkObject food)

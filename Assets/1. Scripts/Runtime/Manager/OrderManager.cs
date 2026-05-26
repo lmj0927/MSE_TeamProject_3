@@ -6,7 +6,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine.UIElements.Experimental;
 
-public class OrderManager : Singleton<OrderManager>
+public class OrderManager : NetworkSingleton<OrderManager>
 {
     [SerializeField] private GameObject orderUI;
     private OrderItem[] uiSlots;
@@ -18,18 +18,25 @@ public class OrderManager : Singleton<OrderManager>
     private List<Customer> orders = new List<Customer>();
     private HashSet<Customer> animatedCustomers = new HashSet<Customer>();
 
-    private void Start()
+    public override void Spawned()
     {
+        base.Spawned();
         uiSlots = orderUI.GetComponentsInChildren<OrderItem>(true);
         CloseOrder();
         timerUI.gameObject.SetActive(false);
 
+        if(GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
+        else GameManagerActionsSetup();
+    }
+
+    private void GameManagerActionsSetup()
+    {
         GameManager.Instance.OnStageStart += HandleStageStart;
         GameManager.Instance.OnStageEnd += HandleStageEnd;
         GameManager.Instance.OnPointUpdated += UpdatePoint;
     }
 
-    private void Update()
+    public override void FixedUpdateNetwork()
     {
         if (!isPlaying) return;
 
