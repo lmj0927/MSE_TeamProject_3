@@ -9,4 +9,6 @@ public interface IFoodHolder
     bool CanRemove();
     void OnAdded(NetworkObject food, Vector3 pos);
     void OnRemoved(NetworkObject food);
+
+    void OnClear();
 }

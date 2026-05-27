@@ -1,6 +1,7 @@
 ﻿// Owned by JunYoung Park
 using System;
 using System.Collections;
+using Fusion;
 using UnityEngine;
 
 public class DrinkCounter : ACounter
@@ -44,7 +45,7 @@ public class DrinkCounter : ACounter
 
         if (isUsing)
         {
-            current += Time.deltaTime;
+            current += Runner.DeltaTime;
             progressBar.SetProgress(current / maxTimingRange);
 
             if (current >= maxTimingRange)
@@ -57,19 +58,29 @@ public class DrinkCounter : ACounter
     public override void Interact(PlayerController player)
     {
         if (player.HasFood()) return;
+        
+        AuthorityHandler.RequestStateAuthority(
+            onAuthorized: () =>
+            {
 
-        if (!isUsing)
-        {
-            SoundManager.Instance.DrinkStart(this);
-            StartDispensing(player);
-        }
-        else if (player == currentUser)
-        {
-            float tolerance = maxTimingRange * acceptableRatio;
-            bool isSuccess = Mathf.Abs(current - interactingTiming) <= tolerance;
-;
-            EndDispensing(isSuccess);
-        }
+                if (!isUsing)
+                {
+                    SoundManager.Instance.DrinkStart(this);
+                    StartDispensing(player);
+                }
+                else if (player == currentUser)
+                {
+                    float tolerance = maxTimingRange * acceptableRatio;
+                    bool isSuccess = Mathf.Abs(current - interactingTiming) <= tolerance;
+
+                    EndDispensing(isSuccess);
+                }
+            },
+            onNotAuthorized: () =>
+            {
+                Debug.LogWarning("[DrinkCounter Interact] denied.");
+            }
+        );
     }
 
     private void StartDispensing(PlayerController player)
@@ -81,7 +92,8 @@ public class DrinkCounter : ACounter
         currentUser.FreezeMovement(true);
         progressBar.gameObject.SetActive(true);
 
-        RPC_AddFood(FoodSpawner.SpawnFood(Runner, drinks[selected]), foodPoint.position);
+        OnAdded(FoodSpawner.SpawnFood(Runner, drinks[selected]), Vector3.zero);
+
 
         recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Beverage);
         maxTimingRange = recipe.Value;         // Should be lower than 2sec (depending on sfx)
@@ -112,11 +124,13 @@ public class DrinkCounter : ACounter
 
         if (isSuccess)
         {
-            currentUser.AddFood(RemoveFood());
+            // currentUser.AddFood(RemoveFood());
+            FoodTransfer.Transfer(this, currentUser, GetLastFood(), Vector3.zero);
         }
         else
         {
-            RPC_ClearFood();
+            // RPC_ClearFood();
+            OnClear();
         }
     }
 

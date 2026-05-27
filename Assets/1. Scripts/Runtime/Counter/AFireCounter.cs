@@ -90,10 +90,21 @@ public abstract class AFireCounter : ACounter
     public void AddResultFood(FoodSO resultFood)
     {
         if (resultFood == null) return;
-        var food = RemoveFood();
+        // var food = RemoveFood();
         // Destroy(food.gameObject);
-        FoodSpawner.Despawn(Runner, food);
-        AddFood(FoodSpawner.SpawnFood(Runner, resultFood));
+        // AddFood(FoodSpawner.SpawnFood(Runner, resultFood));
+        var food = GetLastFood();
+        food.GetComponent<AuthorityHandler>().RequestStateAuthority(
+            onAuthorized: () =>
+            {
+                FoodSpawner.Despawn(Runner, food);
+                OnAdded(FoodSpawner.SpawnFood(Runner, resultFood), Vector3.zero);        
+            },
+            onNotAuthorized: () =>
+            {
+                Debug.Log("[AFireCounter AddResultFood] denied.");
+            }
+        );
     }
 
     public void SetDone(bool val)

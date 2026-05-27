@@ -20,7 +20,7 @@ public class RefrigeratorCounter : ACounter
 
     public override void FixedUpdateNetwork()
     {
-        if (interactionCooltime > 0) interactionCooltime -= Time.deltaTime;
+        if (interactionCooltime > 0) interactionCooltime -= Runner.DeltaTime;
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -44,7 +44,9 @@ public class RefrigeratorCounter : ACounter
 
             SetDoors(true);
 
-            Destroy(player.RemoveFood().gameObject);
+            // Destroy(player.RemoveFood().sgameObject);
+            
+            FoodSpawner.Despawn(Runner, player.HeldFoodObject);
 
             DOVirtual.DelayedCall(doorAnimDuration * 0.7f, () =>
             {

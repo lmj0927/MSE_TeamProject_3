@@ -55,6 +55,7 @@ public static class FoodSpawner
 
     public static void Despawn(NetworkRunner runner, NetworkId foodObjectId)
     {
+        // if(foodObjectId)
         runner.Despawn(runner.FindObject(foodObjectId));
     }
 

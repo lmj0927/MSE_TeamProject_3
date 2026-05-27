@@ -181,4 +181,10 @@ public class PlayerController : NetworkBehaviour, IFoodHolder
         FreezeMovement(false);
     }
     private void HandleStageEnd() => FreezeMovement(true);
+
+    public void OnClear()
+    {
+
+        throw new System.NotImplementedException();
+    }
 }

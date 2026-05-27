@@ -23,7 +23,7 @@ public class BaseCounter : ACounter
                     float randomZ = Random.Range(-scatterRadius, scatterRadius);
                     Vector3 randomOffset = new Vector3(randomX, 0f, randomZ);
 
-                    FoodTransfer.Transfer(player, this, player.HeldFoodObject, foodPoint.position + (Vector3.up * foods.Count * 0.1f) + randomOffset);
+                    FoodTransfer.Transfer(player, this, player.HeldFoodObject, (Vector3.up * foods.Count * 0.1f) + randomOffset);
                 }
                 else if (CanRemoveFood(player))
                 {

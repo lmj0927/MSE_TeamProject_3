@@ -13,37 +13,51 @@ public class FrierCounter : AFireCounter
 
     public override void Interact(PlayerController player)
     {
-        if (!isBasketDown && CanAddFood(player))
-        {
-            AddFood(player.RemoveFood());
-            var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Oil);
-            if (recipe != null)
+        AuthorityHandler.RequestStateAuthority(
+            onAuthorized: () =>
             {
-                cookTime = recipe.Value;
-                resultFood = recipe.Result;
+                if (!isBasketDown && CanAddFood(player))
+                {
+                    // AddFood(player.RemoveFood());
+                    FoodTransfer.Transfer(player, this, player.HeldFoodObject, Vector3.zero);
+                    var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Oil);
+                    if (recipe != null)
+                    {
+                        cookTime = recipe.Value;
+                        resultFood = recipe.Result;
+                    }
+                } 
+                else if (!isBasketDown && !isDone && HasFood())
+                {
+                    isBasketDown = true;
+                    otherside.SetBasket(true);
+
+                    StartFry();
+                    otherside.StartFry();
+                    
+                } 
+                else if (isDone && isBasketDown)
+                {
+                    isBasketDown = false;
+                    otherside.SetBasket(false);
+
+                    FinishFry();
+                    otherside.FinishFry();
+                } 
+                else if (isDone && CanRemoveFood(player))
+                {
+                    isDone = false;
+
+                    // player.AddFood(RemoveFood());
+                    FoodTransfer.Transfer(this, player, GetLastFood(), Vector3.zero);
+                    resultFood = null;
+                }
+            },
+            onNotAuthorized: () =>
+            {
+                Debug.LogWarning("[FrierCounter Interact] Denied");
             }
-        } else if (!isBasketDown && !isDone && HasFood())
-        {
-            isBasketDown = true;
-            otherside.SetBasket(true);
-
-            StartFry();
-            otherside.StartFry();
-            
-        } else if (isDone && isBasketDown)
-        {
-            isBasketDown = false;
-            otherside.SetBasket(false);
-
-            FinishFry();
-            otherside.FinishFry();
-        } else if (isDone && CanRemoveFood(player))
-        {
-            isDone = false;
-
-            player.AddFood(RemoveFood());
-            resultFood = null;
-        } 
+        );
     }
 
     public void StartFry()
