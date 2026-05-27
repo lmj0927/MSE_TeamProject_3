@@ -61,9 +61,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2b6bf48e91b94d240bb9f8ef6b536707, type: 2}
   - {fileID: 11400000, guid: 12b4efa7acb403c4693d21ae964a9060, type: 2}
   - {fileID: 11400000, guid: 6f39f5aeb4be9074a959ca98c8f40fd9, type: 2}
+  - {fileID: 11400000, guid: 26a0fe850956fb442aae0da2f94f0707, type: 2}
   oilRecipes:
   - {fileID: 11400000, guid: aed579b03117af742b11f3fe19d9b09c, type: 2}
   - {fileID: 11400000, guid: 159976e8db19df34887adf5d44438bf5, type: 2}
+  - {fileID: 11400000, guid: 58d518d969c20f341bb834eac3fae755, type: 2}
   ingredients: []
   trashFood: {fileID: 11400000, guid: 509d46e9af02c47a1b5000f361bf8252, type: 2}
   debugRecipes:
