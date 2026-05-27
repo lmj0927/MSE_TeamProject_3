@@ -118,7 +118,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -7201565908688825660, guid: 3ba6f838fa2934e42a30c19fb88c9677, type: 3}
 --- !u!65 &-1248990779637225684
@@ -155,7 +155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SliceCounter
   foodPoint: {fileID: 2461633508383189703}
-  defaultCount: 5
+  outlineRoot: {fileID: 0}
   progressBar: {fileID: 6988603572045264521}
 --- !u!1 &2795608010820608868
 GameObject:

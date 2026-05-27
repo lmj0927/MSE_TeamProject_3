@@ -120,7 +120,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -7201565908688825660, guid: 3ba6f838fa2934e42a30c19fb88c9677, type: 3}
 --- !u!65 &4355254203346618897
@@ -157,6 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CookingCounter
   foodPoint: {fileID: 5503633102482622519}
+  outlineRoot: {fileID: 0}
 --- !u!1 &1522178499186077311
 GameObject:
   m_ObjectHideFlags: 0

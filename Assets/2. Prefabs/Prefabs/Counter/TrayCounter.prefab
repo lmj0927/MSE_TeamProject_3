@@ -410,7 +410,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -7201565908688825660, guid: 3ba6f838fa2934e42a30c19fb88c9677, type: 3}
 --- !u!65 &6976196477328287918
@@ -447,6 +447,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrayCounter
   foodPoint: {fileID: 316395569190402455}
+  outlineRoot: {fileID: 0}
   currentTray: {fileID: 0}
   Tray: {fileID: 2333169965421215431, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
   subPoints:

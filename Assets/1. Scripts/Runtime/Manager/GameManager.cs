@@ -18,6 +18,7 @@ public class GameManager : Singleton<GameManager>
     private GameState state = GameState.MainMenu;
     [SerializeField] private StageSO[] stages;
     private StageSO reading;
+    public StageSO Reading => reading;
 
     private bool isPlaying = false;
     private bool isPaused = false;      // 일시정지?(고려중)
