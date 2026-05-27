@@ -23,25 +23,27 @@ public class PlayerController : NetworkBehaviour, IFoodHolder
             holdAnchor = transform;
 
         if (HasStateAuthority)
+        {
             HeldFoodObject = null;
+            if(GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
+            else GameManagerActionsSetup();
+        }
 
-        if(GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
-        else GameManagerActionsSetup();
     }
     private void GameManagerActionsSetup()
     {
         // TODO: do not freeze at first.
-        // FreezeMovement(true);
-        GameManager.Instance.OnStageStart += HandleStageStart;
-        GameManager.Instance.OnResult += HandleStageEnd;
+        FreezeMovement(true);
+        GameManager.Instance.OnStageStart += RPC_HandleStageStart;
+        GameManager.Instance.OnResult += RPC_HandleStageEnd;
     }
 
     private void OnDestroy()
     {
         if (GameManager.Instance == null) return;
 
-        GameManager.Instance.OnStageStart -= HandleStageStart;
-        GameManager.Instance.OnResult -= HandleStageEnd;
+        GameManager.Instance.OnStageStart -= RPC_HandleStageStart;
+        GameManager.Instance.OnResult -= RPC_HandleStageEnd;
     }
     public bool AddFood(NetworkObject foodNO)
     {
@@ -176,11 +178,18 @@ public class PlayerController : NetworkBehaviour, IFoodHolder
         Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] CanRemove() = {ok} (HeldFoodObject={heldName})");
         return ok;
     }
-    private void HandleStageStart() {
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_HandleStageStart() {
+        if(!HasStateAuthority) return;
         Debug.Log("[PlayerController HandleStageStart] called to unfreeze player.");
         FreezeMovement(false);
     }
-    private void HandleStageEnd() => FreezeMovement(true);
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_HandleStageEnd() {
+        if(!HasStateAuthority) return;
+        FreezeMovement(true);
+    }
 
     public void OnClear()
     {

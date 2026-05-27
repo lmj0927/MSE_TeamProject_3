@@ -5,6 +5,7 @@ using System.Linq;
 using DG.Tweening;
 using TMPro;
 using UnityEngine.UIElements.Experimental;
+using Fusion;
 
 public class OrderManager : NetworkSingleton<OrderManager>
 {
@@ -31,9 +32,9 @@ public class OrderManager : NetworkSingleton<OrderManager>
 
     private void GameManagerActionsSetup()
     {
-        GameManager.Instance.OnStageStart += HandleStageStart;
-        GameManager.Instance.OnStageEnd += HandleStageEnd;
-        GameManager.Instance.OnPointUpdated += UpdatePoint;
+        GameManager.Instance.OnStageStart += RPC_HandleStageStart;
+        GameManager.Instance.OnStageEnd += RPC_HandleStageEnd;
+        GameManager.Instance.OnPointUpdated += RPC_UpdatePoint;
     }
 
     public override void FixedUpdateNetwork()
@@ -46,9 +47,9 @@ public class OrderManager : NetworkSingleton<OrderManager>
     {
         if (GameManager.Instance == null) return;
 
-        GameManager.Instance.OnStageStart -= HandleStageStart;
-        GameManager.Instance.OnStageEnd -= HandleStageEnd;
-        GameManager.Instance.OnPointUpdated -= UpdatePoint;
+        GameManager.Instance.OnStageStart -= RPC_HandleStageStart;
+        GameManager.Instance.OnStageEnd -= RPC_HandleStageEnd;
+        GameManager.Instance.OnPointUpdated -= RPC_UpdatePoint;
     }
 
     public void AddOrder(Customer customer)
@@ -111,16 +112,20 @@ public class OrderManager : NetworkSingleton<OrderManager>
     public void ShowOrder() => orderUI.SetActive(true);
     public void CloseOrder() => orderUI.SetActive(false);
 
-    private void HandleStageStart()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_HandleStageStart()
     {
+        if(!HasStateAuthority) return;
         CloseOrder();
         timerUI.gameObject.SetActive(true);
 
         timerUI.SetProgress(0);
         isPlaying = true;
     }
-    private void HandleStageEnd()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_HandleStageEnd()
     {
+        if(!HasStateAuthority) return;
         isPlaying = false;
         CloseOrder();
         timerUI.gameObject.SetActive(false);
@@ -134,8 +139,10 @@ public class OrderManager : NetworkSingleton<OrderManager>
         }
     }
 
-    private void UpdatePoint(int p, int grade)
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_UpdatePoint(int p, int grade)
     {
+        if(!HasStateAuthority) return;
         point.text = "Point: " + p;
 
        foreach (GameObject star in starParent.transform)

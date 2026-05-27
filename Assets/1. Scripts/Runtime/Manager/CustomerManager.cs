@@ -65,8 +65,8 @@ public class CustomerManager : NetworkBehaviour
 
     private void GameManagerActionsSetup()
     {
-        GameManager.Instance.OnStageStart += HandleStageStart;
-        GameManager.Instance.OnStageEnd += HandleStageEnd;
+        GameManager.Instance.OnStageStart += RPC_HandleStageStart;
+        GameManager.Instance.OnStageEnd += RPC_HandleStageEnd;
     }
     public override void FixedUpdateNetwork()
     {
@@ -125,8 +125,8 @@ public class CustomerManager : NetworkBehaviour
     {
         if (GameManager.Instance == null) return;
 
-        GameManager.Instance.OnStageStart -= HandleStageStart;
-        GameManager.Instance.OnStageEnd -= HandleStageEnd;
+        GameManager.Instance.OnStageStart -= RPC_HandleStageStart;
+        GameManager.Instance.OnStageEnd -= RPC_HandleStageEnd;
     }
 
     private Transform GetOutside()
@@ -200,10 +200,15 @@ public class CustomerManager : NetworkBehaviour
         customers[idx] = null;
     }
 
-    private void HandleStageStart() {
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_HandleStageStart() {
+        if(!HasStateAuthority) return;
         isPlaying = true;
     }
-    private void HandleStageEnd() {
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_HandleStageEnd() {
+        if(!HasStateAuthority) return;
         isPlaying = false;
 
         foreach(var kC in kCustomers) {

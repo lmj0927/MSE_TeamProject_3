@@ -31,28 +31,37 @@ public class RefrigeratorCounter : ACounter
 
     public override void Interact(PlayerController player)
     {
-        if (!player.HasFood())
-        {
-            interactPlayer = player;
-            interactPlayer.FreezeMovement(true);
-            SetDoors(true);
-            ingredientPopupUI.Show();
-        } else if(interactionCooltime <= 0 && player.HasFood())
-        {
-            var tmp =  player.HeldFood.Data;
-            if ( tmp.FoodName == "Trash" || tmp.Type != FoodSO.FoodType.Raw) return;
-
-            SetDoors(true);
-
-            // Destroy(player.RemoveFood().sgameObject);
-            
-            FoodSpawner.Despawn(Runner, player.HeldFoodObject);
-
-            DOVirtual.DelayedCall(doorAnimDuration * 0.7f, () =>
+        AuthorityHandler.RequestStateAuthority(
+            onAuthorized: () =>
             {
-                SetDoors(false);
-            });
-        }
+                if (!player.HasFood())
+                {
+                    interactPlayer = player;
+                    interactPlayer.FreezeMovement(true);
+                    SetDoors(true);
+                    ingredientPopupUI.Show();
+                } else if(interactionCooltime <= 0 && player.HasFood())
+                {
+                    var tmp =  player.HeldFood.Data;
+                    if ( tmp.FoodName == "Trash" || tmp.Type != FoodSO.FoodType.Raw) return;
+
+                    SetDoors(true);
+
+                    // Destroy(player.RemoveFood().sgameObject);
+                    
+                    FoodSpawner.Despawn(Runner, player.HeldFoodObject);
+
+                    DOVirtual.DelayedCall(doorAnimDuration * 0.7f, () =>
+                    {
+                        SetDoors(false);
+                    });
+                }
+            },
+            onNotAuthorized: () =>
+            {
+                Debug.Log($"[Counter/{name}] well.. denied.");
+            }
+        );
     }
 
     private void OnIngredientSelected(FoodSO foodSO)

@@ -20,7 +20,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
     [SerializeField] private StageSO[] stages;
     private StageSO reading;
 
-    private bool isPlaying = false;
+    [Networked] private bool isPlaying { get; set; }
     private bool isPaused = false;      // 일시정지?(고려중)
 
     public Action OnStageStart;
@@ -47,6 +47,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
         state = GameState.MainMenu;
         stageTimer = 0f;
         currentP = 0;
+        isPlaying = false;
     }
     public override void FixedUpdateNetwork()
     {
@@ -98,7 +99,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
         switch(state)
         {
             case GameState.Loading:
-                ModifyRecipeManager();
+                RPC_ModifyRecipeManager();
                 if (reading != null) stageT = reading.stageTimeLimit;
 
 
@@ -121,7 +122,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
                 break;
 
             case GameState.Playing:
-                StartStage();
+                RPC_StartStage();
                 break;
 
             case GameState.EndPlay:
@@ -146,7 +147,8 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
         }
     }
 
-    public void StartStage(bool immediate = false)      // 스테이지 시작, bool은 버튼사용을 고려한 parameter
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_StartStage(bool immediate = false)      // 스테이지 시작, bool은 버튼사용을 고려한 parameter
     {
         if (immediate)
         {
@@ -167,7 +169,8 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
         }
     }
 
-    private void ModifyRecipeManager()  
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_ModifyRecipeManager()  
     {
         if (reading == null) return;
         RecipeManager.Instance.SetData(reading.availableIngredients.ToList(), reading.availableAssemble.ToList());

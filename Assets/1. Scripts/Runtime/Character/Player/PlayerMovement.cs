@@ -33,7 +33,7 @@ public class PlayerMovement : NetworkBehaviour
 
     CharacterController playerController;
     float cachedSpeed;
-    bool isFreezing = false;
+    [Networked] bool isFreezing { get; set; }
 
     public Camera Camera;
 
@@ -53,6 +53,8 @@ public class PlayerMovement : NetworkBehaviour
                 animator = GetComponentInChildren<Animator>();
             if (stamina == null)
                 stamina = GetComponent<Stamina>();
+
+            isFreezing = false;
         }
     }
 
