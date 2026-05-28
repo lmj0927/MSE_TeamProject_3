@@ -11,6 +11,10 @@ public class RefrigeratorCounter : ACounter
     [SerializeField] private float openAngle = 40f;
     [SerializeField] private float doorAnimDuration = 0.5f;
     private float interactionCooltime = 0.2f;
+
+
+    [Networked, OnChangedRender(nameof(OnChangedIsOpen))] private bool isOpen { get; set; }
+    
     public override void Spawned()
     {
         base.Spawned();
@@ -18,9 +22,9 @@ public class RefrigeratorCounter : ACounter
         ingredientPopupUI.OnIngredientSelected += OnIngredientSelected;
     }
 
-    public override void FixedUpdateNetwork()
+    public void Update()
     {
-        if (interactionCooltime > 0) interactionCooltime -= Runner.DeltaTime;
+        if (interactionCooltime > 0) interactionCooltime -= Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -37,16 +41,19 @@ public class RefrigeratorCounter : ACounter
             {
                 if (!player.HasFood())
                 {
+                    AuthorityHandler.Barrier();
                     interactPlayer = player;
                     interactPlayer.FreezeMovement(true);
-                    SetDoors(true);
+                    // SetDoors(true);
+                    isOpen = true;
                     ingredientPopupUI.Show();
                 } else if(interactionCooltime <= 0 && player.HasFood())
                 {
                     var tmp =  player.HeldFood.Data;
                     if ( tmp.FoodName == "Trash" || tmp.Type != FoodSO.FoodType.Raw) return;
 
-                    SetDoors(true);
+                    // SetDoors(true);
+                    isOpen = true;
 
                     // Destroy(player.RemoveFood().sgameObject);
                     
@@ -54,13 +61,14 @@ public class RefrigeratorCounter : ACounter
 
                     DOVirtual.DelayedCall(doorAnimDuration * 0.7f, () =>
                     {
-                        SetDoors(false);
+                        // SetDoors(false);
+                        isOpen = false;
                     });
                 }
             },
             onNotAuthorized: () =>
             {
-                Debug.Log($"[Counter/{name}] well.. denied.");
+                Debug.Log($"[Counter/{name}] well.. denied. It might be because of the barrier by someone.");
             }
         );
     }
@@ -76,12 +84,14 @@ public class RefrigeratorCounter : ACounter
 
     private void UnuseReset()
     {
+        AuthorityHandler.Unbarrier();
         if (interactPlayer != null)
         {
             interactPlayer.FreezeMovement(false);
             interactPlayer = null;
         }
-        SetDoors(false);
+        // SetDoors(false);
+        isOpen = false;
         interactionCooltime = 0.2f;
     }
     private void SetDoors(bool isOpen)
@@ -97,6 +107,8 @@ public class RefrigeratorCounter : ACounter
         hinges[1].transform.DOLocalRotate(new Vector3(0, -targetAngle, 0), doorAnimDuration)
             .SetEase(Ease.OutQuad);
     }
+
+    private void OnChangedIsOpen() => SetDoors(isOpen);
 
     public override bool CanRemove() => true;
     public override void OnRemoved(NetworkObject food) {}

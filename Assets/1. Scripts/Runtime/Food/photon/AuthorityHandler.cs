@@ -8,6 +8,13 @@ public class AuthorityHandler : NetworkBehaviour, IStateAuthorityChanged
     System.Action onAuthorized;
     System.Action onNotAuthorized;
 
+    /// <summary>
+    /// It prevents stealing the state authority (similar to lock).
+    /// </summary>
+    bool barrier = false;
+    public void Barrier() => barrier = true;
+    public void Unbarrier() => barrier = false;
+
     private string Tag => $"[Auth/{name}/P{Runner.LocalPlayer.PlayerId}]";
 
     public void RequestStateAuthority(System.Action onAuthorized, System.Action onNotAuthorized)
@@ -45,8 +52,15 @@ public class AuthorityHandler : NetworkBehaviour, IStateAuthorityChanged
     {
         Debug.Log($"{Tag} RPC_RequestStateAuthority received. HasAuth={Object.HasStateAuthority} isAuthorizing={isAuthorizing} IsInvokeLocal={info.IsInvokeLocal} src=P{info.Source.PlayerId}");
 
-        if(Object.HasStateAuthority && !isAuthorizing)
+        if(barrier)
         {
+            Debug.LogWarning($"{Tag} Cannot grant - Barrier is active");
+            Rpc_NotAuthorized(info.Source, true);
+            return;
+        }
+        else if(Object.HasStateAuthority && !isAuthorizing)
+        {
+            
             Debug.Log($"{Tag} Granting — setting isAuthorizing=true, sending RPC_Authorized to P{info.Source.PlayerId}");
             isAuthorizing = true;
             RPC_Authorized(info.Source); // call on the requester
@@ -54,7 +68,7 @@ public class AuthorityHandler : NetworkBehaviour, IStateAuthorityChanged
         else // either we don't have authority anymore, or already giving it away
         {
             Debug.LogWarning($"{Tag} Cannot grant — HasAuth={Object.HasStateAuthority} isAuthorizing={isAuthorizing}. Sending Rpc_NotAuthorized to P{info.Source.PlayerId}.");
-            Rpc_NotAuthorized(info.Source);
+            Rpc_NotAuthorized(info.Source, false);
         }
     }
 
@@ -67,14 +81,18 @@ public class AuthorityHandler : NetworkBehaviour, IStateAuthorityChanged
 
 
 	[Rpc(RpcSources.All, RpcTargets.All)]
-	private void Rpc_NotAuthorized([RpcTarget] PlayerRef player)
+	private void Rpc_NotAuthorized([RpcTarget] PlayerRef player, bool isBarriered)
 	{
         Debug.LogWarning($"{Tag} Rpc_NotAuthorized received. Firing onNotAuthorized. onAuthorized was {(onAuthorized==null ? "null" : "set")}.");
 		onNotAuthorized?.Invoke();
 		onAuthorized = null;
 		onNotAuthorized = null;
+        if(isBarriered) 
+        {
+            Debug.LogWarning($"{Tag} Cannot grant - Barrier is active");
+            isAuthorizing = false;
+        }
 	}
-
 
     public void StateAuthorityChanged()
     {
