@@ -34,6 +34,7 @@ public class PlayerMovement : NetworkBehaviour
     CharacterController playerController;
     float cachedSpeed;
     [Networked] bool isFreezing { get; set; }
+    [Networked] bool shouldShowUI { get; set; }
 
     public Camera Camera;
 
@@ -55,11 +56,13 @@ public class PlayerMovement : NetworkBehaviour
                 stamina = GetComponent<Stamina>();
 
             isFreezing = false;
+            shouldShowUI = false;
         }
     }
 
     public override void FixedUpdateNetwork()
     {
+
         if (HasStateAuthority == false)
         {
             return;
@@ -150,13 +153,18 @@ public class PlayerMovement : NetworkBehaviour
             bool isRecovering = stamina.Current < stamina.Max;
 
             // 달리기 시도 중이거나, 회복 중일 때만 UI를 띄웁니다.
-            bool shouldShowUI = wantsRun || isRecovering;
+            shouldShowUI = wantsRun || isRecovering;
+        }
+    }
 
-            // 매 프레임 SetActive가 불리는 걸 막기 위해 상태가 다를 때만 호출합니다.
-            if (staminaUI.activeSelf != shouldShowUI)
-            {
-                staminaUI.SetActive(shouldShowUI);
-            }
+    public override void Render()
+    {
+        base.Render();
+
+        // 매 프레임 SetActive가 불리는 걸 막기 위해 상태가 다를 때만 호출합니다.
+        if (staminaUI.activeSelf != shouldShowUI)
+        {
+            staminaUI.SetActive(shouldShowUI);
         }
     }
 
