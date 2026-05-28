@@ -104,7 +104,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
         switch(state)
         {
             case GameState.Loading:
-                RPC_ModifyRecipeManager();
+                // RPC_ModifyRecipeManager();
                 if (reading != null) stageT = reading.stageTimeLimit;
 
 
@@ -174,12 +174,12 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
         }
     }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_ModifyRecipeManager()  
-    {
-        if (reading == null) return;
-        RecipeManager.Instance.SetData(reading.availableIngredients.ToList(), reading.availableAssemble.ToList());
-    }
+    // [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    // private void RPC_ModifyRecipeManager()  
+    // {
+    //     if (reading == null) return;
+    //     RecipeManager.Instance.SetData(reading.availableIngredients.ToList(), reading.availableAssemble.ToList());
+    // }
 
     public void RegisterTask()
     {
@@ -219,6 +219,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
         Debug.Log($"[GameManager OnReadingIdxChanged] called with readingIdx {readingIdx}");
         if(readingIdx < 0) return;
         reading = stages[readingIdx];
+        RecipeManager.Instance.SetData(reading.availableIngredients.ToList(), reading.availableAssemble.ToList());
         ChangeState(GameState.Loading);
     }
 
