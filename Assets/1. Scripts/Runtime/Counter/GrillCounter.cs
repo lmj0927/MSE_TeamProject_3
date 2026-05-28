@@ -7,6 +7,7 @@ public class GrillCounter : AFireCounter
     [SerializeField] private ParticleSystem smoke;
     public override void Interact(PlayerController player)
     {
+        if(!player.HasStateAuthority) return;
         AuthorityHandler.RequestStateAuthority(
             onAuthorized: () =>
             {

@@ -1633,10 +1633,6 @@ PrefabInstance:
       value: Refrigerator1
       objectReference: {fileID: 0}
     - target: {fileID: 2117089050705044222, guid: 231a044c3195405429a8a45939beab71, type: 3}
-      propertyPath: scrollRect
-      value: 
-      objectReference: {fileID: 2055186916}
-    - target: {fileID: 2117089050705044222, guid: 231a044c3195405429a8a45939beab71, type: 3}
       propertyPath: ingredients.Array.size
       value: 9
       objectReference: {fileID: 0}
@@ -2352,6 +2348,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Coke
       objectReference: {fileID: 0}
+    - target: {fileID: 6283463671935501467, guid: 1cff3a1b0b6ee354eb7c3d77cd360026, type: 3}
+      propertyPath: SortKey
+      value: 2811104996
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2742764544658441897, guid: 1cff3a1b0b6ee354eb7c3d77cd360026, type: 3}
     m_RemovedGameObjects:
@@ -2428,6 +2428,10 @@ PrefabInstance:
     - target: {fileID: 3958365687770782333, guid: 1cff3a1b0b6ee354eb7c3d77cd360026, type: 3}
       propertyPath: m_Name
       value: Coke (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6283463671935501467, guid: 1cff3a1b0b6ee354eb7c3d77cd360026, type: 3}
+      propertyPath: SortKey
+      value: 1383708128
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2742764544658441897, guid: 1cff3a1b0b6ee354eb7c3d77cd360026, type: 3}
@@ -8424,6 +8428,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Coke (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 6283463671935501467, guid: 1cff3a1b0b6ee354eb7c3d77cd360026, type: 3}
+      propertyPath: SortKey
+      value: 3326678775
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2742764544658441897, guid: 1cff3a1b0b6ee354eb7c3d77cd360026, type: 3}
     m_RemovedGameObjects:
@@ -10861,6 +10869,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Coke (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6283463671935501467, guid: 1cff3a1b0b6ee354eb7c3d77cd360026, type: 3}
+      propertyPath: SortKey
+      value: 220097365
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2742764544658441897, guid: 1cff3a1b0b6ee354eb7c3d77cd360026, type: 3}
     m_RemovedGameObjects:
@@ -11615,17 +11627,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2685334816312188819, guid: 231a044c3195405429a8a45939beab71, type: 3}
   m_PrefabInstance: {fileID: 2055186914}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2055186916 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4329212345306392515, guid: 231a044c3195405429a8a45939beab71, type: 3}
-  m_PrefabInstance: {fileID: 2055186914}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ScrollRect
 --- !u!1 &2055186917 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1694085636472818072, guid: 231a044c3195405429a8a45939beab71, type: 3}
@@ -11816,6 +11817,10 @@ PrefabInstance:
     - target: {fileID: 3958365687770782333, guid: 1cff3a1b0b6ee354eb7c3d77cd360026, type: 3}
       propertyPath: m_Name
       value: Coke (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6283463671935501467, guid: 1cff3a1b0b6ee354eb7c3d77cd360026, type: 3}
+      propertyPath: SortKey
+      value: 229575307
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2742764544658441897, guid: 1cff3a1b0b6ee354eb7c3d77cd360026, type: 3}

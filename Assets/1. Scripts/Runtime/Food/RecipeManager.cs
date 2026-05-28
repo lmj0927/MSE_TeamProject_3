@@ -30,10 +30,16 @@ public class RecipeManager : Singleton<RecipeManager>
 
     private List<FoodSO> copyIng = new List<FoodSO>();
 
+
+    private bool hasData = false;
+    public bool HasData => hasData;
+
     public void SetData(List<FoodSO> ing, List<RecipeSO> assemble)
     {
         ingredients = ing;
         assembleRecipes = assemble;
+        hasData = true;
+        Debug.Log("[RecipeManager SetData] data filled");
     }
     /// <summary>
     /// Returns a randomly selected assemble/beverage/sidemenu recipe from the assembleRecipes list.

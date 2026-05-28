@@ -31,6 +31,7 @@ public class RefrigeratorCounter : ACounter
 
     public override void Interact(PlayerController player)
     {
+        if(!player.HasStateAuthority) return;
         AuthorityHandler.RequestStateAuthority(
             onAuthorized: () =>
             {

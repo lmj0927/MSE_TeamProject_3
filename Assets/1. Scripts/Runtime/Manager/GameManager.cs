@@ -19,6 +19,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
     [Networked] private GameState state { get; set; }
     [SerializeField] private StageSO[] stages;
     private StageSO reading;
+    [Networked, OnChangedRender(nameof(OnReadingIdxChanged))] private int readingIdx { get; set; }
 
     [Networked] private bool isPlaying { get; set; }
     private bool isPaused = false;      // 일시정지?(고려중)
@@ -44,10 +45,14 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
     public override void Spawned()
     {
         base.Spawned();
-        state = GameState.MainMenu;
-        stageTimer = 0f;
-        currentP = 0;
-        isPlaying = false;
+        if(HasStateAuthority)
+        {
+            state = GameState.MainMenu;
+            stageTimer = 0f;
+            currentP = 0;
+            isPlaying = false;
+            readingIdx = -1;
+        }
     }
     public override void FixedUpdateNetwork()
     {
@@ -200,7 +205,20 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
 
     public void EnterStage(int idx)         // 버튼에서 구독할 함수
     {
-        reading = stages[idx];
+        if(!HasStateAuthority)
+        {
+            Debug.LogWarning("[GameManager EnterStage] You have no authority to enter stage");
+            return;
+        }
+        Debug.Log($"[GameManager EnterStage] stage {readingIdx} to {idx}");
+        readingIdx = idx;
+    }
+
+    public void OnReadingIdxChanged()
+    {
+        Debug.Log($"[GameManager OnReadingIdxChanged] called with readingIdx {readingIdx}");
+        if(readingIdx < 0) return;
+        reading = stages[readingIdx];
         ChangeState(GameState.Loading);
     }
 

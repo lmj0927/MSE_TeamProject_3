@@ -24,6 +24,7 @@ public class SliceCounter : ACounter
 
     public override void Interact(PlayerController player)
     {
+        if(!player.HasStateAuthority) return;
         AuthorityHandler.RequestStateAuthority(
             onAuthorized: () =>
             {

@@ -57,6 +57,9 @@ public class DrinkCounter : ACounter
 
     public override void Interact(PlayerController player)
     {
+
+        if(!player.HasStateAuthority) return;
+        
         if (player.HasFood()) return;
         
         AuthorityHandler.RequestStateAuthority(
