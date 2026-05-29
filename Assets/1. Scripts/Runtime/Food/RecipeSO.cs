@@ -10,7 +10,6 @@ public class RecipeSO : ScriptableObject
     /// If the recipe is for beverage, result must be only elements of ingredients
     /// </summary>
     [SerializeField] private List<FoodSO> ingredients;
-    [SerializeField] private List<RecipeSO> complements;
 
     /// <summary>
     /// value for cooking
@@ -22,7 +21,6 @@ public class RecipeSO : ScriptableObject
     [SerializeField] private int value;
 
     public FoodSO Result => result; 
-    public List<FoodSO> Ingredients => ingredients;             
-    public List<RecipeSO> Complements => complements;
+    public List<FoodSO> Ingredients => ingredients;      
     public int Value => value;
 }

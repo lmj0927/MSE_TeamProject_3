@@ -47,6 +47,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   isDontDestroyOnLoad: 1
   bgm: {fileID: 6102453702827861299}
+  main: {fileID: 8300000, guid: 452d041dee9cba94bb5bdbfaaef0cf56, type: 3}
+  lobby: {fileID: 8300000, guid: 2321e1c48206f514ab602f252a803de7, type: 3}
+  playing: {fileID: 8300000, guid: fbeef52efc559cc418199e581fc0ab6d, type: 3}
   order: {fileID: 8300000, guid: f8a6a74b45a5c9d4b82d3918358332bf, type: 3}
   slice: {fileID: 8300000, guid: d36107d0c9464dc469a82f82737ee08f, type: 3}
   grill: {fileID: 8300000, guid: 815ce57b9c1e70144b4d86b9126f69ba, type: 3}
@@ -68,7 +71,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0

@@ -21,7 +21,6 @@ public class GameManager : Singleton<GameManager>
     public StageSO Reading => reading;
 
     private bool isPlaying = false;
-    private bool isPaused = false;      // 일시정지?(고려중)
 
     public Action OnStageStart;
     public Action<int, int> OnPointUpdated;
@@ -41,7 +40,6 @@ public class GameManager : Singleton<GameManager>
     }
     private void Update()
     {
-        if (isPaused) return;
         switch(state)
         {
             case GameState.WaitSync:
@@ -116,6 +114,8 @@ public class GameManager : Singleton<GameManager>
                 break;
 
             case GameState.MainMenu:
+                SoundManager.Instance.ChangeBGM(1);
+
                 isPlaying = false;
                 stageTimer = 0f;
                 currentP = 0;

@@ -9224,6 +9224,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kitchen_Table_18
       objectReference: {fileID: 0}
+    - target: {fileID: 7352036728135248719, guid: ab4b5494cd0695d40b4ed4bfd416c612, type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7678119418051164087, guid: ab4b5494cd0695d40b4ed4bfd416c612, type: 3}
       propertyPath: m_LocalScale.x
       value: 1

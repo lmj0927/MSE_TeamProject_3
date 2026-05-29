@@ -48,6 +48,7 @@ MonoBehaviour:
   sideMenuRecipes:
   - {fileID: 11400000, guid: af35eca2de76ba745b01fefc4e495831, type: 2}
   - {fileID: 11400000, guid: da74f0f3c86674d408893227dd341af0, type: 2}
+  - {fileID: 11400000, guid: dbf0f714636b419409d6275496bd4e34, type: 2}
   beverageRecipes:
   - {fileID: 11400000, guid: 9a880120662d27a409a2ff3b9f52e13e, type: 2}
   assembleRecipes: []
@@ -62,10 +63,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 12b4efa7acb403c4693d21ae964a9060, type: 2}
   - {fileID: 11400000, guid: 6f39f5aeb4be9074a959ca98c8f40fd9, type: 2}
   - {fileID: 11400000, guid: 26a0fe850956fb442aae0da2f94f0707, type: 2}
+  - {fileID: 11400000, guid: 472f7fd2bc4a03a41bf4574954caee7e, type: 2}
   oilRecipes:
   - {fileID: 11400000, guid: aed579b03117af742b11f3fe19d9b09c, type: 2}
   - {fileID: 11400000, guid: 159976e8db19df34887adf5d44438bf5, type: 2}
   - {fileID: 11400000, guid: 58d518d969c20f341bb834eac3fae755, type: 2}
+  - {fileID: 11400000, guid: 30a6b8bbc1b4bd74ea01f2cf11495ce1, type: 2}
   ingredients: []
   trashFood: {fileID: 11400000, guid: 509d46e9af02c47a1b5000f361bf8252, type: 2}
   debugRecipes:

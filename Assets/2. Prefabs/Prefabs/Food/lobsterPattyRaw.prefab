@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7073629185898052536}
   - component: {fileID: 6232618032388459602}
   - component: {fileID: 1696577795087587830}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: lobsterPattyRaw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -150,7 +150,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6026817144245391940}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: lobsterPattyRaw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
