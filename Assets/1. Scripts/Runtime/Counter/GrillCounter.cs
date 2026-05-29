@@ -1,5 +1,6 @@
 // Owned by MinJun Lee
 
+using Fusion;
 using UnityEngine;
 
 public class GrillCounter : AFireCounter
@@ -16,7 +17,7 @@ public class GrillCounter : AFireCounter
                     // AddFood(player.RemoveFood());
                     FoodTransfer.Transfer(player, this, player.HeldFoodObject, Vector3.zero);
 
-                    SoundManager.Instance.GrillStart(this);
+                    // SoundManager.Instance.GrillStart(this);
 
                     var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Grill);
                     if (recipe != null)
@@ -26,7 +27,8 @@ public class GrillCounter : AFireCounter
                     }
 
                     SetState(CookState);
-                    smoke.Play();
+                    // smoke.Play();
+                    RPC_PlayEffects();
                 }
                 else if (isDone && CanRemoveFood(player))
                 {
@@ -34,7 +36,8 @@ public class GrillCounter : AFireCounter
                     // player.AddFood(RemoveFood());
                     FoodTransfer.Transfer(this, player, GetLastFood(), Vector3.zero);
                     SetState(NoneState);
-                    smoke.Stop();
+                    // smoke.Stop();
+                    RPC_StopEffects();
 
                     isDone = false;
                     resultFood = null;
@@ -47,5 +50,17 @@ public class GrillCounter : AFireCounter
         );
     }
 
-    
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayEffects()
+    {
+        smoke.Play();
+        SoundManager.Instance.GrillStart(this);
+    }
+
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_StopEffects()
+    {
+        smoke.Stop();
+    }
 }

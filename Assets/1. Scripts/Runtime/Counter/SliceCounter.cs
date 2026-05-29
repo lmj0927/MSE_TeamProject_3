@@ -7,8 +7,8 @@ public class SliceCounter : ACounter
     private int sliceCount = 5;
     [SerializeField] private ProgressBar progressBar;
 
-    private bool isSlicing = false;
-    private int currentSliceCount = 0;
+    [Networked, OnChangedRender(nameof(OnIsSlicingChanged))] private bool isSlicing { get; set; }
+    [Networked, OnChangedRender(nameof(OnSlicingCountChanged))] private int currentSliceCount { get; set; }
     private RecipeSO recipe;
 
     public override void Spawned()
@@ -19,6 +19,12 @@ public class SliceCounter : ACounter
         {
             progressBar.gameObject.SetActive(false);
             progressBar.SetProgress(0f);
+        }
+
+        if(HasStateAuthority)
+        {
+            isSlicing = false;
+            currentSliceCount = 0;
         }
     }
 
@@ -37,9 +43,8 @@ public class SliceCounter : ACounter
 
                     sliceCount = recipe.Value;
 
-                    isSlicing = true;
-                    if (progressBar != null)
-                        progressBar.gameObject.SetActive(true);
+                    isSlicing = true; // call callback
+
                     return;
                 }
                 else if (CanRemoveFood(player) && !isSlicing)
@@ -50,31 +55,22 @@ public class SliceCounter : ACounter
                 }
                 else if (isSlicing)
                 {
-                    SoundManager.Instance.Slice();
-                    currentSliceCount++;
-                    if (progressBar != null)
-                        progressBar.SetProgress((float)currentSliceCount / sliceCount);
+                    currentSliceCount++; // call callback
+                    
                     if (currentSliceCount >= sliceCount)
                     {
-                        isSlicing = false;
-                        currentSliceCount = 0;
-                        if (progressBar != null)
-                        {
-                            progressBar.gameObject.SetActive(false);
-                            progressBar.SetProgress(0f);
-                        }
+                        isSlicing = false; // call callback
+                        currentSliceCount = 0; // call callback
+
                         var food = GetLastFood();
                         OnRemoved(food);
-                        FoodSpawner.Despawn(Runner, food);
-                        // if (recipe == null) AddFood(FoodSpawner.SpawnFood(Runner, RecipeManager.Instance.GetTrashFood()));
-                        // else
-                        // {
-                        //     AddFood(FoodSpawner.SpawnFood(Runner, recipe.Result));
-                        //     recipe = null;
-                        // }
+                        food.GetComponent<AuthorityHandler>().RequestStateAuthority(
+                            onAuthorized: () => FoodSpawner.Despawn(Runner, food),
+                            onNotAuthorized: () => {}
+                        );
                         FoodSO foodSO = (recipe == null) ? RecipeManager.Instance.GetTrashFood() : recipe.Result;
                         NetworkObject foodNO = FoodSpawner.SpawnFood(Runner, foodSO);
-                        OnAdded(foodNO, foodPoint.position);
+                        OnAdded(foodNO, Vector3.zero);
                     }
                 }
                 
@@ -84,48 +80,28 @@ public class SliceCounter : ACounter
                 
             }
         );
-        // if (CanAddFood(player))
-        // {
-        //     RPC_AddFood(player.RemoveFood(), foodPoint.position);
-        //     recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Slice);
-        //     if (recipe == null) return;
+    }
 
-        //     sliceCount = recipe.Value;
+    private void OnIsSlicingChanged()
+    {
+        if(isSlicing)
+        {
+            if (progressBar != null)
+                progressBar.gameObject.SetActive(true);    
+        }
+    }
 
-        //     isSlicing = true;
-        //     if (progressBar != null)
-        //         progressBar.gameObject.SetActive(true);
-        //     return;
-        // }
-        // else if (CanRemoveFood(player) && !isSlicing)
-        // {
-        //     player.AddFood(RemoveFood());
-        //     return;
-        // }
-        // else if (isSlicing)
-        // {
-        //     SoundManager.Instance.Slice();
-        //     currentSliceCount++;
-        //     if (progressBar != null)
-        //         progressBar.SetProgress((float)currentSliceCount / sliceCount);
-        //     if (currentSliceCount >= sliceCount)
-        //     {
-        //         isSlicing = false;
-        //         currentSliceCount = 0;
-        //         if (progressBar != null)
-        //         {
-        //             progressBar.gameObject.SetActive(false);
-        //             progressBar.SetProgress(0f);
-        //         }
-        //         var food = RemoveFood();
-        //         FoodSpawner.Despawn(Runner, food);
-        //         if (recipe == null) AddFood(FoodSpawner.SpawnFood(Runner, RecipeManager.Instance.GetTrashFood()));
-        //         else
-        //         {
-        //             AddFood(FoodSpawner.SpawnFood(Runner, recipe.Result));
-        //             recipe = null;
-        //         }
-        //     }
-        // }
+    private void OnSlicingCountChanged()
+    {
+        if (progressBar != null)
+            progressBar.SetProgress((float)currentSliceCount / sliceCount);
+        
+        SoundManager.Instance.Slice();
+        
+        if(currentSliceCount >= sliceCount)
+        {
+            progressBar.gameObject.SetActive(false);
+            progressBar.SetProgress(0f);
+        }
     }
 }

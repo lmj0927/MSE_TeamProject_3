@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Fusion;
+using System.Collections;
 
 public abstract class ACounter : NetworkBehaviour, IInteractable, IFoodHolder
 {
     [SerializeField] protected Transform foodPoint;
 
     public Transform FoodPoint => foodPoint;
-
 
 
     /// <summary>
@@ -47,7 +47,6 @@ public abstract class ACounter : NetworkBehaviour, IInteractable, IFoodHolder
     {
         Debug.LogError("[ACounter virtual AddFood] Call RPC_AddFood instead.");
         // RPC_AddFood(food, foodPoint.position);
-
     }
 
     // protected virtual void AddFood(NetworkObject food, Vector3 position)
@@ -203,20 +202,24 @@ public abstract class ACounter : NetworkBehaviour, IInteractable, IFoodHolder
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_SetParent(NetworkObject food, Vector3 offset)
     {
+        if(food == null) return;
+
         var foodName = food != null ? food.name : "null";
         Debug.Log($"[Counter/{name}] RPC_SetParent received on local. food={foodName} pos={offset} foodPoint={foodPoint.position}");
         food.transform.SetParent(foodPoint, false);
         food.transform.SetLocalPositionAndRotation(offset, Quaternion.identity);
     }
 
-    public virtual void OnAdded(NetworkObject food, Vector3 pos)
+    public virtual void OnAdded(NetworkObject food, Vector3 offset)
     {
+        if(food == null) return;
+        
         var foodName = food != null ? food.name : "null";
-        Debug.Log($"[Counter/{name}] OnAdded called. food={foodName} pos={pos} HasFoodAuth={(food != null && food.HasStateAuthority)} HasCounterAuth={HasStateAuthority} foodsCount(before)={foods.Count}");
+        Debug.Log($"[Counter/{name}] OnAdded called. food={foodName} offset={offset} HasFoodAuth={(food != null && food.HasStateAuthority)} HasCounterAuth={HasStateAuthority} foodsCount(before)={foods.Count}");
 
         // food.transform.SetParent(foodPoint, false);
         // food.transform.SetPositionAndRotation(pos, Quaternion.identity);
-        RPC_SetParent(food, pos);
+        RPC_SetParent(food, offset);
 
         food.GetComponent<Food>().SetDrop();
         foods.Add(food);
