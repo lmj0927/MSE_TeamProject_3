@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class Customer : MonoBehaviour, IInteractable
+public class Customer : NetworkBehaviour, IInteractable
 {
     public enum cState { Entering, GoingSeat, Sitting, GoingTrash, Leaving, StageEnd }
     public enum Emotion { Happy, Boring, Angry}
@@ -43,16 +43,16 @@ public class Customer : MonoBehaviour, IInteractable
     private int seatNum = -1;
     private float dragChair = 0.25f;
 
-    private bool isDecided = false;
-    public bool isWaiting { get; private set; } = false;
+    [Networked] private bool isDecided { get; set; }= false;
+    [Networked] public bool isWaiting { get; private set; } = false;
     public float sitTimer { get; private set; } = 60.0f;
     private float maxSit;
-    private Emotion emotion = Emotion.Happy;
+    [Networked] private Emotion emotion { get; set; } = Emotion.Happy;
     private float boring = 30.0f;
     private float angry = 10.0f;
 
-    private bool isEating = false;
-    private bool hasEaten = false;
+    [Networked] private bool isEating { get; set; }= false;
+    [Networked] private bool hasEaten { get; set; } = false;
     private float mealTimer = 10.0f;
 
     public RecipeSO mainOrder { get; private set; }
@@ -62,17 +62,17 @@ public class Customer : MonoBehaviour, IInteractable
     [SerializeField] private Image[] menuImages;
     [SerializeField] private Transform holdAnchor;
     [SerializeField] private GameObject trayPrefab;
-    private GameObject tray;
+    private NetworkObject tray;
 
 
     // Event for CustomerManger to check Customer leaving
     public Action<int> OnMealFinished;
     public Action<Customer> OnSleep;
 
-    private cState current = cState.Entering;
-    private bool arriveHandled = false;
-    private bool alreadyDeciding = false;
-    private bool alreadyStand = false;
+    [Networked] private cState current { get; set; } = cState.Entering;
+    [Networked] private bool arriveHandled { get; set; } = false;
+    [Networked] private bool alreadyDeciding { get; set; } = false;
+    [Networked] private bool alreadyStand { get; set; } = false;
 
     private Transform exit;
 
@@ -88,8 +88,9 @@ public class Customer : MonoBehaviour, IInteractable
             patienceColor = patienceBar.GetComponent<StateChanger>();
         }
     }
-    private void Update()
+    public override void FixedUpdateNetwork()
     {
+        if(!HasStateAuthority) return;
         // Arrival Triggers
         if (agent.enabled && !arriveHandled && IsArrived())
         {
@@ -100,7 +101,7 @@ public class Customer : MonoBehaviour, IInteractable
         // Waiting Food
         if (isWaiting)
         {
-            sitTimer -= Time.deltaTime;
+            sitTimer -= Runner.DeltaTime;
 
             if (patienceBar != null)
             {
@@ -113,7 +114,7 @@ public class Customer : MonoBehaviour, IInteractable
                 isWaiting = false;
                 OrderManager.Instance.RemoveOrder(this);
                 Stand();
-                if (food != null) Destroy(food.gameObject);
+                if (food != null) Runner.Despawn(food);
 
             } else if (emotion == Emotion.Boring && sitTimer <= angry)
             {
@@ -136,7 +137,7 @@ public class Customer : MonoBehaviour, IInteractable
         // Eating food
         if (isEating)
         {
-            mealTimer -= Time.deltaTime;
+            mealTimer -= Runner.DeltaTime;
 
             if (mealTimer <= 0)
             {
@@ -333,7 +334,7 @@ public class Customer : MonoBehaviour, IInteractable
                 Sit();
                 break;
             case cState.GoingTrash:
-                if (tray != null) Destroy(tray);
+                if (tray != null) Runner.Despawn(tray);
                 setPath(cState.Leaving, exit);
                 break;
             case cState.Leaving:
@@ -342,7 +343,7 @@ public class Customer : MonoBehaviour, IInteractable
                 break;
             case cState.StageEnd:
                 GameManager.Instance.CompleteTask();
-                Destroy(gameObject);
+                Runner.Despawn(Object);
                 break;
         }
     }
@@ -413,7 +414,8 @@ public class Customer : MonoBehaviour, IInteractable
             SetFace(2);
             anim.SetTrigger("wrong");
             Stand();
-            Destroy(served.gameObject);
+            // Destroy(served.gameObject);
+            Runner.Despawn(served);
 
             return;
         }
@@ -476,7 +478,7 @@ public class Customer : MonoBehaviour, IInteractable
 
         if (food != null)
         {
-            Destroy(food.gameObject);
+            Runner.Despawn(food);
         }
 
         StartCoroutine(StandRoutine());
@@ -509,7 +511,7 @@ public class Customer : MonoBehaviour, IInteractable
         
         if (hasEaten)
         {
-            tray = Instantiate(trayPrefab);
+            tray = Runner.Spawn(trayPrefab);
 
             tray.transform.SetParent(holdAnchor, true);
             

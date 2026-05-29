@@ -4773,7 +4773,7 @@ PrefabInstance:
     - target: {fileID: 2652328840234719614, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
       propertyPath: customer
       value: 
-      objectReference: {fileID: 3466173328236988086, guid: c285271debe6df14794d28a84dde7632, type: 3}
+      objectReference: {fileID: 3466173328236988086, guid: 1a89d32e4cb164c96a7bc0dc3fc50612, type: 3}
     - target: {fileID: 2652328840234719614, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
       propertyPath: trashBin
       value: 
@@ -4960,7 +4960,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
   SortKey: 2372228052
   ObjectInterest: 1
-  Flags: 262145
+  Flags: 131073
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 841659240}

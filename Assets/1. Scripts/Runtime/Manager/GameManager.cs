@@ -40,7 +40,9 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
 
     public Scene MainRunnerScene => throw new NotImplementedException();
 
-    private int pastP = 0;       
+    private int pastP = 0;
+
+    private SceneRef? inGameScene = null;
 
     public override void Spawned()
     {
@@ -121,8 +123,8 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
                 // SceneManager.LoadScene(reading.sceneName);
                 if(HasStateAuthority)
                 {
-                    var sceneRef = SceneRef.FromIndex(SceneUtility.GetBuildIndexByScenePath("Assets/3. Scenes/YongKyu/" + reading.sceneName + ".unity"));
-                    Runner.LoadScene(sceneRef, LoadSceneMode.Single);
+                    inGameScene = SceneRef.FromIndex(SceneUtility.GetBuildIndexByScenePath("Assets/3. Scenes/YongKyu/" + reading.sceneName + ".unity"));
+                    Runner.LoadScene(inGameScene.Value, LoadSceneMode.Single);
                 }
                 break;
 
@@ -159,6 +161,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
         {
             isPlaying = true;
             OnStageStart?.Invoke();
+            Debug.Log("[GameManager] OnStageStart Called.");
         }
         else StartCoroutine(EnterRoutine());
     }
@@ -171,6 +174,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
         {
             isPlaying = true;
             OnStageStart?.Invoke();
+            Debug.Log("[GameManager] OnStageStart Called.");
         }
     }
 
@@ -230,6 +234,10 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
 
     public void SceneLoadDone(in SceneLoadDoneArgs sceneInfo)
     {
-        ChangeState(GameState.WaitSync);
+        if(inGameScene.HasValue && sceneInfo.SceneRef == inGameScene.Value)
+        {
+            Debug.Log("[GameManager SceneLoadDone] Scene Loaded?");
+            ChangeState(GameState.WaitSync);
+        }
     }
 }

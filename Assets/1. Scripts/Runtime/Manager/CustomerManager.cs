@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CustomerManager : NetworkBehaviour
 {
-    private bool isPlaying = false;
+    [Networked] private bool isPlaying { get; set; } = false;
 
     [SerializeField]
     private GameObject customer;
@@ -70,16 +70,19 @@ public class CustomerManager : NetworkBehaviour
     }
     public override void FixedUpdateNetwork()
     {
+        if(!HasStateAuthority) return;
+
         if (!isPlaying) return;
 
         int emptyK = GetEmptyKiosk();
 
         if (emptyK != -1)
         {
-            spawnTimer -= Time.deltaTime;
+            spawnTimer -= Runner.DeltaTime;
 
             if (spawnTimer <= 0)
             {
+                Debug.Log("Spawn");
                 spawnTimer = spawnTerm;
                 Customer c = GetCustomer();
 
@@ -145,7 +148,8 @@ public class CustomerManager : NetworkBehaviour
 
         if (pool.Count == 0)
         {
-            c = Instantiate(customer, outside.position, outside.rotation).GetComponent<Customer>();
+            // c = Instantiate(customer, outside.position, outside.rotation).GetComponent<Customer>();
+            c = Runner.Spawn(customer, outside.position, outside.rotation).GetComponent<Customer>();
             c.OnSleep += AddToPool;
         }
         else
@@ -204,6 +208,7 @@ public class CustomerManager : NetworkBehaviour
     private void RPC_HandleStageStart() {
         if(!HasStateAuthority) return;
         isPlaying = true;
+        Debug.Log($"[CustomerManager RPC_HandleStageStart] isPlaying = {isPlaying}");
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
