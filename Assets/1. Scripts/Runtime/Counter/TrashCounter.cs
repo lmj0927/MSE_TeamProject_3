@@ -1,4 +1,5 @@
 // Owned by MinJun Lee
+using Fusion;
 using UnityEngine;
 
 public class TrashCounter : ACounter
@@ -9,7 +10,15 @@ public class TrashCounter : ACounter
         if (player.HasFood())
         {
             FoodSpawner.Despawn(Runner, player.RemoveFood());
-            SoundManager.Instance.Trash();
+            RPC_PlayTrash();
         }
     }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_PlayTrash()
+    {
+        SoundManager.Instance.Trash();
+    }
+
+    
 }

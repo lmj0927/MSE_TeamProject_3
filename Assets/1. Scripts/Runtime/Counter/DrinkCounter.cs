@@ -59,7 +59,7 @@ public class DrinkCounter : ACounter
     {
 
         if(!player.HasStateAuthority) return;
-        
+
         if (player.HasFood()) return;
         
         AuthorityHandler.RequestStateAuthority(
@@ -68,7 +68,7 @@ public class DrinkCounter : ACounter
 
                 if (!isUsing)
                 {
-                    SoundManager.Instance.DrinkStart(this);
+                    RPC_PlaySound();
                     StartDispensing(player);
                 }
                 else if (player == currentUser)
@@ -190,5 +190,11 @@ public class DrinkCounter : ACounter
             float waitTime = b4 - Mathf.Max(0f, b3);
             progressColor.SetColorState(2, waitTime);
         }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlaySound()
+    {
+        SoundManager.Instance.DrinkStart(this);
     }
 }
