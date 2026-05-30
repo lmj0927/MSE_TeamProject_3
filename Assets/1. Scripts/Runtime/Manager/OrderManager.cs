@@ -54,17 +54,31 @@ public class OrderManager : NetworkSingleton<OrderManager>
 
     public void AddOrder(Customer customer)
     {
-        if (!isPlaying || orders.Contains(customer)) return;
+        if (!HasStateAuthority) return;
+        RPC_AddOrder(customer);
+    }
+
+    public void RemoveOrder(Customer customer)
+    {
+        if (!HasStateAuthority) return;
+        RPC_RemoveOrder(customer);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_AddOrder(Customer customer)
+    {
+        if (!isPlaying || customer == null || orders.Contains(customer)) return;
 
         orders.Add(customer);
         SoundManager.Instance.Order();
         Resort();
     }
 
-    public void RemoveOrder(Customer customer)
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_RemoveOrder(Customer customer)
     {
+        if (customer == null) return;
         orders.Remove(customer);
-
         animatedCustomers.Remove(customer);
 
         if (isPlaying) Resort();
@@ -115,7 +129,6 @@ public class OrderManager : NetworkSingleton<OrderManager>
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_HandleStageStart()
     {
-        if(!HasStateAuthority) return;
         CloseOrder();
         timerUI.gameObject.SetActive(true);
 
@@ -125,11 +138,10 @@ public class OrderManager : NetworkSingleton<OrderManager>
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_HandleStageEnd()
     {
-        if(!HasStateAuthority) return;
         isPlaying = false;
         CloseOrder();
         timerUI.gameObject.SetActive(false);
-        orders.Clear(); 
+        orders.Clear();
         animatedCustomers.Clear();
 
         foreach (var slot in uiSlots)
@@ -142,7 +154,6 @@ public class OrderManager : NetworkSingleton<OrderManager>
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_UpdatePoint(int p, int grade)
     {
-        if(!HasStateAuthority) return;
         point.text = "Point: " + p;
 
        foreach (GameObject star in starParent.transform)

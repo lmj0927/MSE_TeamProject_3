@@ -45,8 +45,8 @@ public class Customer : NetworkBehaviour, IInteractable
 
     [Networked] private bool isDecided { get; set; }= false;
     [Networked] public bool isWaiting { get; private set; } = false;
-    public float sitTimer { get; private set; } = 60.0f;
-    private float maxSit;
+    [Networked] public float sitTimer { get; private set; } = 60.0f;
+    [Networked] private float maxSit { get; set; }
     [Networked] private Emotion emotion { get; set; } = Emotion.Happy;
     private float boring = 30.0f;
     private float angry = 10.0f;
@@ -55,9 +55,13 @@ public class Customer : NetworkBehaviour, IInteractable
     [Networked] private bool hasEaten { get; set; } = false;
     private float mealTimer = 10.0f;
 
-    public RecipeSO mainOrder { get; private set; }
-    public RecipeSO drinkOrder { get; private set; }
-    public RecipeSO sideOrder { get; private set; }
+    // Recipe selection synced by idx; SO looked up locally via RecipeManager
+    [Networked] private int mainOrderIdx { get; set; } = -1;
+    [Networked] private int drinkOrderIdx { get; set; } = -1;
+    [Networked] private int sideOrderIdx { get; set; } = -1;
+    public RecipeSO mainOrder => mainOrderIdx >= 0 ? RecipeManager.Instance?.GetAssemble(mainOrderIdx) : null;
+    public RecipeSO drinkOrder => drinkOrderIdx >= 0 ? RecipeManager.Instance?.GetBeverage(drinkOrderIdx) : null;
+    public RecipeSO sideOrder => sideOrderIdx >= 0 ? RecipeManager.Instance?.GetSide(sideOrderIdx) : null;
     private NetworkObject food;
     [SerializeField] private Image[] menuImages;
     [SerializeField] private Transform holdAnchor;
@@ -139,15 +143,15 @@ public class Customer : NetworkBehaviour, IInteractable
                 emotion = Emotion.Angry;
                 faceIdx = 2;
                 RPC_PlayAnim(AnimTrigger.Angry);
-                patienceColor.SetColorState(2, 0f);
+                RPC_SetPatience(2, 0f);
             }
             else if (emotion == Emotion.Happy && sitTimer <= boring)
             {
-                patienceColor.SetColorState(1, 0f);
+                RPC_SetPatience(1, 0f);
                 emotion = Emotion.Boring;
                 faceIdx = 1;
                 RPC_PlayAnim(AnimTrigger.Boring);
-                patienceColor.SetColorState(2, boring - angry);
+                RPC_SetPatience(2, boring - angry);
             }
 
         }
@@ -201,7 +205,7 @@ public class Customer : NetworkBehaviour, IInteractable
             patienceBar.SetProgress(1f);
             patienceBar.gameObject.SetActive(false);
         }
-        patienceColor?.SetColorState(0, 0);
+        RPC_SetPatience(0, 0f);
 
         mealTimer = UnityEngine.Random.Range(mealRange.x, mealRange.y);
 
@@ -435,7 +439,7 @@ public class Customer : NetworkBehaviour, IInteractable
             isWaiting = true;
             if (patienceBar != null) patienceBar.gameObject.SetActive(true);
 
-            patienceColor?.SetColorState(1, maxSit - boring);
+            RPC_SetPatience(1, maxSit - boring);
         }
     }
 
@@ -580,9 +584,9 @@ public class Customer : NetworkBehaviour, IInteractable
         mealRange = meal;
         speedRange = speed;
 
-        mainOrder = RecipeManager.Instance.GiveRandomAssembleRecipe();
-        drinkOrder = beverage ? RecipeManager.Instance.GiveRandomBeverageRecipe() : null;
-        sideOrder = sidemenu ? RecipeManager.Instance.GiveRandomSideRecipe() : null;
+        mainOrderIdx = RecipeManager.Instance.RandomAssembleIdx();
+        drinkOrderIdx = beverage ? RecipeManager.Instance.RandomBeverageIdx() : -1;
+        sideOrderIdx = sidemenu ? RecipeManager.Instance.RandomSideIdx() : -1;
 
         InitializeStats();
     }
@@ -652,5 +656,11 @@ public class Customer : NetworkBehaviour, IInteractable
         if (anim == null) return;
         anim.SetBool("hasTrash", trash);
         anim.SetTrigger("walk");
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_SetPatience(int state, float duration)
+    {
+        patienceColor?.SetColorState(state, duration);
     }
 }
