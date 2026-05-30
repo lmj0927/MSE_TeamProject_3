@@ -360,6 +360,7 @@ GameObject:
   - component: {fileID: 2321564798672048850}
   - component: {fileID: 2564723303250454554}
   - component: {fileID: 7942742876463990160}
+  - component: {fileID: 2622229223432943987}
   m_Layer: 0
   m_Name: DrinkCounter
   m_TagString: Untagged
@@ -481,11 +482,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   foodPoint: {fileID: 219150815071976944}
+  foodSpawner: {fileID: 0}
+  outlineRoot: {fileID: 0}
   drinks:
   - {fileID: 11400000, guid: 46b05fbae0046c14790c642769a29356, type: 2}
   progressBar: {fileID: 4073766155787271036}
   range: {fileID: 7598689467594588226}
   acceptableRatio: 0.1
+--- !u!114 &2622229223432943987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4984348835542864326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 3994626615
+  ObjectInterest: 1
+  Flags: 786433
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 7942742876463990160}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &5396992558262594381
 GameObject:
   m_ObjectHideFlags: 0

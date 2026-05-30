@@ -5,8 +5,9 @@ using System.Linq;
 using DG.Tweening;
 using TMPro;
 using UnityEngine.UIElements.Experimental;
+using Fusion;
 
-public class OrderManager : Singleton<OrderManager>
+public class OrderManager : NetworkSingleton<OrderManager>
 {
     [SerializeField] private GameObject orderUI;
     private OrderItem[] uiSlots;
@@ -18,45 +19,69 @@ public class OrderManager : Singleton<OrderManager>
     private List<Customer> orders = new List<Customer>();
     private HashSet<Customer> animatedCustomers = new HashSet<Customer>();
 
-    private void Start()
+    public override void Spawned()
     {
+        base.Spawned();
         uiSlots = orderUI.GetComponentsInChildren<OrderItem>(true);
         CloseOrder();
         timerUI.gameObject.SetActive(false);
 
-        GameManager.Instance.OnStageStart += HandleStageStart;
-        GameManager.Instance.OnStageEnd += HandleStageEnd;
-        GameManager.Instance.OnPointUpdated += UpdatePoint;
+        if(GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
+        else GameManagerActionsSetup();
     }
 
-    private void Update()
+    private void GameManagerActionsSetup()
+    {
+        GameManager.Instance.OnStageStart += RPC_HandleStageStart;
+        GameManager.Instance.OnStageEnd += RPC_HandleStageEnd;
+        GameManager.Instance.OnPointUpdated += RPC_UpdatePoint;
+    }
+
+    public override void Render()
     {
         if (!isPlaying) return;
+        if (GameManager.Instance == null) return;
 
-        timerUI.SetProgress(GameManager.Instance.stageTimer / GameManager.Instance.StageT);
+        float total = GameManager.Instance.StageT;
+        if (total <= 0f) return;
+        timerUI.SetProgress(GameManager.Instance.stageTimer / total);
     }
     private void OnDestroy()
     {
         if (GameManager.Instance == null) return;
 
-        GameManager.Instance.OnStageStart -= HandleStageStart;
-        GameManager.Instance.OnStageEnd -= HandleStageEnd;
-        GameManager.Instance.OnPointUpdated -= UpdatePoint;
+        GameManager.Instance.OnStageStart -= RPC_HandleStageStart;
+        GameManager.Instance.OnStageEnd -= RPC_HandleStageEnd;
+        GameManager.Instance.OnPointUpdated -= RPC_UpdatePoint;
     }
 
     public void AddOrder(Customer customer)
     {
-        if (!isPlaying || orders.Contains(customer)) return;
+        if (!HasStateAuthority) return;
+        RPC_AddOrder(customer);
+    }
+
+    public void RemoveOrder(Customer customer)
+    {
+        if (!HasStateAuthority) return;
+        RPC_RemoveOrder(customer);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_AddOrder(Customer customer)
+    {
+        if (!isPlaying || customer == null || orders.Contains(customer)) return;
 
         orders.Add(customer);
         SoundManager.Instance.Order();
         Resort();
     }
 
-    public void RemoveOrder(Customer customer)
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_RemoveOrder(Customer customer)
     {
+        if (customer == null) return;
         orders.Remove(customer);
-
         animatedCustomers.Remove(customer);
 
         if (isPlaying) Resort();
@@ -104,7 +129,8 @@ public class OrderManager : Singleton<OrderManager>
     public void ShowOrder() => orderUI.SetActive(true);
     public void CloseOrder() => orderUI.SetActive(false);
 
-    private void HandleStageStart()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_HandleStageStart()
     {
         CloseOrder();
         timerUI.gameObject.SetActive(true);
@@ -112,12 +138,13 @@ public class OrderManager : Singleton<OrderManager>
         timerUI.SetProgress(0);
         isPlaying = true;
     }
-    private void HandleStageEnd()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_HandleStageEnd()
     {
         isPlaying = false;
         CloseOrder();
         timerUI.gameObject.SetActive(false);
-        orders.Clear(); 
+        orders.Clear();
         animatedCustomers.Clear();
 
         foreach (var slot in uiSlots)
@@ -127,7 +154,8 @@ public class OrderManager : Singleton<OrderManager>
         }
     }
 
-    private void UpdatePoint(int p, int grade)
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_UpdatePoint(int p, int grade)
     {
         point.text = "Point: " + p;
 

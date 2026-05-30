@@ -1,6 +1,7 @@
 ﻿// Owned by JunYoung Park
 using System;
 using System.Collections;
+using Fusion;
 using UnityEngine;
 
 public class DrinkCounter : ACounter
@@ -26,8 +27,10 @@ public class DrinkCounter : ACounter
 
     private Coroutine colorRoutine;
 
-    private void Awake()
+    public override void Spawned()
     {
+        base.Spawned();
+
         if (progressBar != null)
         {
             progressBar.gameObject.SetActive(false);
@@ -36,11 +39,13 @@ public class DrinkCounter : ACounter
         }
     }
 
-    private void Update()
+    public override void FixedUpdateNetwork()
     {
+        base.FixedUpdateNetwork();
+
         if (isUsing)
         {
-            current += Time.deltaTime;
+            current += Runner.DeltaTime;
             progressBar.SetProgress(current / maxTimingRange);
 
             if (current >= maxTimingRange)
@@ -52,20 +57,33 @@ public class DrinkCounter : ACounter
 
     public override void Interact(PlayerController player)
     {
-        if (player.HasFood()) return;
 
-        if (!isUsing)
-        {
-            SoundManager.Instance.DrinkStart(this);
-            StartDispensing(player);
-        }
-        else if (player == currentUser)
-        {
-            float tolerance = maxTimingRange * acceptableRatio;
-            bool isSuccess = Mathf.Abs(current - interactingTiming) <= tolerance;
-;
-            EndDispensing(isSuccess);
-        }
+        if(!player.HasStateAuthority) return;
+
+        if (player.HasFood()) return;
+        
+        AuthorityHandler.RequestStateAuthority(
+            onAuthorized: () =>
+            {
+
+                if (!isUsing)
+                {
+                    RPC_PlaySound();
+                    StartDispensing(player);
+                }
+                else if (player == currentUser)
+                {
+                    float tolerance = maxTimingRange * acceptableRatio;
+                    bool isSuccess = Mathf.Abs(current - interactingTiming) <= tolerance;
+
+                    EndDispensing(isSuccess);
+                }
+            },
+            onNotAuthorized: () =>
+            {
+                Debug.LogWarning("[DrinkCounter Interact] denied.");
+            }
+        );
     }
 
     private void StartDispensing(PlayerController player)
@@ -77,7 +95,8 @@ public class DrinkCounter : ACounter
         currentUser.FreezeMovement(true);
         progressBar.gameObject.SetActive(true);
 
-        AddFood(drinks[selected].CreateFood());
+        OnAdded(FoodSpawner.SpawnFood(Runner, drinks[selected]), Vector3.zero);
+
 
         recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Beverage);
         maxTimingRange = recipe.Value;         // Should be lower than 2sec (depending on sfx)
@@ -95,7 +114,7 @@ public class DrinkCounter : ACounter
 
     private void EndDispensing(bool isSuccess)
     {
-        OnDrinkFinished?.Invoke();
+        RPC_StopSound();
         isUsing = false;
         currentUser.FreezeMovement(false);
         progressBar.gameObject.SetActive(false);
@@ -108,11 +127,13 @@ public class DrinkCounter : ACounter
 
         if (isSuccess)
         {
-            currentUser.AddFood(RemoveFood());
+            // currentUser.AddFood(RemoveFood());
+            FoodTransfer.Transfer(this, currentUser, GetLastFood(), Vector3.zero);
         }
         else
         {
-            ClearFood();
+            // RPC_ClearFood();
+            OnClear();
         }
     }
 
@@ -169,5 +190,17 @@ public class DrinkCounter : ACounter
             float waitTime = b4 - Mathf.Max(0f, b3);
             progressColor.SetColorState(2, waitTime);
         }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlaySound()
+    {
+        SoundManager.Instance.DrinkStart(this);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_StopSound()
+    {
+        OnDrinkFinished?.Invoke(); // fire on every client so each local SoundManager stops its drink audio
     }
 }
