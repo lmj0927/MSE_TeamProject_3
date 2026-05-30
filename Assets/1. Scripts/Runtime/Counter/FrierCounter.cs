@@ -97,7 +97,7 @@ public class FrierCounter : AFireCounter
                 );
             }
             // boiling.Play();
-            RPC_PlayEffects();
+            if (HasStateAuthority) RPC_PlayEffects();
             SetState(CookState);
         }
     }
@@ -105,15 +105,14 @@ public class FrierCounter : AFireCounter
     public void FinishFry(bool onlyBoil = false)
     {
         // boiling.Stop();
-        RPC_StopEffects();
+        if (HasStateAuthority) RPC_StopEffects();
 
-        if (onlyBoil) return; 
+        if (onlyBoil) return;
 
         transform.position -= offset;
 
         if (HasFood())
         {
-            OnCookFinished?.Invoke();
             foreach (var f in foods.Select(food => Runner.FindObject(food)))
             {
                 f.GetComponent<AuthorityHandler>().RequestStateAuthority(
@@ -132,7 +131,7 @@ public class FrierCounter : AFireCounter
 
 
 
-    // [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_PlayEffects()
     {
         SoundManager.Instance.FryStart(this);
@@ -140,9 +139,10 @@ public class FrierCounter : AFireCounter
     }
 
 
-    // [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_StopEffects()
     {
         boiling.Stop();
+        OnCookFinished?.Invoke(); // fire on every client so each local SoundManager stops its fry audio
     }
 }

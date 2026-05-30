@@ -32,7 +32,6 @@ public class GrillCounter : AFireCounter
                 }
                 else if (isDone && CanRemoveFood(player))
                 {
-                    OnCookFinished?.Invoke();
                     // player.AddFood(RemoveFood());
                     FoodTransfer.Transfer(this, player, GetLastFood(), Vector3.zero);
                     SetState(NoneState);
@@ -62,5 +61,6 @@ public class GrillCounter : AFireCounter
     private void RPC_StopEffects()
     {
         smoke.Stop();
+        OnCookFinished?.Invoke(); // fire on every client so each local SoundManager stops its grill audio
     }
 }

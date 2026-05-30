@@ -105,7 +105,8 @@ public abstract class ACounter : NetworkBehaviour, IInteractable, IFoodHolder
 
     protected NetworkObject GetLastFood()
     {
-        return Runner.FindObject(foods.Last());
+        if(foods.Count == 0) return null;
+        return Runner.FindObject(foods.Last());                
     }
 
     /// <summary>
@@ -213,7 +214,7 @@ public abstract class ACounter : NetworkBehaviour, IInteractable, IFoodHolder
     public virtual void OnAdded(NetworkObject food, Vector3 offset)
     {
         if(food == null) return;
-        
+
         var foodName = food != null ? food.name : "null";
         Debug.Log($"[Counter/{name}] OnAdded called. food={foodName} offset={offset} HasFoodAuth={(food != null && food.HasStateAuthority)} HasCounterAuth={HasStateAuthority} foodsCount(before)={foods.Count}");
 

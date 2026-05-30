@@ -114,7 +114,7 @@ public class DrinkCounter : ACounter
 
     private void EndDispensing(bool isSuccess)
     {
-        OnDrinkFinished?.Invoke();
+        RPC_StopSound();
         isUsing = false;
         currentUser.FreezeMovement(false);
         progressBar.gameObject.SetActive(false);
@@ -196,5 +196,11 @@ public class DrinkCounter : ACounter
     private void RPC_PlaySound()
     {
         SoundManager.Instance.DrinkStart(this);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_StopSound()
+    {
+        OnDrinkFinished?.Invoke(); // fire on every client so each local SoundManager stops its drink audio
     }
 }
