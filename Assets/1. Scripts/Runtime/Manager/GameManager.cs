@@ -30,9 +30,8 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
     public Action OnResult;
     private int task;
 
-    private float stageT = 60f;
-    public float StageT => stageT;
-    [Networked] public float stageTimer { get; private set; } = 0f;    
+    [Networked] public float StageT { get; private set; } = 60f;
+    [Networked] public float stageTimer { get; private set; } = 0f;
 
     [Networked] public int currentP { get; private set; } = 0;
 
@@ -58,6 +57,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
     }
     public override void FixedUpdateNetwork()
     {
+        if (!HasStateAuthority) return;
         if (isPaused) return;
         switch(state)
         {
@@ -67,7 +67,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
             case GameState.Playing:
                 stageTimer += Runner.DeltaTime;
 
-                if (stageTimer >= stageT)
+                if (stageTimer >= StageT)
                 {
                     stageTimer = 0f;
                     // 현재 점수 서버에 저장 예정
@@ -107,7 +107,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
         {
             case GameState.Loading:
                 // RPC_ModifyRecipeManager();
-                if (reading != null) stageT = reading.stageTimeLimit;
+                if (reading != null) StageT = reading.stageTimeLimit;
 
 
                 // UnityEngine.Events.UnityAction<Scene, LoadSceneMode> OnLoad = null;

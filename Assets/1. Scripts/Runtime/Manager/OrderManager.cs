@@ -37,11 +37,14 @@ public class OrderManager : NetworkSingleton<OrderManager>
         GameManager.Instance.OnPointUpdated += RPC_UpdatePoint;
     }
 
-    public override void FixedUpdateNetwork()
+    public override void Render()
     {
         if (!isPlaying) return;
+        if (GameManager.Instance == null) return;
 
-        timerUI.SetProgress(GameManager.Instance.stageTimer / GameManager.Instance.StageT);
+        float total = GameManager.Instance.StageT;
+        if (total <= 0f) return;
+        timerUI.SetProgress(GameManager.Instance.stageTimer / total);
     }
     private void OnDestroy()
     {
