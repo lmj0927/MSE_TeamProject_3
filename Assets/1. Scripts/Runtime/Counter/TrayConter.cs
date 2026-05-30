@@ -45,7 +45,7 @@ public class TrayCounter : ACounter
                             // food.transform.position = foodPoint.position;
                             // foodPositions.Add(foodPoint.position);
                             // RPC_AddFood(food, foodPoint.position);
-                            FoodTransfer.Transfer(player, this, player.HeldFoodObject, foodPoint.position);
+                            FoodTransfer.Transfer(player, this, player.HeldFoodObject, Vector3.zero);
                         }
                         else if (foodDataType == FoodSO.FoodType.Side)
                         {

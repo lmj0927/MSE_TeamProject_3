@@ -9,7 +9,7 @@ public static class FoodSpawner
     {
         return SpawnFood(runner, foodSO, Vector3.zero, Quaternion.identity, inputAuthority);
     }
-    public static NetworkObject SpawnFood(NetworkRunner runner, FoodSO foodSO, Vector3 position, Quaternion rotation, PlayerRef? inputAuthority = null)
+    public static NetworkObject SpawnFood(NetworkRunner runner, FoodSO foodSO, Vector3 position, Quaternion rotation, PlayerRef? inputAuthority = null, NetworkRunner.OnBeforeSpawned onBeforeSpawned = null)
     {
         if (foodSO == null)
         {
@@ -40,7 +40,8 @@ public static class FoodSpawner
             foodSO.Prefab,
             position,
             rotation,
-            inputAuthority
+            inputAuthority,
+            onBeforeSpawned
         );
 
         // Food food = obj.GetComponent<Food>();

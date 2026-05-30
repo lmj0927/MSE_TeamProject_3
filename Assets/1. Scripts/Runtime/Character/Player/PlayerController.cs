@@ -50,34 +50,26 @@ public class PlayerController : NetworkBehaviour, IFoodHolder
         if (foodNO == null || HeldFoodObject != null)
             return false;
 
+
+
+        // Side menu check
+        List<FoodSO> holding = new List<FoodSO>();
+        holding.Add(foodNO.GetComponent<Food>().Data);
+        var recipe = RecipeManager.Instance.Cook(holding, RecipeType.Side);
+        if (recipe != null)
+        {
+            Debug.Log("[PlayerController AddFood] Side menu detected");
+            FoodSpawner.Despawn(Runner, foodNO);
+            foodNO = FoodSpawner.SpawnFood(Runner, recipe.Result);
+        }else Debug.Log("[PlayerController AddFood] not side menu");
+        
+        // Hold
         HeldFoodObject = foodNO;
-        // foodNO.RequestStateAuthority();
-
-        // var food = foodNO.GetComponent<Food>();
-        // if (food != null)
-        // {
-        //     Debug.Log("[PlayerController AddFood] HeldFoodObject try to call food RPC_SetHolder");
-        //     food.RPC_SetHolder(Food.HolderKind.Player, this, Vector3.zero);
-        // }
-
-		// TODO-Photon: What it means? 
-		//List<FoodSO> holding = new List<FoodSO>();
-
-        //holding.Add(food.data); 
-        //var recipe = RecipeManager.Instance.Cook(holding, RecipeType.Side);
-        //if (recipe != null)
-        //{
-        //    Destroy(food.gameObject);
-        //    food = recipe.Result.CreateFood();
-        //}
-
-        //heldFood = food;
-        //AttachHeldFood(food);
-
         HeldFoodObject.GetComponent<AuthorityHandler>().RequestStateAuthority(
             onAuthorized: () => 
             {
                 Debug.Log("[PlayerController AddFood] Authorized.");
+                Debug.Log("[PlayerController AddFood] HeldFoodObject is " + HeldFood.Data.FoodName);
 
                 HeldFoodObject.transform.SetParent(holdAnchor, false);
                 HeldFoodObject.transform.SetPositionAndRotation(holdAnchor.position, holdAnchor.rotation);
@@ -89,8 +81,7 @@ public class PlayerController : NetworkBehaviour, IFoodHolder
                 Debug.Log("[PlayerController AddFood] Not Authorized.");
             }
         );
-        
-        Debug.Log("[PlayerController AddFood] HeldFoodObject is " + HeldFood.Data.FoodName);
+
         return true;
     }
 
@@ -144,6 +135,21 @@ public class PlayerController : NetworkBehaviour, IFoodHolder
     {
         var foodName = food != null ? food.name : "null";
         Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] OnAdded called. food={foodName} pos={pos} HasFoodAuth={(food != null && food.HasStateAuthority)} HasPlayerAuth={HasStateAuthority}");
+
+
+        // Side menu check
+        List<FoodSO> holding = new List<FoodSO>();
+        holding.Add(food.GetComponent<Food>().Data);
+        var recipe = RecipeManager.Instance.Cook(holding, RecipeType.Side);
+        if (recipe != null)
+        {
+            Debug.Log("[PlayerController AddFood] Side menu detected");
+            FoodSpawner.Despawn(Runner, food);
+            food = FoodSpawner.SpawnFood(Runner, recipe.Result);
+        } else Debug.Log("[PlayerController AddFood] not side menu");
+
+
+        // Hold
         HeldFoodObject = food;
         // HeldFoodObject.transform.SetParent(holdAnchor, false);
         // HeldFoodObject.transform.SetPositionAndRotation(holdAnchor.position, holdAnchor.rotation);
