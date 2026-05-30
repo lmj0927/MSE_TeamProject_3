@@ -412,6 +412,8 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 82705981227a7c544939ebf5d5a9168c, type: 3}
   - {fileID: 2800000, guid: c62944c035cd6d342833db56575926a8, type: 3}
   patienceBar: {fileID: 4379694185765039706}
+  _isWaiting: 0
+  _sitTimer: 60
   menuImages:
   - {fileID: 6435709134719400467}
   - {fileID: 4862483107158080655}
@@ -526,7 +528,7 @@ MonoBehaviour:
   SyncScale: 0
   SyncParent: 0
   _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
+  DisableSharedModeInterpolation: 1
 --- !u!1 &3533565980509894486
 GameObject:
   m_ObjectHideFlags: 0

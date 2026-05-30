@@ -1541,6 +1541,7 @@ MonoBehaviour:
   interactLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+  outlineLayerIndex: 1
 --- !u!114 &2338618378719261916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1619,7 +1620,7 @@ MonoBehaviour:
   SyncScale: 0
   SyncParent: 0
   _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
+  DisableSharedModeInterpolation: 1
 --- !u!114 &4769050047508473582
 MonoBehaviour:
   m_ObjectHideFlags: 0
