@@ -588,7 +588,7 @@ public class Customer : MonoBehaviour, IInteractable
     {
         if (!isWaiting) return;
         if (!player.HasFood()) return;
-        print(pitch);
+
         Food served = player.RemoveFood();
         GetFood(served);
     }
