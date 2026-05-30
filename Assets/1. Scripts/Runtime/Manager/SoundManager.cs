@@ -43,6 +43,13 @@ public class SoundManager : Singleton<SoundManager>
     private void Start()
     {
         ChangeBGM(0);
+        
+        if(GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionSetup);
+        else GameManagerActionSetup();
+    }
+
+    private void GameManagerActionSetup()
+    {
         GameManager.Instance.OnStageStart += () => ChangeBGM(2);
         GameManager.Instance.OnStageEnd += StopAllSFX;
         bgm.loop = true;  
