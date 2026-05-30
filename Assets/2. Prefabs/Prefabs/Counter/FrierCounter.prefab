@@ -342,7 +342,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   foodPoint: {fileID: 2024063795244355047}
   outlineRoot: {fileID: 3141862116280336555}
-  burnTime: 2
+  burnTime: 3
   cookProgressBar: {fileID: 6476679912032449191}
   burnProgressBar: {fileID: 1703722416157103604}
   resultFood: {fileID: 0}
@@ -626,7 +626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   foodPoint: {fileID: 704966768954393761}
   outlineRoot: {fileID: 3141862116280336555}
-  burnTime: 2
+  burnTime: 3
   cookProgressBar: {fileID: 663301446080983060}
   burnProgressBar: {fileID: 5148064850837559111}
   resultFood: {fileID: 0}

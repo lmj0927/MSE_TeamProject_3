@@ -18,13 +18,13 @@ public class GameManager : Singleton<GameManager>
     private GameState state = GameState.MainMenu;
     [SerializeField] private StageSO[] stages;
     private StageSO reading;
+    public StageSO Reading => reading;
 
     private bool isPlaying = false;
-    private bool isPaused = false;      // 일시정지?(고려중)
 
     public Action OnStageStart;
     public Action<int, int> OnPointUpdated;
-    public Action OnStageEnd;                       // 시간 종료로 인해 실행되야할것: 손님의 입장 중단, 있던 손님의 즉시 퇴장. 각각의 스크립트에서 별도 실행 등
+    public Action OnStageEnd;                   
     public Action OnResult;
     private int task;
 
@@ -40,7 +40,6 @@ public class GameManager : Singleton<GameManager>
     }
     private void Update()
     {
-        if (isPaused) return;
         switch(state)
         {
             case GameState.WaitSync:
@@ -115,6 +114,8 @@ public class GameManager : Singleton<GameManager>
                 break;
 
             case GameState.MainMenu:
+                SoundManager.Instance.ChangeBGM(1);
+
                 isPlaying = false;
                 stageTimer = 0f;
                 currentP = 0;

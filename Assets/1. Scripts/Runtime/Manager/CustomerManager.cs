@@ -63,6 +63,7 @@ public class CustomerManager : MonoBehaviour
     {
         GameManager.Instance.OnStageStart += HandleStageStart;
         GameManager.Instance.OnStageEnd += HandleStageEnd;
+        spawnTerm = GameManager.Instance.Reading.spawnRate;
     }
     void Update()
     {

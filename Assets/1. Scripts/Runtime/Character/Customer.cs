@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -50,6 +49,10 @@ public class Customer : MonoBehaviour, IInteractable
     private float boring = 30.0f;
     private float angry = 10.0f;
 
+    public Action OnEmotionChange;
+    private Vector2 pitchRange = new Vector2(0.8f, 2f);
+    private float pitch;
+
     private bool isEating = false;
     private bool hasEaten = false;
     private float mealTimer = 10.0f;
@@ -63,8 +66,6 @@ public class Customer : MonoBehaviour, IInteractable
     [SerializeField] private GameObject trayPrefab;
     private GameObject tray;
 
-
-    // Event for CustomerManger to check Customer leaving
     public Action<int> OnMealFinished;
     public Action<Customer> OnSleep;
 
@@ -118,6 +119,8 @@ public class Customer : MonoBehaviour, IInteractable
             {
                 emotion = Emotion.Angry;
                 SetFace(2);
+                OnEmotionChange?.Invoke();
+                SoundManager.Instance.Angry(this, pitch);
                 anim.SetTrigger("angry");
                 patienceColor.SetColorState(2, 0f);
             }
@@ -125,6 +128,8 @@ public class Customer : MonoBehaviour, IInteractable
             {
                 patienceColor.SetColorState(1, 0f);
                 emotion = Emotion.Boring;
+                OnEmotionChange?.Invoke();
+                SoundManager.Instance.Boring(this, pitch);
                 SetFace(1);
                 anim.SetTrigger("boring");
                 patienceColor.SetColorState(2, boring - angry);
@@ -148,6 +153,7 @@ public class Customer : MonoBehaviour, IInteractable
 
     private void OnDestroy()
     {
+        OnEmotionChange = null;
         OnMealFinished = null;
         OnSleep = null;
 
@@ -187,6 +193,8 @@ public class Customer : MonoBehaviour, IInteractable
         maxSit = sitTimer;
         boring = sitTimer * 0.6f;
         angry = sitTimer * 0.25f;
+
+        pitch = UnityEngine.Random.Range(pitchRange.x, pitchRange.y);
 
         if (patienceBar != null)
         {
@@ -409,6 +417,8 @@ public class Customer : MonoBehaviour, IInteractable
 
         if (points == 0)
         {
+            OnEmotionChange?.Invoke();
+            SoundManager.Instance.Angry(this, pitch);
             SetFace(2);
             anim.SetTrigger("wrong");
             Stand();
@@ -418,7 +428,9 @@ public class Customer : MonoBehaviour, IInteractable
         }
         else GameManager.Instance.AddPoint(points);
 
-            SetFace(0);
+        OnEmotionChange?.Invoke();
+        SoundManager.Instance.Happy(this, pitch);
+        SetFace(0);
         anim.SetTrigger("correct");
         isEating = true;
         agent.stoppingDistance = 1.5f;
@@ -576,7 +588,7 @@ public class Customer : MonoBehaviour, IInteractable
     {
         if (!isWaiting) return;
         if (!player.HasFood()) return;
-
+        print(pitch);
         Food served = player.RemoveFood();
         GetFood(served);
     }

@@ -18,7 +18,15 @@ public class FrierCounter : AFireCounter
             var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Oil);
             if (recipe != null)
             {
-                cookTime = recipe.Value;
+                float maxAllowedTime = 10f - burnTime;
+
+                if (recipe.Value > maxAllowedTime)
+                {
+                    Debug.LogWarning($"[FrierCounter] The frying time ({recipe.Value} sec) for {recipe.Result.FoodName} is too long." +
+                                     $"Due to SFX length limit, it has been auto-modified to {maxAllowedTime}sec. Please check the Recipe SO.");
+                }
+
+                cookTime = Mathf.Min(recipe.Value, maxAllowedTime);
                 resultFood = recipe.Result;
             }
         } else if (!isBasketDown && !isDone && HasFood())
