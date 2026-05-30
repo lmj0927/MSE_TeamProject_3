@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b69725272f37440bfb817b33c77a5f58, type: 3}
+  m_Name: TripleBurger
+  m_EditorClassIdentifier: Assembly-CSharp::FoodSO
+  foodName: TripleBurger
+  prefab: {fileID: 4706460075730594061, guid: f77ef9158b4fe78439749cb5084eae7a, type: 3}
+  sprite: {fileID: 21300000, guid: 1a5e6b52065955b4d97a2a50e8c50d1a, type: 3}
+  type: 4
+  point: 7500

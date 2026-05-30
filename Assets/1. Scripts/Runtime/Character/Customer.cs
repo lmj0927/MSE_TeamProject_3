@@ -51,8 +51,13 @@ public class Customer : NetworkBehaviour, IInteractable
     private float boring = 30.0f;
     private float angry = 10.0f;
 
+    public Action OnEmotionChange;
+    private Vector2 pitchRange = new Vector2(0.8f, 2f);
+    private float pitch;
+
     [Networked] private bool isEating { get; set; }= false;
     [Networked] private bool hasEaten { get; set; } = false;
+
     private float mealTimer = 10.0f;
 
     // Recipe selection synced by idx; SO looked up locally via RecipeManager
@@ -68,8 +73,6 @@ public class Customer : NetworkBehaviour, IInteractable
     [SerializeField] private GameObject trayPrefab;
     private NetworkObject tray;
 
-
-    // Event for CustomerManger to check Customer leaving
     public Action<int> OnMealFinished;
     public Action<Customer> OnSleep;
 
@@ -141,6 +144,9 @@ public class Customer : NetworkBehaviour, IInteractable
             } else if (emotion == Emotion.Boring && sitTimer <= angry)
             {
                 emotion = Emotion.Angry;
+
+                OnEmotionChange?.Invoke();
+                SoundManager.Instance.Angry(this, pitch);
                 faceIdx = 2;
                 RPC_PlayAnim(AnimTrigger.Angry);
                 RPC_SetPatience(2, 0f);
@@ -149,6 +155,9 @@ public class Customer : NetworkBehaviour, IInteractable
             {
                 RPC_SetPatience(1, 0f);
                 emotion = Emotion.Boring;
+
+                OnEmotionChange?.Invoke();
+                SoundManager.Instance.Boring(this, pitch);
                 faceIdx = 1;
                 RPC_PlayAnim(AnimTrigger.Boring);
                 RPC_SetPatience(2, boring - angry);
@@ -172,6 +181,7 @@ public class Customer : NetworkBehaviour, IInteractable
 
     private void OnDestroy()
     {
+        OnEmotionChange = null;
         OnMealFinished = null;
         OnSleep = null;
 
@@ -199,6 +209,8 @@ public class Customer : NetworkBehaviour, IInteractable
         maxSit = sitTimer;
         boring = sitTimer * 0.6f;
         angry = sitTimer * 0.25f;
+
+        pitch = UnityEngine.Random.Range(pitchRange.x, pitchRange.y);
 
         if (patienceBar != null)
         {
@@ -455,6 +467,8 @@ public class Customer : NetworkBehaviour, IInteractable
 
         if (points == 0)
         {
+            OnEmotionChange?.Invoke();
+            SoundManager.Instance.Angry(this, pitch);
             faceIdx = 2;
             RPC_PlayAnim(AnimTrigger.Wrong);
             Stand();
@@ -465,6 +479,8 @@ public class Customer : NetworkBehaviour, IInteractable
         }
         else GameManager.Instance.AddPoint(points);
 
+        OnEmotionChange?.Invoke();
+        SoundManager.Instance.Happy(this, pitch);
         faceIdx = 0;
         RPC_PlayAnim(AnimTrigger.Correct);
         isEating = true;

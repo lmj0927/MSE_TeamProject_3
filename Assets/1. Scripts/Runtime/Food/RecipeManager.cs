@@ -169,40 +169,7 @@ public class RecipeManager : Singleton<RecipeManager>
                     }
                 }
             }
-
-            if (!recFind && recipe.Complements != null)
-            {
-                foreach (RecipeSO complement in recipe.Complements)
-                {
-                    if (complement.Ingredients.Count != ingredients.Count) continue;
-
-                    copyIng.Clear();
-                    copyIng.AddRange(ingredients);
-
-                    recFind = true;
-
-                    foreach (FoodSO compleIng in complement.Ingredients)
-                    {
-                        bool ingFind = false;
-                        for (int i = 0; i < copyIng.Count; i++)
-                        {
-                            ingFind = compleIng.FoodName.Equals(copyIng[i].FoodName);
-                            if (ingFind)
-                            {
-                                copyIng.RemoveAt(i);
-                                break;
-                            }
-                        }
-                        if (!ingFind)
-                        {
-                            recFind = false;
-                            break;
-                        }
-                    }
-
-                    if (recFind) break;
-                }
-            }   
+ 
             if(recFind) return recipe;
 
         }

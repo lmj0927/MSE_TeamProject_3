@@ -12,7 +12,6 @@ public class FrierCounter : AFireCounter
 
     private Vector3 offset = new Vector3(0, -0.13f, 0.05f);
 
-
     public override void Spawned()
     {
         base.Spawned();
@@ -40,6 +39,14 @@ public class FrierCounter : AFireCounter
                             var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Oil);
                             if (recipe != null)
                             {
+                                float maxAllowedTime = 10f - burnTime;
+
+                                if (recipe.Value > maxAllowedTime)
+                                {
+                                    Debug.LogWarning($"[FrierCounter] The frying time ({recipe.Value} sec) for {recipe.Result.FoodName} is too long." +
+                                                     $"Due to SFX length limit, it has been auto-modified to {maxAllowedTime}sec. Please check the Recipe SO.");
+                                }
+
                                 cookTime = recipe.Value;
                                 resultFood = recipe.Result;
                             }

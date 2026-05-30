@@ -9,7 +9,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
 {
     public enum GameState {
         MainMenu,
-        Loading,       
+        Loading,
         WaitSync,       // 다른 플레이어 로딩 대기
         Playing,
         EndPlay,
@@ -18,15 +18,15 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
 
     [Networked] private GameState state { get; set; }
     [SerializeField] private StageSO[] stages;
-    private StageSO reading;
+    public StageSO reading { get; private set; }
+    
     [Networked, OnChangedRender(nameof(OnReadingIdxChanged))] private int readingIdx { get; set; }
 
     [Networked] private bool isPlaying { get; set; }
-    private bool isPaused = false;      // 일시정지?(고려중)
 
     public Action OnStageStart;
     public Action<int, int> OnPointUpdated;
-    public Action OnStageEnd;                       // 시간 종료로 인해 실행되야할것: 손님의 입장 중단, 있던 손님의 즉시 퇴장. 각각의 스크립트에서 별도 실행 등
+    public Action OnStageEnd;                   
     public Action OnResult;
     private int task;
 
@@ -58,7 +58,6 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
     public override void FixedUpdateNetwork()
     {
         if (!HasStateAuthority) return;
-        if (isPaused) return;
         switch(state)
         {
             case GameState.WaitSync:
@@ -141,6 +140,8 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
                 break;
 
             case GameState.MainMenu:
+                SoundManager.Instance.ChangeBGM(0);
+
                 isPlaying = false;
                 stageTimer = 0f;
                 currentP = 0;

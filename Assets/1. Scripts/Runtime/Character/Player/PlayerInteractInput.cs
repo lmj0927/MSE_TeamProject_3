@@ -74,7 +74,11 @@ public class PlayerInteractInput : MonoBehaviour
                 break;
             }
 
-            float dot = Vector3.Dot(transform.forward, toTarget / Mathf.Sqrt(sqr));
+            Vector3 flatForward = new Vector3(transform.forward.x, 0, transform.forward.z);
+            Vector3 flatToTarget = new Vector3(toTarget.x, 0, toTarget.z).normalized;
+
+
+            float dot = Vector3.Dot(flatForward, flatToTarget);
             if (dot < minForwardDot) continue;
 
             if (sqr < bestSqr)
