@@ -74,6 +74,16 @@ public class Customer : NetworkBehaviour, IInteractable
     [Networked] private bool alreadyDeciding { get; set; } = false;
     [Networked] private bool alreadyStand { get; set; } = false;
 
+    // Networked costume (replicates appearance to all clients)
+    [Networked] private Color bodyColor { get; set; }
+    [Networked] private int hatIdx { get; set; }
+    [Networked] private int glassesIdx { get; set; }
+    [Networked] private int mouthIdx { get; set; }
+    [Networked, OnChangedRender(nameof(OnFaceChanged))] private int faceIdx { get; set; }
+    [Networked, OnChangedRender(nameof(OnCostumeChanged))] private int costumeVersion { get; set; }
+
+    private enum AnimTrigger { Idle, Angry, Boring, Sit, Wrong, Correct, Stand }
+
     private Transform exit;
 
     private void Awake()
@@ -88,6 +98,14 @@ public class Customer : NetworkBehaviour, IInteractable
             patienceColor = patienceBar.GetComponent<StateChanger>();
         }
     }
+
+    // Proxy: initial state already synced -> apply now. Master: skip (values still default, InitializeStats will apply).
+    public override void Spawned()
+    {
+        base.Spawned();
+        if (costumeVersion > 0) OnCostumeChanged();
+    }
+
     public override void FixedUpdateNetwork()
     {
         if(!HasStateAuthority) return;
@@ -110,7 +128,7 @@ public class Customer : NetworkBehaviour, IInteractable
 
             if (sitTimer <= 0 )
             {
-                SetFace(2);
+                faceIdx = 2;
                 isWaiting = false;
                 OrderManager.Instance.RemoveOrder(this);
                 Stand();
@@ -119,16 +137,16 @@ public class Customer : NetworkBehaviour, IInteractable
             } else if (emotion == Emotion.Boring && sitTimer <= angry)
             {
                 emotion = Emotion.Angry;
-                SetFace(2);
-                anim.SetTrigger("angry");
+                faceIdx = 2;
+                RPC_PlayAnim(AnimTrigger.Angry);
                 patienceColor.SetColorState(2, 0f);
             }
             else if (emotion == Emotion.Happy && sitTimer <= boring)
             {
                 patienceColor.SetColorState(1, 0f);
                 emotion = Emotion.Boring;
-                SetFace(1);
-                anim.SetTrigger("boring");
+                faceIdx = 1;
+                RPC_PlayAnim(AnimTrigger.Boring);
                 patienceColor.SetColorState(2, boring - angry);
             }
 
@@ -164,25 +182,13 @@ public class Customer : NetworkBehaviour, IInteractable
 
     private void InitializeStats()
     {
-        // Random Appearance
-        RandomColor();
-        int hatType = UnityEngine.Random.Range(0, hat.transform.childCount + 1);
-        int glassesType = UnityEngine.Random.Range(0, glasses.transform.childCount + 1);
-        int mouthType = UnityEngine.Random.Range(0, mouth.transform.childCount + 1);
-        SetCostume(hatType, glassesType, mouthType);
-        SetFace(0);
-
-        
-        if (anim != null) anim.Update(0f);
-
-        if (portrait != null)
-        {
-            if (portrait.texture != null) Destroy(portrait.texture);
-            Destroy(portrait);
-        }
-
-        portrait = PreviewGenerator.TakeLiveSnapshot(this.gameObject, 512, 512, false);
-        
+        // Random Appearance (sync via Networked + costumeVersion bump triggers ApplyCostume on all)
+        bodyColor = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+        hatIdx = UnityEngine.Random.Range(0, hat.transform.childCount + 1);
+        glassesIdx = UnityEngine.Random.Range(0, glasses.transform.childCount + 1);
+        mouthIdx = UnityEngine.Random.Range(0, mouth.transform.childCount + 1);
+        faceIdx = 0;
+        costumeVersion++;
 
         // Random Timer
         sitTimer = UnityEngine.Random.Range(sitRange.x, sitRange.y);
@@ -224,6 +230,9 @@ public class Customer : NetworkBehaviour, IInteractable
         alreadyDeciding = false;
         alreadyStand = false;
         agent.stoppingDistance = 0.3f;
+
+        // Apply locally on master (OnChangedRender on authority isn't guaranteed same-tick)
+        OnCostumeChanged();
     }
     
     private void SetMenuImg(RecipeSO r, int idx)
@@ -237,11 +246,40 @@ public class Customer : NetworkBehaviour, IInteractable
         menuImages[idx].gameObject.SetActive(true);
         menuImages[idx].sprite = r.Result.Sprite;
     }
-    private void RandomColor()
-    {
-        Color randomC = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+    // OnChangedRender callbacks: replicate appearance to all clients
+    private void OnFaceChanged() => SetFace(faceIdx);
 
-        mat[0].SetColor("_BaseColor", randomC);
+    private void OnCostumeChanged()
+    {
+        if (mat != null && mat.Length > 0) mat[0].SetColor("_BaseColor", bodyColor);
+        SetCostume(hatIdx, glassesIdx, mouthIdx);
+        SetFace(faceIdx);
+
+        if (anim != null) anim.Update(0f);
+        TakeSnapshot();
+    }
+
+    private int lastSnapshotVersion = -1;
+
+    // Defer to end-of-frame: camera.Render() during Fusion tick breaks URP render pass state
+    private void TakeSnapshot()
+    {
+        StartCoroutine(TakeSnapshotRoutine());
+    }
+
+    private IEnumerator TakeSnapshotRoutine()
+    {
+        yield return new WaitForEndOfFrame();
+        if (this == null || gameObject == null) yield break;
+        if (lastSnapshotVersion == costumeVersion) yield break; // dedupe per costume version
+        lastSnapshotVersion = costumeVersion;
+
+        if (portrait != null)
+        {
+            if (portrait.texture != null) Destroy(portrait.texture);
+            Destroy(portrait);
+        }
+        portrait = PreviewGenerator.TakeLiveSnapshot(this.gameObject, 512, 512, false);
     }
 
     // h = Hat type
@@ -265,6 +303,7 @@ public class Customer : NetworkBehaviour, IInteractable
     // 3 is pacifier
     private void SetCostume(int h, int g, int m)
     {
+        if (hat == null || glasses == null || mouth == null) return;
         int hMax = hat.transform.childCount;
 
         for (int i = 0; i < hMax; i++)
@@ -295,9 +334,10 @@ public class Customer : NetworkBehaviour, IInteractable
     // 2 is angry
     private void SetFace(int type)
     {
+        if (mat == null || mat.Length < 2 || faces == null || faces.Length == 0) return;
         type = Mathf.Abs(type);
         int idx = faces.Length > type ? type : 0;
-        
+
         mat[1].SetTexture("_BaseMap", faces[idx]);
     }
 
@@ -327,7 +367,7 @@ public class Customer : NetworkBehaviour, IInteractable
         switch (current)
         {
             case cState.Entering:
-                anim.SetTrigger("idle");
+                RPC_PlayAnim(AnimTrigger.Idle);
                 Order();
                 break;
             case cState.GoingSeat:
@@ -379,7 +419,7 @@ public class Customer : NetworkBehaviour, IInteractable
         transform.position = destination.GetChild(0).position + (-transform.forward * 0.1f);
         destination.position += (-destination.forward * dragChair);
 
-        anim.SetTrigger("sit");
+        RPC_PlayAnim(AnimTrigger.Sit);
         current = cState.Sitting;
 
         StartCoroutine(SitRoutine());
@@ -411,8 +451,8 @@ public class Customer : NetworkBehaviour, IInteractable
 
         if (points == 0)
         {
-            SetFace(2);
-            anim.SetTrigger("wrong");
+            faceIdx = 2;
+            RPC_PlayAnim(AnimTrigger.Wrong);
             Stand();
             // Destroy(served.gameObject);
             Runner.Despawn(served);
@@ -421,8 +461,8 @@ public class Customer : NetworkBehaviour, IInteractable
         }
         else GameManager.Instance.AddPoint(points);
 
-            SetFace(0);
-        anim.SetTrigger("correct");
+        faceIdx = 0;
+        RPC_PlayAnim(AnimTrigger.Correct);
         isEating = true;
         agent.stoppingDistance = 1.5f;
         food = served;
@@ -490,7 +530,7 @@ public class Customer : NetworkBehaviour, IInteractable
         yield return new WaitForSeconds(0.1f);
         if (!anim.GetCurrentAnimatorStateInfo(0).IsName("wrong"))   // Default Stand Scenario
         {
-            anim.SetTrigger("stand");
+            RPC_PlayAnim(AnimTrigger.Stand);
             yield return new WaitForSeconds(0.1f);
         }
         else
@@ -564,9 +604,7 @@ public class Customer : NetworkBehaviour, IInteractable
         if (agent.enabled)
         {
             agent.SetDestination(destination.position);
-            
-            anim.SetBool("hasTrash", next != null);
-            anim.SetTrigger("walk");
+            RPC_PlayWalk(next != null);
         }
     }
     public float GetPatienceHueShift()
@@ -590,5 +628,29 @@ public class Customer : NetworkBehaviour, IInteractable
         destination = exitPos;
         Stand();
         GameManager.Instance.RegisterTask();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayAnim(AnimTrigger trigger)
+    {
+        if (anim == null) return;
+        switch (trigger)
+        {
+            case AnimTrigger.Idle: anim.SetTrigger("idle"); break;
+            case AnimTrigger.Angry: anim.SetTrigger("angry"); break;
+            case AnimTrigger.Boring: anim.SetTrigger("boring"); break;
+            case AnimTrigger.Sit: anim.SetTrigger("sit"); break;
+            case AnimTrigger.Wrong: anim.SetTrigger("wrong"); break;
+            case AnimTrigger.Correct: anim.SetTrigger("correct"); break;
+            case AnimTrigger.Stand: anim.SetTrigger("stand"); break;
+        }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayWalk(bool trash)
+    {
+        if (anim == null) return;
+        anim.SetBool("hasTrash", trash);
+        anim.SetTrigger("walk");
     }
 }

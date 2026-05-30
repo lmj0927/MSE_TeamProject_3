@@ -141,28 +141,32 @@ public class CustomerManager : NetworkBehaviour
     }
     private Customer GetCustomer()
     {
-
         Customer c;
-
         Transform outside = GetOutside();
+
+        bool beverage = UnityEngine.Random.value <= beverageRatio;
+        bool sidemenu = UnityEngine.Random.value <= sideRatio;
 
         if (pool.Count == 0)
         {
-            // c = Instantiate(customer, outside.position, outside.rotation).GetComponent<Customer>();
-            c = Runner.Spawn(customer, outside.position, outside.rotation).GetComponent<Customer>();
-            c.OnSleep += AddToPool;
+            // Init via onBeforeSpawned: SetValues runs before Spawned() so Networked props are ready for initial sync
+            NetworkObject no = Runner.Spawn(customer, outside.position, outside.rotation, null,
+                (runner, obj) =>
+                {
+                    var newC = obj.GetComponent<Customer>();
+                    newC.OnSleep += AddToPool;
+                    newC.SetValues(sitTimerRange, mealTimerRange, walkSpeedRange, beverage, sidemenu);
+                });
+            c = no.GetComponent<Customer>();
         }
         else
         {
             c = pool.Dequeue();
             c.transform.position = outside.position;
             c.transform.rotation = outside.rotation;
-
             c.gameObject.SetActive(true);
+            c.SetValues(sitTimerRange, mealTimerRange, walkSpeedRange, beverage, sidemenu);
         }
-        bool beverage = UnityEngine.Random.value <= beverageRatio;
-        bool sidemenu = UnityEngine.Random.value <= sideRatio;
-        c.SetValues(sitTimerRange, mealTimerRange, walkSpeedRange, beverage, sidemenu);
         return c;
     }
 
