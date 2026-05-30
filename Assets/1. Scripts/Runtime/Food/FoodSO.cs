@@ -32,12 +32,10 @@ public class FoodSO : ScriptableObject
 
     public Food CreateFood()
     {
-        Debug.LogWarning("[FoodSO CreateFood] Deprecated method.");
-        return null;
-        // var food = Instantiate(prefab);
-        // food.AddComponent<Food>();
-        // food.GetComponent<Food>().SetData(this);
-        // return food.GetComponent<Food>();
+        var food = Instantiate(prefab);
+        food.AddComponent<Food>();
+        food.GetComponent<Food>().SetData(this);
+        return food.GetComponent<Food>();
     }
 
 }

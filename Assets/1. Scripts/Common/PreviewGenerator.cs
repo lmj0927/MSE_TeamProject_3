@@ -20,7 +20,6 @@ public class PreviewGenerator
 
         GameObject cameraObject = new GameObject("Snapshot Camera");
         Camera camera = cameraObject.AddComponent<Camera>();
-        camera.enabled = false; // manual Render only; avoid end-of-frame display leak
         camera.clearFlags = CameraClearFlags.SolidColor;
 
         Color bgColor = new Color(0f, 0f, 0f, 0f);
@@ -54,7 +53,7 @@ public class PreviewGenerator
         keyLightObject.transform.rotation = Quaternion.Euler(30f, cameraObject.transform.eulerAngles.y - 30f, 0f);
 
         RenderTexture renderTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.ARGB32);
-        renderTexture.antiAliasing = 1; // URP/hardware may not support 8; mismatch crashes the blit
+        renderTexture.antiAliasing = 8; 
 
         camera.targetTexture = renderTexture;
         RenderTexture previousRT = RenderTexture.active;

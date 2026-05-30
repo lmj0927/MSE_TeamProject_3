@@ -1,7 +1,10 @@
 fileFormatVersion: 2
-guid: 557914a77291c4facb75a51dded9069f
-labels:
-- FusionPrefab
+guid: a81a5789c72593e48af2d8d37e6b4933
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
   productId: 301805
@@ -9,8 +12,3 @@ AssetOrigin:
   packageVersion: 1.0
   assetPath: Assets/Toony Kitchen Ingredients Free/Prefabs/Ingredients/chicken_Leg_Meat_Raw.prefab
   uploadId: 708770
-PrefabImporter:
-  externalObjects: {}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 

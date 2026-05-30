@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using System;
 using UnityEngine.EventSystems;
 using DG.Tweening;
-using Fusion;
 
 public class IngredientPopupUI : BasePopupUI
 {
@@ -16,11 +15,9 @@ public class IngredientPopupUI : BasePopupUI
     [SerializeField] private IngredientButton buttonPrefab;
     private List<IngredientButton> ingredientButtons = new List<IngredientButton>();
 
-    public Action<FoodSO> OnIngredientSelected;
+    public Action<Food> OnIngredientSelected;
 
     private GameObject lastSelected;
-
-    private bool initialized = false;
 
     protected override void Awake()
     {
@@ -55,14 +52,12 @@ public class IngredientPopupUI : BasePopupUI
 
     protected override void OnShow()
     {
-        if(!initialized) Initialize();
         if (lastSelected != null && EventSystem.current.currentSelectedGameObject == null)
         {
             EventSystem.current.SetSelectedGameObject(lastSelected);
         }
     }
 
-    
     public void Initialize()
     {
         foreach (var btn in ingredientButtons)
@@ -98,20 +93,12 @@ public class IngredientPopupUI : BasePopupUI
         }
 
         ResetTop(); 
-
-        if(ingredientButtons.Count > 0) {
-            initialized = true;
-            Debug.Log("[IngredientPopupUI Initialize] Initialized.");
-        } else
-        {
-            Debug.LogWarning("[IngredientPopupUI Initialize] Fail to initialized refrigerator.");
-        }
     }
 
     private void OnIngredientButtonClick(FoodSO food)
     {
-        // var instantiatedFood = food.CreateFood();
-        OnIngredientSelected?.Invoke(food);
+        var instantiatedFood = food.CreateFood();
+        OnIngredientSelected?.Invoke(instantiatedFood);
         Hide();
     }
 

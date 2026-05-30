@@ -1,8 +1,7 @@
-// Owned by SeungYeon Jung
-using Fusion;
+﻿// Owned by SeungYeon Jung
 using UnityEngine;
 
-public class PlayerMovement : NetworkBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     float hAxis;
     float vAxis;
@@ -20,12 +19,6 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private string isMovingParam = "isMoving";
     [SerializeField] private string isRunningParam = "isRunning";
     [SerializeField] private string isCarryingParam = "isCarrying";
-    
-    // Networked: synchronized by photon fusion
-    // OnchangedRender(nameof(function)): callback when the property value changed
-    [Networked, OnChangedRender(nameof(IsMovingChanged))] private bool isMoving { get; set; }
-    [Networked, OnChangedRender(nameof(IsRunningChanged))] private bool isRunning { get; set; }
-    [Networked, OnChangedRender(nameof(IsCarryingChanged))] private bool isCarrying { get; set; }
 
     [Header("Stamina")]
     [SerializeField] private Stamina stamina;
@@ -33,40 +26,20 @@ public class PlayerMovement : NetworkBehaviour
 
     CharacterController playerController;
     float cachedSpeed;
-    [Networked] bool isFreezing { get; set; }
-    [Networked] bool shouldShowUI { get; set; }
+    bool isFreezing = false;
 
-    public Camera Camera;
-
-    public override void Spawned()
+    private void Start()
     {
-        if (HasStateAuthority)
-        {
-            Debug.Log("Player spawned");
-            Camera = Camera.main;
-            Debug.Log("Camera " + ((Camera == null) ? "not found" : "found"));
-            Camera.GetComponent<FollowCamera>().target = transform;
+        playerController = GetComponent<CharacterController>();
 
-
-            playerController = GetComponent<CharacterController>();
-
-            if (animator == null)
-                animator = GetComponentInChildren<Animator>();
-            if (stamina == null)
-                stamina = GetComponent<Stamina>();
-
-            isFreezing = false;
-            shouldShowUI = false;
-        }
+        if (animator == null)
+            animator = GetComponentInChildren<Animator>();
+        if (stamina == null)
+            stamina = GetComponent<Stamina>();
     }
 
-    public override void FixedUpdateNetwork()
+    private void Update()
     {
-
-        if (HasStateAuthority == false)
-        {
-            return;
-        }
         // ⭐ 추가: UI 표시 로직을 위해 wantsRun 변수를 밖으로 빼냈습니다.
         bool wantsRun = false;
 
@@ -77,43 +50,39 @@ public class PlayerMovement : NetworkBehaviour
 
             moveVec = new Vector3(hAxis, 0, vAxis).normalized;
 
-            // networked property
-            isMoving = moveVec.sqrMagnitude > 0.0001f;
+            bool isMoving = moveVec.sqrMagnitude > 0.0001f;
             wantsRun = isMoving && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
 
             bool canRun = wantsRun;
             if (wantsRun && stamina != null)
             {
-                canRun = stamina.TryDrainForRunning(Runner.DeltaTime);
+                canRun = stamina.TryDrainForRunning(Time.deltaTime);
             }
 
-            // networked property
-            isCarrying = gameObject.GetComponent<PlayerController>().HasFood();
+            bool isCarrying = gameObject.GetComponent<PlayerController>().HasFood();
 
             if (!wantsRun && stamina != null)
             {
                 float weight = 1f;
                 if (isMoving) weight = 0.8f;
 
-                stamina.RegenWhileIdle(Runner.DeltaTime * weight);
+                stamina.RegenWhileIdle(Time.deltaTime * weight);
             }
 
-            // networked property
-            isRunning = canRun;
+            bool isRunning = canRun;
             cachedSpeed = speed * (isRunning ? runMultiplier : 1f);
 
-            // no need to change here because it will be managed via callbacks
-            // if (animator != null)
-            // {
-            //     animator.SetBool(isCarryingParam, isCarrying);
-            //     animator.SetBool(isMovingParam, isMoving);
-            //     animator.SetBool(isRunningParam, isRunning);
-            // }
+            if (animator != null)
+            {
+                animator.SetBool(isCarryingParam, isCarrying);
+                animator.SetBool(isMovingParam, isMoving);
+                animator.SetBool(isRunningParam, isRunning);
+            }
 
             if (isMoving)
             {
                 var targetRot = Quaternion.LookRotation(moveVec, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, turnSpeed * Runner.DeltaTime);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
             }
 
             Vector3 moveVelocity = moveVec * cachedSpeed;
@@ -122,28 +91,27 @@ public class PlayerMovement : NetworkBehaviour
             {
                 velocity.y = -2f;
             }
-            velocity.y += gravity * Runner.DeltaTime;
+            velocity.y += gravity * Time.deltaTime;
 
-            playerController.Move((moveVelocity + velocity) * Runner.DeltaTime);
+            playerController.Move((moveVelocity + velocity) * Time.deltaTime);
         }
         else
         {
             if (stamina != null)
-                stamina.RegenWhileIdle(Runner.DeltaTime);
-            
-            // no need to change here because it will be managed via callbacks
-            // if (animator != null)
-            // {
-            //     animator.SetBool(isMovingParam, false);
-            //     animator.SetBool(isRunningParam, false);
-            // }
+                stamina.RegenWhileIdle(Time.deltaTime);
+
+            if (animator != null)
+            {
+                animator.SetBool(isMovingParam, false);
+                animator.SetBool(isRunningParam, false);
+            }
 
             if (playerController.isGrounded && velocity.y < 0)
             {
                 velocity.y = -2f;
             }
-            velocity.y += gravity * Runner.DeltaTime;
-            playerController.Move(velocity * Runner.DeltaTime);
+            velocity.y += gravity * Time.deltaTime;
+            playerController.Move(velocity * Time.deltaTime);
         }
 
         // ⭐ 추가: UI 표시 제어 로직 (Update의 마지막에 처리)
@@ -153,34 +121,15 @@ public class PlayerMovement : NetworkBehaviour
             bool isRecovering = stamina.Current < stamina.Max;
 
             // 달리기 시도 중이거나, 회복 중일 때만 UI를 띄웁니다.
-            shouldShowUI = wantsRun || isRecovering;
+            bool shouldShowUI = wantsRun || isRecovering;
+
+            // 매 프레임 SetActive가 불리는 걸 막기 위해 상태가 다를 때만 호출합니다.
+            if (staminaUI.activeSelf != shouldShowUI)
+            {
+                staminaUI.SetActive(shouldShowUI);
+            }
         }
     }
-
-    public override void Render()
-    {
-        base.Render();
-
-        // 매 프레임 SetActive가 불리는 걸 막기 위해 상태가 다를 때만 호출합니다.
-        if (staminaUI.activeSelf != shouldShowUI)
-        {
-            staminaUI.SetActive(shouldShowUI);
-        }
-    }
-
-    void IsMovingChanged()
-    {
-        animator.SetBool(isMovingParam, isMoving);
-    }
-    void IsRunningChanged()
-    {
-        animator.SetBool(isRunningParam, isRunning);
-    }
-    void IsCarryingChanged()
-    {
-        animator.SetBool(isCarryingParam, isCarrying);
-    }
-
 
     public void SetInteracting(bool flag)
     {

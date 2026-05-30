@@ -1,11 +1,10 @@
 // Owned by JunYoung Park
 using System.Collections.Generic;
-using Fusion;
 using UnityEngine;
 
-public class CustomerManager : NetworkBehaviour
+public class CustomerManager : MonoBehaviour
 {
-    [Networked] private bool isPlaying { get; set; } = false;
+    private bool isPlaying = false;
 
     [SerializeField]
     private GameObject customer;
@@ -45,7 +44,7 @@ public class CustomerManager : NetworkBehaviour
 
     [Tooltip("Probability of ordering wiht sidemenu (0.0 ~ 1.0)")]
     [SerializeField] private float sideRatio = 0.5f;
-    public override void Spawned()
+    private void Awake()
     {
         kioskState = new bool[waitingPoint.Length];
         kCustomers = new Customer[waitingPoint.Length];
@@ -58,32 +57,26 @@ public class CustomerManager : NetworkBehaviour
         }
         useState = new bool[chairs.Length];
         customers = new Customer[chairs.Length];
-
-        if(GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
-        else GameManagerActionsSetup();
     }
 
-    private void GameManagerActionsSetup()
+    private void Start()
     {
-        spawnTerm = GameManager.Instance.reading.spawnRate;
-        GameManager.Instance.OnStageStart += RPC_HandleStageStart;
-        GameManager.Instance.OnStageEnd += RPC_HandleStageEnd;
+        GameManager.Instance.OnStageStart += HandleStageStart;
+        GameManager.Instance.OnStageEnd += HandleStageEnd;
+        spawnTerm = GameManager.Instance.Reading.spawnRate;
     }
-    public override void FixedUpdateNetwork()
+    void Update()
     {
-        if(!HasStateAuthority) return;
-
         if (!isPlaying) return;
 
         int emptyK = GetEmptyKiosk();
 
         if (emptyK != -1)
         {
-            spawnTimer -= Runner.DeltaTime;
+            spawnTimer -= Time.deltaTime;
 
             if (spawnTimer <= 0)
             {
-                Debug.Log("Spawn");
                 spawnTimer = spawnTerm;
                 Customer c = GetCustomer();
 
@@ -129,8 +122,8 @@ public class CustomerManager : NetworkBehaviour
     {
         if (GameManager.Instance == null) return;
 
-        GameManager.Instance.OnStageStart -= RPC_HandleStageStart;
-        GameManager.Instance.OnStageEnd -= RPC_HandleStageEnd;
+        GameManager.Instance.OnStageStart -= HandleStageStart;
+        GameManager.Instance.OnStageEnd -= HandleStageEnd;
     }
 
     private Transform GetOutside()
@@ -142,32 +135,27 @@ public class CustomerManager : NetworkBehaviour
     }
     private Customer GetCustomer()
     {
-        Customer c;
-        Transform outside = GetOutside();
 
-        bool beverage = UnityEngine.Random.value <= beverageRatio;
-        bool sidemenu = UnityEngine.Random.value <= sideRatio;
+        Customer c;
+
+        Transform outside = GetOutside();
 
         if (pool.Count == 0)
         {
-            // Init via onBeforeSpawned: SetValues runs before Spawned() so Networked props are ready for initial sync
-            NetworkObject no = Runner.Spawn(customer, outside.position, outside.rotation, null,
-                (runner, obj) =>
-                {
-                    var newC = obj.GetComponent<Customer>();
-                    newC.OnSleep += AddToPool;
-                    newC.SetValues(sitTimerRange, mealTimerRange, walkSpeedRange, beverage, sidemenu);
-                });
-            c = no.GetComponent<Customer>();
+            c = Instantiate(customer, outside.position, outside.rotation).GetComponent<Customer>();
+            c.OnSleep += AddToPool;
         }
         else
         {
             c = pool.Dequeue();
             c.transform.position = outside.position;
             c.transform.rotation = outside.rotation;
+
             c.gameObject.SetActive(true);
-            c.SetValues(sitTimerRange, mealTimerRange, walkSpeedRange, beverage, sidemenu);
         }
+        bool beverage = UnityEngine.Random.value <= beverageRatio;
+        bool sidemenu = UnityEngine.Random.value <= sideRatio;
+        c.SetValues(sitTimerRange, mealTimerRange, walkSpeedRange, beverage, sidemenu);
         return c;
     }
 
@@ -209,16 +197,10 @@ public class CustomerManager : NetworkBehaviour
         customers[idx] = null;
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    private void RPC_HandleStageStart() {
-        if(!HasStateAuthority) return;
+    private void HandleStageStart() {
         isPlaying = true;
-        Debug.Log($"[CustomerManager RPC_HandleStageStart] isPlaying = {isPlaying}");
     }
-
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    private void RPC_HandleStageEnd() {
-        if(!HasStateAuthority) return;
+    private void HandleStageEnd() {
         isPlaying = false;
 
         foreach(var kC in kCustomers) {

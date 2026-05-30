@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class FollowCamera : MonoBehaviour
 {
-    public Transform target;
+    [SerializeField] private Transform target;
     [SerializeField] private Vector3 offset;
 
     private void LateUpdate()

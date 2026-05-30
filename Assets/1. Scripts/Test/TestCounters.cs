@@ -1,12 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Fusion;
 
 public class TestCounters : MonoBehaviour
 {
     [SerializeField] private List<ACounter> counters;
     [SerializeField] private PlayerController player;
-    [SerializeField] private NetworkObject food; 
+    [SerializeField] private Food food; 
 
     private void Start()
     {

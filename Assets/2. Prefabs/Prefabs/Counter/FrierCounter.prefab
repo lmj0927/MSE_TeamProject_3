@@ -225,7 +225,6 @@ GameObject:
   - component: {fileID: 2178014227665284259}
   - component: {fileID: 1374881422691757684}
   - component: {fileID: 8398750461670382126}
-  - component: {fileID: 3917397203020511481}
   m_Layer: 0
   m_Name: Prop_Frier_p02
   m_TagString: Untagged
@@ -342,7 +341,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   foodPoint: {fileID: 2024063795244355047}
-  foodSpawner: {fileID: 0}
   outlineRoot: {fileID: 3141862116280336555}
   burnTime: 3
   cookProgressBar: {fileID: 6476679912032449191}
@@ -350,24 +348,6 @@ MonoBehaviour:
   resultFood: {fileID: 0}
   otherside: {fileID: 5689694635379222744}
   boiling: {fileID: 7956260342045779048}
---- !u!114 &3917397203020511481
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4686031336162129113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
-  SortKey: 0
-  ObjectInterest: 1
-  Flags: 786432
-  NestedObjects: []
-  NetworkedBehaviours: []
-  ForceRemoteRenderTimeframe: 0
 --- !u!1 &5290469519004334502
 GameObject:
   m_ObjectHideFlags: 0
@@ -529,7 +509,6 @@ GameObject:
   - component: {fileID: 1007235815183251719}
   - component: {fileID: 6637352255457444653}
   - component: {fileID: 5689694635379222744}
-  - component: {fileID: 6273060123908759267}
   m_Layer: 0
   m_Name: Prop_Frier_p03
   m_TagString: Untagged
@@ -646,7 +625,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   foodPoint: {fileID: 704966768954393761}
-  foodSpawner: {fileID: 0}
   outlineRoot: {fileID: 3141862116280336555}
   burnTime: 3
   cookProgressBar: {fileID: 663301446080983060}
@@ -654,24 +632,6 @@ MonoBehaviour:
   resultFood: {fileID: 0}
   otherside: {fileID: 8398750461670382126}
   boiling: {fileID: 6016352546532384763}
---- !u!114 &6273060123908759267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8368673636561424390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
-  SortKey: 0
-  ObjectInterest: 1
-  Flags: 786432
-  NestedObjects: []
-  NetworkedBehaviours: []
-  ForceRemoteRenderTimeframe: 0
 --- !u!1001 &260354765006604075
 PrefabInstance:
   m_ObjectHideFlags: 0

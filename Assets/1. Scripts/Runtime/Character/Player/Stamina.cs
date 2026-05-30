@@ -1,11 +1,10 @@
 // Owned by SeungYeon Jung
-using Fusion;
 using UnityEngine;
 
-public class Stamina : NetworkBehaviour
+public class Stamina : MonoBehaviour
 {
     [SerializeField] private float maxStamina = 100f;
-    [Networked] private float currentStamina { get; set; }
+    [SerializeField] private float currentStamina = 100f;
     [SerializeField] private float drainPerSecond = 20f;
     [SerializeField] private float regenPerSecond = 15f;
 
@@ -14,11 +13,10 @@ public class Stamina : NetworkBehaviour
     public float Normalized => maxStamina <= 0f ? 0f : Mathf.Clamp01(currentStamina / maxStamina);
     public bool HasStamina => currentStamina > 0.001f;
 
-    public override void Spawned()
+    private void Awake()
     {
         maxStamina = Mathf.Max(0f, maxStamina);
-        // currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
-        currentStamina = maxStamina;
+        currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
     }
 
     public bool TryDrainForRunning(float deltaTime)

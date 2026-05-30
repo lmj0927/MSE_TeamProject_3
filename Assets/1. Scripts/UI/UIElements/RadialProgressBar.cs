@@ -1,5 +1,4 @@
 // Owned by MinJun Lee
-using Fusion;
 using UnityEngine;
 using UnityEngine.UI;
 

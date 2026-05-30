@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
-using Fusion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
+public class GameManager : Singleton<GameManager>
 {
     public enum GameState {
         MainMenu,
@@ -16,13 +15,12 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
         Result
     }
 
-    [Networked] private GameState state { get; set; }
+    private GameState state = GameState.MainMenu;
     [SerializeField] private StageSO[] stages;
-    public StageSO reading { get; private set; }
-    
-    [Networked, OnChangedRender(nameof(OnReadingIdxChanged))] private int readingIdx { get; set; }
+    private StageSO reading;
+    public StageSO Reading => reading;
 
-    [Networked] private bool isPlaying { get; set; }
+    private bool isPlaying = false;
 
     public Action OnStageStart;
     public Action<int, int> OnPointUpdated;
@@ -30,43 +28,27 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
     public Action OnResult;
     private int task;
 
-    [Networked] public float StageT { get; private set; } = 60f;
-    [Networked] public float stageTimer { get; private set; } = 0f;
+    private float stageT = 60f;
+    public float StageT => stageT;
+    public float stageTimer { get; private set; } = 0f;    
 
-    [Networked] public int currentP { get; private set; } = 0;
+    public int currentP { get; private set; } = 0;
+    private int pastP = 0;       
 
-    public bool IsBusy => throw new NotImplementedException();
-
-    public Scene MainRunnerScene => throw new NotImplementedException();
-
-    private int pastP = 0;
-
-    private SceneRef? inGameScene = null;
-
-    public override void Spawned()
+    private void Start()
     {
-        base.Spawned();
-        if(HasStateAuthority)
-        {
-            state = GameState.MainMenu;
-            stageTimer = 0f;
-            currentP = 0;
-            isPlaying = false;
-            readingIdx = -1;
-        }
     }
-    public override void FixedUpdateNetwork()
+    private void Update()
     {
-        if (!HasStateAuthority) return;
         switch(state)
         {
             case GameState.WaitSync:
                 if (true) ChangeState(GameState.Playing);               // 모든 플레이어 로딩완료 체크하는 것으로 수정 예정
                 break;
             case GameState.Playing:
-                stageTimer += Runner.DeltaTime;
+                stageTimer += Time.deltaTime;
 
-                if (stageTimer >= StageT)
+                if (stageTimer >= stageT)
                 {
                     stageTimer = 0f;
                     // 현재 점수 서버에 저장 예정
@@ -97,38 +79,30 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
 
     public void ChangeState(GameState newState)
     {
-        if(!HasStateAuthority) return;
-
-        Debug.Log($"[GameManager ChangeState] {state} to {newState}");
         state = newState;
 
         switch(state)
         {
             case GameState.Loading:
-                // RPC_ModifyRecipeManager();
-                if (reading != null) StageT = reading.stageTimeLimit;
+                ModifyRecipeManager();
+                if (reading != null) stageT = reading.stageTimeLimit;
 
 
-                // UnityEngine.Events.UnityAction<Scene, LoadSceneMode> OnLoad = null;
-                // OnLoad = (scene, mode) =>
-                // {
-                //     ChangeState(GameState.WaitSync);
-
-                //     SceneManager.sceneLoaded -= OnLoad;
-                // };
-
-                // SceneManager.sceneLoaded += OnLoad;
-
-                // SceneManager.LoadScene(reading.sceneName);
-                if(HasStateAuthority)
+                UnityEngine.Events.UnityAction<Scene, LoadSceneMode> OnLoad = null;
+                OnLoad = (scene, mode) =>
                 {
-                    inGameScene = SceneRef.FromIndex(SceneUtility.GetBuildIndexByScenePath("Assets/3. Scenes/YongKyu/" + reading.sceneName + ".unity"));
-                    Runner.LoadScene(inGameScene.Value, LoadSceneMode.Single);
-                }
+                    ChangeState(GameState.WaitSync);
+
+                    SceneManager.sceneLoaded -= OnLoad;
+                };
+
+                SceneManager.sceneLoaded += OnLoad;
+
+                SceneManager.LoadScene(reading.sceneName);
                 break;
 
             case GameState.Playing:
-                RPC_StartStage();
+                StartStage();
                 break;
 
             case GameState.EndPlay:
@@ -140,7 +114,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
                 break;
 
             case GameState.MainMenu:
-                SoundManager.Instance.ChangeBGM(0);
+                SoundManager.Instance.ChangeBGM(1);
 
                 isPlaying = false;
                 stageTimer = 0f;
@@ -155,14 +129,12 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
         }
     }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_StartStage(bool immediate = false)      // 스테이지 시작, bool은 버튼사용을 고려한 parameter
+    public void StartStage(bool immediate = false)      // 스테이지 시작, bool은 버튼사용을 고려한 parameter
     {
         if (immediate)
         {
             isPlaying = true;
             OnStageStart?.Invoke();
-            Debug.Log("[GameManager] OnStageStart Called.");
         }
         else StartCoroutine(EnterRoutine());
     }
@@ -175,16 +147,14 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
         {
             isPlaying = true;
             OnStageStart?.Invoke();
-            Debug.Log("[GameManager] OnStageStart Called.");
         }
     }
 
-    // [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    // private void RPC_ModifyRecipeManager()  
-    // {
-    //     if (reading == null) return;
-    //     RecipeManager.Instance.SetData(reading.availableIngredients.ToList(), reading.availableAssemble.ToList());
-    // }
+    private void ModifyRecipeManager()  
+    {
+        if (reading == null) return;
+        RecipeManager.Instance.SetData(reading.availableIngredients.ToList(), reading.availableAssemble.ToList());
+    }
 
     public void RegisterTask()
     {
@@ -210,35 +180,12 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
 
     public void EnterStage(int idx)         // 버튼에서 구독할 함수
     {
-        if(!HasStateAuthority)
-        {
-            Debug.LogWarning("[GameManager EnterStage] You have no authority to enter stage");
-            return;
-        }
-        Debug.Log($"[GameManager EnterStage] stage {readingIdx} to {idx}");
-        readingIdx = idx;
-    }
-
-    public void OnReadingIdxChanged()
-    {
-        Debug.Log($"[GameManager OnReadingIdxChanged] called with readingIdx {readingIdx}");
-        if(readingIdx < 0) return;
-        reading = stages[readingIdx];
-        RecipeManager.Instance.SetData(reading.availableIngredients.ToList(), reading.availableAssemble.ToList());
+        reading = stages[idx];
         ChangeState(GameState.Loading);
     }
 
     public void LeaveStage()               // 버튼에서 구독할 함수
     {
         ChangeState(GameState.MainMenu);
-    }
-
-    public void SceneLoadDone(in SceneLoadDoneArgs sceneInfo)
-    {
-        if(inGameScene.HasValue && sceneInfo.SceneRef == inGameScene.Value)
-        {
-            Debug.Log("[GameManager SceneLoadDone] Scene Loaded?");
-            ChangeState(GameState.WaitSync);
-        }
     }
 }

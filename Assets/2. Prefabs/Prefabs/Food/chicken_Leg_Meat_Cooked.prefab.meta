@@ -1,7 +1,10 @@
 fileFormatVersion: 2
-guid: efb17c5c877b84e1ca0d2c94a99b586e
-labels:
-- FusionPrefab
+guid: 7a0757ecd5276ad41a7d93a76a0c431a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
   productId: 301805
@@ -9,8 +12,3 @@ AssetOrigin:
   packageVersion: 1.0
   assetPath: Assets/Toony Kitchen Ingredients Free/Prefabs/Ingredients/chicken_Leg_Meat_Cooked.prefab
   uploadId: 708770
-PrefabImporter:
-  externalObjects: {}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
