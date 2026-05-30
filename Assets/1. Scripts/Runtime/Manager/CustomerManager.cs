@@ -65,7 +65,7 @@ public class CustomerManager : NetworkBehaviour
 
     private void GameManagerActionsSetup()
     {
-        spawnTerm = GameManager.Instance.Reading.spawnRate;
+        spawnTerm = GameManager.Instance.reading.spawnRate;
         GameManager.Instance.OnStageStart += RPC_HandleStageStart;
         GameManager.Instance.OnStageEnd += RPC_HandleStageEnd;
     }

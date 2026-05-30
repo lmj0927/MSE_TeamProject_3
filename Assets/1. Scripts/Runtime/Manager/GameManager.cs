@@ -9,7 +9,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
 {
     public enum GameState {
         MainMenu,
-        Loading,       
+        Loading,
         WaitSync,       // 다른 플레이어 로딩 대기
         Playing,
         EndPlay,
@@ -18,8 +18,8 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
 
     [Networked] private GameState state { get; set; }
     [SerializeField] private StageSO[] stages;
-    private StageSO reading;
-
+    public StageSO reading { get; private set; }
+    
     [Networked, OnChangedRender(nameof(OnReadingIdxChanged))] private int readingIdx { get; set; }
 
     [Networked] private bool isPlaying { get; set; }
