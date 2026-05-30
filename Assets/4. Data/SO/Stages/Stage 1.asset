@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 619db966a75a9f2488eef8723a08234b, type: 3}
   m_Name: Stage 1
   m_EditorClassIdentifier: Assembly-CSharp::StageSO
-  stageName: temp Stage
-  sceneName: Test Restaurant
-  stageTimeLimit: 180
+  stageName: Stage 1
+  sceneName: Stage 1
+  stageTimeLimit: 300
   spawnRate: 15
   oneStarScore: 0
   twoStarScore: 0

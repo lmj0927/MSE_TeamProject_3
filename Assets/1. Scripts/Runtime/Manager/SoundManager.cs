@@ -31,9 +31,11 @@ public class SoundManager : Singleton<SoundManager>
     private AudioClip trash;
 
     [SerializeField]
-    private AudioClip success;
+    private AudioClip happy;
     [SerializeField]
-    private AudioClip fail;
+    private AudioClip boring;
+    [SerializeField]
+    private AudioClip angry;
 
 
     private List<AudioSource> pool = new List<AudioSource>();
@@ -120,6 +122,7 @@ public class SoundManager : Singleton<SoundManager>
             {
                 source.DOKill();
                 source.volume = 1f;
+                source.pitch = 1f;
                 return source;
             }
         }
@@ -215,14 +218,36 @@ public class SoundManager : Singleton<SoundManager>
         c.OnDrinkFinished += StopAudio;
     }
 
-    public void Success()
-    {
-        GetSource().PlayOneShot(success);
-    }
+    public void Happy(Customer c, float p) => PlayEmotion(c, happy, p);
+    public void Boring(Customer c, float p) => PlayEmotion(c, boring, p);
+    public void Angry(Customer c, float p) => PlayEmotion(c, angry, p);
 
-    public void Fail()
+    private void PlayEmotion(Customer c, AudioClip clip, float p)
     {
-        GetSource().PlayOneShot(fail);
+        AudioSource audio = GetSource();
+
+        audio.pitch = p;
+        audio.clip = clip;
+        audio.loop = false;
+        audio.Play();
+
+        Action StopAudio = null;
+        StopAudio = () =>
+        {
+            if (audio.clip == clip) SFXEnd(audio, 0f);
+
+            c.OnEmotionChange -= StopAudio;
+        };
+
+        c.OnEmotionChange += StopAudio;
+
+        DOVirtual.DelayedCall(clip.length / p, () =>
+        {
+            if (c != null)
+            {
+                c.OnEmotionChange -= StopAudio;
+            }
+        });
     }
 
     private void SFXEnd(AudioSource audio, float duration = 0.25f)

@@ -56,6 +56,9 @@ MonoBehaviour:
   fry: {fileID: 8300000, guid: d13005fa5988ee544b39ce44dd8ee6a3, type: 3}
   drink: {fileID: 8300000, guid: 792b75aa18be1ea4b99dadc2bb93da52, type: 3}
   trash: {fileID: 8300000, guid: 763637f9eefe07849b2c660682851c21, type: 3}
+  happy: {fileID: 8300000, guid: 9d07b923cea50904fb8130db1e32c2dc, type: 3}
+  boring: {fileID: 8300000, guid: 0757b8d024f15f04da1050f8d626a924, type: 3}
+  angry: {fileID: 8300000, guid: 9c31100dd1adc644887d1823c58ea038, type: 3}
 --- !u!82 &6102453702827861299
 AudioSource:
   m_ObjectHideFlags: 0

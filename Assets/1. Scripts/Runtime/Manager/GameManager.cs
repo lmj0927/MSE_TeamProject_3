@@ -24,7 +24,7 @@ public class GameManager : Singleton<GameManager>
 
     public Action OnStageStart;
     public Action<int, int> OnPointUpdated;
-    public Action OnStageEnd;                       // 시간 종료로 인해 실행되야할것: 손님의 입장 중단, 있던 손님의 즉시 퇴장. 각각의 스크립트에서 별도 실행 등
+    public Action OnStageEnd;                   
     public Action OnResult;
     private int task;
 
