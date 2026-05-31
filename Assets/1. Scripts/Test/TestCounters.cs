@@ -10,7 +10,7 @@ public class TestCounters : MonoBehaviour
 
     private void Start()
     {
-        player.AddFood(food);
+        // player.AddFood(food);
     }
 
     private void Update()
