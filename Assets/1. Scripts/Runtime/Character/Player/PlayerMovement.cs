@@ -36,6 +36,10 @@ public class PlayerMovement : NetworkBehaviour
     [Networked] bool isFreezing { get; set; }
     [Networked] bool shouldShowUI { get; set; }
 
+    // Tick-level update of the position.
+    Vector3 _lastTickPos;
+    bool _predictionApplied;
+
     public Camera Camera;
 
     public override void Spawned()
@@ -67,6 +71,16 @@ public class PlayerMovement : NetworkBehaviour
         {
             return;
         }
+
+        // tick-unit force update
+        if (_predictionApplied)
+        {
+            playerController.enabled = false;
+            transform.position = _lastTickPos;
+            playerController.enabled = true;
+            _predictionApplied = false;
+        }
+
         // ⭐ 추가: UI 표시 로직을 위해 wantsRun 변수를 밖으로 빼냈습니다.
         bool wantsRun = false;
 
@@ -155,11 +169,26 @@ public class PlayerMovement : NetworkBehaviour
             // 달리기 시도 중이거나, 회복 중일 때만 UI를 띄웁니다.
             shouldShowUI = wantsRun || isRecovering;
         }
+
+        // Snapshot the position
+        _lastTickPos = transform.position;
     }
 
     public override void Render()
     {
         base.Render();
+
+        if (HasStateAuthority && !isFreezing && playerController != null)
+        {
+            float h = Input.GetAxisRaw("Horizontal");
+            float v = Input.GetAxisRaw("Vertical");
+            Vector3 dir = new Vector3(h, 0, v).normalized;
+            if (dir.sqrMagnitude > 0.0001f)
+            {
+                playerController.Move(dir * cachedSpeed * Time.deltaTime);
+                _predictionApplied = true;
+            }
+        }
 
         // 매 프레임 SetActive가 불리는 걸 막기 위해 상태가 다를 때만 호출합니다.
         if (staminaUI.activeSelf != shouldShowUI)
