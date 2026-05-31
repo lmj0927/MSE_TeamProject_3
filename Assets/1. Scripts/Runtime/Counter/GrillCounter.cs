@@ -14,32 +14,29 @@ public class GrillCounter : AFireCounter
             {
                 if (CanAddFood(player))
                 {
-                    // AddFood(player.RemoveFood());
-                    FoodTransfer.Transfer(player, this, player.HeldFoodObject, Vector3.zero);
-
-                    // SoundManager.Instance.GrillStart(this);
-
-                    var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Grill);
-                    if (recipe != null)
+                    player.HandoffTo(this, player.HeldFoodObject, Vector3.zero, () =>
                     {
-                        cookTime = recipe.Value;
-                        resultFood = recipe.Result;
-                    }
+                        var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Grill);
+                        if (recipe != null)
+                        {
+                            cookTime = recipe.Value;
+                            resultFood = recipe.Result;
+                        }
 
-                    SetState(CookState);
-                    // smoke.Play();
-                    RPC_PlayEffects();
+                        SetState(CookState);
+                        RPC_PlayEffects();
+                    });
                 }
                 else if (isDone && CanRemoveFood(player))
                 {
-                    // player.AddFood(RemoveFood());
-                    FoodTransfer.Transfer(this, player, GetLastFood(), Vector3.zero);
-                    SetState(NoneState);
-                    // smoke.Stop();
-                    RPC_StopEffects();
+                    HandoffTo(player, GetLastFood(), Vector3.zero, () =>
+                    {
+                        SetState(NoneState);
+                        RPC_StopEffects();
 
-                    isDone = false;
-                    resultFood = null;
+                        isDone = false;
+                        resultFood = null;
+                    });
                 }
             },
             onNotAuthorized: () =>

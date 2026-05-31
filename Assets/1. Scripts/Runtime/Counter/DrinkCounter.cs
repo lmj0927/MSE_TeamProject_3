@@ -1,4 +1,4 @@
-﻿// Owned by JunYoung Park
+// Owned by JunYoung Park
 using System;
 using System.Collections;
 using Fusion;
@@ -17,12 +17,12 @@ public class DrinkCounter : ACounter
     public Action OnDrinkFinished;
 
     private int selected = 0;
-    private bool isUsing;
-    private PlayerController currentUser;
+    [Networked] private bool isUsing { get; set; }
+    [Networked] private PlayerController currentUser { get; set; }
 
     private float maxTimingRange;
     private float interactingTiming;
-    private float current = 0f;
+    [Networked] private float current { get; set; }
     private RecipeSO recipe;
 
     private Coroutine colorRoutine;
@@ -35,37 +35,35 @@ public class DrinkCounter : ACounter
         {
             progressBar.gameObject.SetActive(false);
             progressBar.SetProgress(0f);
-            progressColor = progressBar.GetComponent<StateChanger>();
         }
+        progressColor = progressBar != null ? progressBar.GetComponent<StateChanger>() : null;
     }
 
     public override void FixedUpdateNetwork()
     {
         base.FixedUpdateNetwork();
 
-        if (isUsing)
-        {
-            current += Runner.DeltaTime;
-            progressBar.SetProgress(current / maxTimingRange);
+        if (!HasStateAuthority) return;
+        if (!isUsing) return;
 
-            if (current >= maxTimingRange)
-            {
-                EndDispensing(false);
-            }
+        current += Runner.DeltaTime;
+        if (progressBar != null) progressBar.SetProgress(current / maxTimingRange);
+
+        if (current >= maxTimingRange)
+        {
+            EndDispensing(false);
         }
     }
 
     public override void Interact(PlayerController player)
     {
-
         if(!player.HasStateAuthority) return;
 
         if (player.HasFood()) return;
-        
+
         AuthorityHandler.RequestStateAuthority(
             onAuthorized: () =>
             {
-
                 if (!isUsing)
                 {
                     RPC_PlaySound();
@@ -89,35 +87,44 @@ public class DrinkCounter : ACounter
     private void StartDispensing(PlayerController player)
     {
         currentUser = player;
-        isUsing = true;
         current = 0f;
 
         currentUser.FreezeMovement(true);
-        progressBar.gameObject.SetActive(true);
+        if (progressBar != null) progressBar.gameObject.SetActive(true);
 
-        OnAdded(FoodSpawner.SpawnFood(Runner, drinks[selected]), Vector3.zero);
-
-
-        recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Beverage);
-        maxTimingRange = recipe.Value;         // Should be lower than 2sec (depending on sfx)
-
-        interactingTiming = UnityEngine.Random.Range(maxTimingRange * 0.1f, maxTimingRange * 0.9f);
-
-        SetRangeUI();
-
-        if (progressColor != null)
+        Place(drinks[selected], Vector3.zero, spawned =>
         {
-            if (colorRoutine != null) StopCoroutine(colorRoutine);
-            colorRoutine = StartCoroutine(ColorSequenceRoutine());
-        }
+            if (spawned == null)
+            {
+                if (currentUser != null) currentUser.FreezeMovement(false);
+                if (progressBar != null) progressBar.gameObject.SetActive(false);
+                currentUser = null;
+                return;
+            }
+
+            recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Beverage);
+            maxTimingRange = recipe.Value;
+
+            interactingTiming = UnityEngine.Random.Range(maxTimingRange * 0.1f, maxTimingRange * 0.9f);
+
+            SetRangeUI();
+
+            if (progressColor != null)
+            {
+                if (colorRoutine != null) StopCoroutine(colorRoutine);
+                colorRoutine = StartCoroutine(ColorSequenceRoutine());
+            }
+
+            isUsing = true;
+        });
     }
 
     private void EndDispensing(bool isSuccess)
     {
         RPC_StopSound();
         isUsing = false;
-        currentUser.FreezeMovement(false);
-        progressBar.gameObject.SetActive(false);
+        if (currentUser != null) currentUser.FreezeMovement(false);
+        if (progressBar != null) progressBar.gameObject.SetActive(false);
 
         if (colorRoutine != null)
         {
@@ -125,15 +132,13 @@ public class DrinkCounter : ACounter
             colorRoutine = null;
         }
 
-        if (isSuccess)
+        if (isSuccess && currentUser != null)
         {
-            // currentUser.AddFood(RemoveFood());
-            FoodTransfer.Transfer(this, currentUser, GetLastFood(), Vector3.zero);
+            HandoffTo(currentUser, GetLastFood(), Vector3.zero, () => currentUser = null);
         }
         else
         {
-            // RPC_ClearFood();
-            OnClear();
+            ClearAll(() => currentUser = null);
         }
     }
 

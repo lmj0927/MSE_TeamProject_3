@@ -2,7 +2,6 @@
 using System.Linq;
 using Fusion;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class FrierCounter : AFireCounter
 {
@@ -24,7 +23,6 @@ public class FrierCounter : AFireCounter
 
     public override void Interact(PlayerController player)
     {
-
         if(!player.HasStateAuthority) return;
         AuthorityHandler.RequestStateAuthority(
             onAuthorized: () =>
@@ -34,47 +32,41 @@ public class FrierCounter : AFireCounter
                     {
                         if (!isBasketDown && CanAddFood(player))
                         {
-                            // AddFood(player.RemoveFood());
-                            FoodTransfer.Transfer(player, this, player.HeldFoodObject, Vector3.zero);
-                            var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Oil);
-                            if (recipe != null)
+                            player.HandoffTo(this, player.HeldFoodObject, Vector3.zero, () =>
                             {
-                                float maxAllowedTime = 10f - burnTime;
-
-                                if (recipe.Value > maxAllowedTime)
+                                var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Oil);
+                                if (recipe != null)
                                 {
-                                    Debug.LogWarning($"[FrierCounter] The frying time ({recipe.Value} sec) for {recipe.Result.FoodName} is too long." +
-                                                     $"Due to SFX length limit, it has been auto-modified to {maxAllowedTime}sec. Please check the Recipe SO.");
-                                }
+                                    float maxAllowedTime = 10f - burnTime;
 
-                                cookTime = recipe.Value;
-                                resultFood = recipe.Result;
-                            }
-                        } 
+                                    if (recipe.Value > maxAllowedTime)
+                                    {
+                                        Debug.LogWarning($"[FrierCounter] The frying time ({recipe.Value} sec) for {recipe.Result.FoodName} is too long." +
+                                                         $"Due to SFX length limit, it has been auto-modified to {maxAllowedTime}sec. Please check the Recipe SO.");
+                                    }
+
+                                    cookTime = recipe.Value;
+                                    resultFood = recipe.Result;
+                                }
+                            });
+                        }
                         else if (!isBasketDown && !isDone && HasFood())
                         {
                             isBasketDown = true;
                             otherside.SetBasket(true);
-
-                            // StartFry();
-                            // otherside.StartFry();
-                            
-                        } 
+                        }
                         else if (isDone && isBasketDown)
                         {
                             isBasketDown = false;
                             otherside.SetBasket(false);
-
-                            // FinishFry();
-                            // otherside.FinishFry();
-                        } 
+                        }
                         else if (isDone || CanRemoveFood(player))
                         {
                             isDone = false;
-
-                            // player.AddFood(RemoveFood());
-                            FoodTransfer.Transfer(this, player, GetLastFood(), Vector3.zero);
-                            resultFood = null;
+                            HandoffTo(player, GetLastFood(), Vector3.zero, () =>
+                            {
+                                resultFood = null;
+                            });
                         }
                     },
                     onNotAuthorized: () => Debug.LogWarning("[FrierCounter Interact] Otherside Denied")
@@ -103,7 +95,6 @@ public class FrierCounter : AFireCounter
                     onNotAuthorized: () => {}
                 );
             }
-            // boiling.Play();
             if (HasStateAuthority) RPC_PlayEffects();
             SetState(CookState);
         }
@@ -111,7 +102,6 @@ public class FrierCounter : AFireCounter
 
     public void FinishFry(bool onlyBoil = false)
     {
-        // boiling.Stop();
         if (HasStateAuthority) RPC_StopEffects();
 
         if (onlyBoil) return;
@@ -135,8 +125,6 @@ public class FrierCounter : AFireCounter
     {
         isBasketDown = val;
     }
-
-
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_PlayEffects()

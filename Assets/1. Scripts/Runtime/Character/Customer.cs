@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class Customer : NetworkBehaviour, IInteractable
+public class Customer : FoodHolder, IInteractable
 {
     public enum cState { Entering, GoingSeat, Sitting, GoingTrash, Leaving, StageEnd }
     public enum Emotion { Happy, Boring, Angry}
@@ -139,7 +139,7 @@ public class Customer : NetworkBehaviour, IInteractable
                 isWaiting = false;
                 OrderManager.Instance.RemoveOrder(this);
                 Stand();
-                if (food != null) Runner.Despawn(food);
+                Discard(food);
 
             } else if (emotion == Emotion.Boring && sitTimer <= angry)
             {
@@ -455,29 +455,11 @@ public class Customer : NetworkBehaviour, IInteractable
         }
     }
 
-    private void GetFood(NetworkObject served)
+    protected override void OnAdded(NetworkObject served, Vector3 _)
     {
         if (patienceBar != null) patienceBar.gameObject.SetActive(false);
         isWaiting = false;
-
         OrderManager.Instance.RemoveOrder(this);
-        served.transform.position = destination.GetChild(1).position;
-
-        int points = CheckOrder(served);
-
-        if (points == 0)
-        {
-            OnEmotionChange?.Invoke();
-            SoundManager.Instance.Angry(this, pitch);
-            faceIdx = 2;
-            RPC_PlayAnim(AnimTrigger.Wrong);
-            Stand();
-            // Destroy(served.gameObject);
-            Runner.Despawn(served);
-
-            return;
-        }
-        else GameManager.Instance.AddPoint(points);
 
         OnEmotionChange?.Invoke();
         SoundManager.Instance.Happy(this, pitch);
@@ -487,9 +469,28 @@ public class Customer : NetworkBehaviour, IInteractable
         agent.stoppingDistance = 1.5f;
         food = served;
 
-        food.transform.SetParent(holdAnchor, true);
-        food.transform.localPosition = Vector3.zero;
-        food.transform.localRotation = Quaternion.identity;
+        served.GetComponent<Food>().SetHeld();
+        served.transform.SetParent(holdAnchor, true);
+        served.transform.localPosition = Vector3.zero;
+        served.transform.localRotation = Quaternion.identity;
+    }
+
+    protected override void OnRemoved(NetworkObject served)
+    {
+        if (served != null && served == food) food = null;
+    }
+
+    public override bool CanAdd(Food f) => isWaiting && food == null;
+    public override bool CanRemove() => food != null;
+
+    public override void ClearAll(Action onDone = null)
+    {
+        if (food == null)
+        {
+            onDone?.Invoke();
+            return;
+        }
+        Discard(food, onDone);
     }
 
     private int CheckOrder(NetworkObject served)
@@ -536,10 +537,7 @@ public class Customer : NetworkBehaviour, IInteractable
 
         alreadyStand = true;
 
-        if (food != null)
-        {
-            Runner.Despawn(food);
-        }
+        Discard(food);
 
         StartCoroutine(StandRoutine());
         
@@ -638,8 +636,27 @@ public class Customer : NetworkBehaviour, IInteractable
         if (!isWaiting) return;
         if (!player.HasFood()) return;
 
-        NetworkObject served = player.RemoveFood();
-        GetFood(served);
+        NetworkObject served = player.HeldFoodObject;
+        int points = CheckOrder(served);
+
+        if (points == 0)
+        {
+            if (patienceBar != null) patienceBar.gameObject.SetActive(false);
+            isWaiting = false;
+            OrderManager.Instance.RemoveOrder(this);
+
+            OnEmotionChange?.Invoke();
+            SoundManager.Instance.Angry(this, pitch);
+            faceIdx = 2;
+            RPC_PlayAnim(AnimTrigger.Wrong);
+            Stand();
+
+            player.Discard(served);
+            return;
+        }
+
+        GameManager.Instance.AddPoint(points);
+        player.HandoffTo(this, served, Vector3.zero);
     }
 
     public void ForceExit(Transform exitPos)

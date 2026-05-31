@@ -6,7 +6,6 @@ using UnityEngine.Serialization;
 public abstract class AFireCounter : ACounter
 {
     [Networked] protected float cookTime { get; set; }
-    // [Networked] public float elapsedTime { get; set; }
     [SerializeField] protected float burnTime;
     [FormerlySerializedAs("grilProgressBar")]
     [SerializeField] protected RadialProgressBar cookProgressBar;
@@ -24,9 +23,6 @@ public abstract class AFireCounter : ACounter
     [Networked, OnChangedRender(nameof(OnChangedShowCookProgress))] public bool showCookProgress { get; set; }
     [Networked, OnChangedRender(nameof(SetCookProgress))] public float cookProgress { get; set; }
     [Networked, OnChangedRender(nameof(SetBurnProgress))] public float burnProgress { get; set; }
-
-
-
 
     public override void Spawned()
     {
@@ -100,8 +96,6 @@ public abstract class AFireCounter : ACounter
 
         if(showCookProgress == false) {
             cookTime = 0f;
-            // SetCookProgress(0f);
-            // SetBurnProgress(0f);
             cookProgress = 0f;
             burnProgress = 0f;
         }
@@ -115,7 +109,6 @@ public abstract class AFireCounter : ACounter
             return;
         }
 
-        // cookProgressBar.SetProgress(normalizedValue);
         cookProgressBar.SetProgress(cookProgress);
     }
 
@@ -126,31 +119,13 @@ public abstract class AFireCounter : ACounter
             return;
         }
 
-        // burnProgressBar.SetProgress(normalizedValue);
         burnProgressBar.SetProgress(burnProgress);
     }
 
     public void AddResultFood(FoodSO resultFood)
     {
         if (resultFood == null) return;
-        // var food = RemoveFood();
-        // Destroy(food.gameObject);
-        // AddFood(FoodSpawner.SpawnFood(Runner, resultFood));
-        var food = GetLastFood();
-        OnRemoved(food);
-        food.GetComponent<AuthorityHandler>().RequestStateAuthority(
-            onAuthorized: () =>
-            {
-                Debug.Log($"[AFireCounter AddResultFood] {food.Name} will be despawned. {resultFood.FoodName} will be spawned.");
-                FoodSpawner.Despawn(Runner, food);
-                NetworkObject resultNO = FoodSpawner.SpawnFood(Runner, resultFood);
-                OnAdded(resultNO, Vector3.zero);        
-            },
-            onNotAuthorized: () =>
-            {
-                Debug.Log("[AFireCounter AddResultFood] denied.");
-            }
-        );
+        Replace(GetLastFood(), resultFood, Vector3.zero);
     }
 
     public void SetDone(bool val)

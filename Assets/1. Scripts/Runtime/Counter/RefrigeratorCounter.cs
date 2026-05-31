@@ -1,4 +1,5 @@
 // Owned by MinJun Lee
+using System;
 using UnityEngine;
 using DG.Tweening;
 using Fusion;
@@ -14,11 +15,11 @@ public class RefrigeratorCounter : ACounter
 
 
     [Networked, OnChangedRender(nameof(OnChangedIsOpen))] private bool isOpen { get; set; }
-    
+
     public override void Spawned()
     {
         base.Spawned();
-        
+
         ingredientPopupUI.OnIngredientSelected += OnIngredientSelected;
     }
 
@@ -44,25 +45,22 @@ public class RefrigeratorCounter : ACounter
                     AuthorityHandler.Barrier();
                     interactPlayer = player;
                     interactPlayer.FreezeMovement(true);
-                    // SetDoors(true);
                     isOpen = true;
                     ingredientPopupUI.Show();
-                } else if(interactionCooltime <= 0 && player.HasFood())
+                }
+                else if(interactionCooltime <= 0 && player.HasFood())
                 {
                     var tmp =  player.HeldFood.Data;
                     if ( tmp.FoodName == "Trash" || tmp.Type != FoodSO.FoodType.Raw) return;
 
-                    // SetDoors(true);
                     isOpen = true;
 
-                    // Destroy(player.RemoveFood().sgameObject);
-                    
-                    FoodSpawner.Despawn(Runner, player.HeldFoodObject);
-
-                    DOVirtual.DelayedCall(doorAnimDuration * 0.7f, () =>
+                    player.Discard(player.HeldFoodObject, () =>
                     {
-                        // SetDoors(false);
-                        isOpen = false;
+                        DOVirtual.DelayedCall(doorAnimDuration * 0.7f, () =>
+                        {
+                            isOpen = false;
+                        });
                     });
                 }
             },
@@ -75,11 +73,22 @@ public class RefrigeratorCounter : ACounter
 
     private void OnIngredientSelected(FoodSO foodSO)
     {
-        NetworkObject food = FoodSpawner.SpawnFood(Runner, foodSO);
-        if(food != null)
-            FoodTransfer.Transfer(this, interactPlayer, food, Vector3.zero);
+        if (interactPlayer == null)
+        {
+            UnuseReset();
+            return;
+        }
 
-        UnuseReset();
+        var target = interactPlayer;
+        Place(foodSO, Vector3.zero, spawned =>
+        {
+            if (spawned == null)
+            {
+                UnuseReset();
+                return;
+            }
+            HandoffTo(target, spawned, Vector3.zero, () => UnuseReset());
+        });
     }
 
     private void UnuseReset()
@@ -90,7 +99,6 @@ public class RefrigeratorCounter : ACounter
             interactPlayer.FreezeMovement(false);
             interactPlayer = null;
         }
-        // SetDoors(false);
         isOpen = false;
         interactionCooltime = 0.2f;
     }
@@ -110,6 +118,11 @@ public class RefrigeratorCounter : ACounter
 
     private void OnChangedIsOpen() => SetDoors(isOpen);
 
+    public override bool CanAdd(Food food) => true;
     public override bool CanRemove() => true;
-    public override void OnRemoved(NetworkObject food) {}
+
+    protected override void OnAdded(NetworkObject food, Vector3 pos) { }
+    protected override void OnRemoved(NetworkObject food) { }
+
+    public override void ClearAll(Action onDone = null) { onDone?.Invoke(); }
 }
