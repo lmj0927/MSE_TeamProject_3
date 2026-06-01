@@ -17,6 +17,8 @@ public class StageSO : ScriptableObject
     [Header("Available Content")]
     public FoodSO[] availableIngredients;
     public RecipeSO[] availableAssemble;
+    public RecipeSO[] availableSide;
+    public RecipeSO[] availableBeverage;
 
 #if UNITY_EDITOR
     private void OnValidate()

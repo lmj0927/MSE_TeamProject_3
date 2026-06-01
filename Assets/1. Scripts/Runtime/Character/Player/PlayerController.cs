@@ -54,9 +54,15 @@ public class PlayerController : FoodHolder
     public void RPC_SetParent(NetworkObject food, Vector3 pos)
     {
         var foodName = food != null ? food.name : "null";
-        Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] RPC_SetParent received on local. food={foodName} pos={pos} holdAnchor={holdAnchor.position}");
-        food.transform.SetParent(holdAnchor, false);
-        food.transform.SetLocalPositionAndRotation(pos, Quaternion.identity);
+        Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] RPC_SetParent received on local. food={foodName} pos={pos}");
+
+        Vector3 targetWorldPos = holdAnchor.TransformPoint(pos);
+        Quaternion targetWorldRot = holdAnchor.rotation;
+
+        food.transform.position = targetWorldPos;
+        food.transform.rotation = targetWorldRot;
+
+        food.transform.SetParent(holdAnchor, true);
     }
 
     protected override void OnAdded(NetworkObject food, Vector3 pos)

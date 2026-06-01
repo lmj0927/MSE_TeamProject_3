@@ -61,7 +61,7 @@ public class FrierCounter : AFireCounter
                             isBasketDown = false;
                             otherside.SetBasket(false);
                         }
-                        else if (isDone || CanRemoveFood(player))
+                        else if (isDone && CanRemoveFood(player))
                         {
                             isDone = false;
                             HandoffTo(player, GetLastFood(), Vector3.zero);

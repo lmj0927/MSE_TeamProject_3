@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1963456138821600441}
   - component: {fileID: 7711800736941331456}
   - component: {fileID: 2910483366526514378}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: friedPatty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5348057213849559469}
-  m_Mesh: {fileID: -6734236012490125393, guid: d47ab4bb4ec197d47b4da22e88ab49dc, type: 3}
+  m_Mesh: {fileID: -6734236012490125393, guid: 41d072f0b7b4149fc89c02e431fa4dae, type: 3}
 --- !u!23 &1963456138821600441
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -140,7 +140,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -6734236012490125393, guid: d47ab4bb4ec197d47b4da22e88ab49dc, type: 3}
+  m_Mesh: {fileID: -6734236012490125393, guid: 41d072f0b7b4149fc89c02e431fa4dae, type: 3}
 --- !u!1 &7278060786554664268
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,7 +150,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 796162772012822585}
-  m_Layer: 7
+  - component: {fileID: 7404167444105978919}
+  - component: {fileID: 209830158421341711}
+  - component: {fileID: -4059139958779294407}
+  - component: {fileID: -2616644384610299472}
+  m_Layer: 8
   m_Name: lobsterPatty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -168,8 +172,71 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 746109729611393170}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7404167444105978919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7278060786554664268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 2766829914
+  ObjectInterest: 1
+  Flags: 786433
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 209830158421341711}
+  - {fileID: -4059139958779294407}
+  - {fileID: -2616644384610299472}
+  ForceRemoteRenderTimeframe: 0
+--- !u!114 &209830158421341711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7278060786554664268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Food
+  data: {fileID: 11400000, guid: 2018265de0624614d8b29c09abffd70c, type: 2}
+--- !u!114 &-4059139958779294407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7278060786554664268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
+--- !u!114 &-2616644384610299472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7278060786554664268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5c32f2cd570402f83de085663572a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AuthorityHandler

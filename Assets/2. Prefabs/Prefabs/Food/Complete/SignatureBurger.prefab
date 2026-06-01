@@ -235,6 +235,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2526414618853721654}
   - component: {fileID: 6851906953106736970}
+  - component: {fileID: 1321557265989497910}
+  - component: {fileID: 5864551875513406751}
+  - component: {fileID: -6581248575895666406}
+  - component: {fileID: -659570530895231868}
   m_Layer: 7
   m_Name: SignatureBurger
   m_TagString: Untagged
@@ -252,7 +256,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_LocalScale: {x: 0.24999999, y: 0.24999999, z: 0.24999999}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6261039990866793135}
@@ -290,6 +294,69 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 122
   m_CollisionDetection: 0
+--- !u!114 &1321557265989497910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4706460075730594061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 857063428
+  ObjectInterest: 1
+  Flags: 786433
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 5864551875513406751}
+  - {fileID: -6581248575895666406}
+  - {fileID: -659570530895231868}
+  ForceRemoteRenderTimeframe: 0
+--- !u!114 &5864551875513406751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4706460075730594061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Food
+  data: {fileID: 11400000, guid: 8a1a419494c0dbe44af1a5d97000a4c2, type: 2}
+--- !u!114 &-6581248575895666406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4706460075730594061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
+--- !u!114 &-659570530895231868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4706460075730594061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5c32f2cd570402f83de085663572a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AuthorityHandler
 --- !u!1 &5061155787512094798
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,7 +511,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5279172599880027415}
-  m_Mesh: {fileID: -3824287831501168549, guid: b17dcdfd91e7bfc438c89c0e492afec1, type: 3}
+  m_Mesh: {fileID: -3824287831501168549, guid: 4962635e13fe94b10b660dd0cfda6a9f, type: 3}
 --- !u!23 &7754484599463194084
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -515,7 +582,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -3824287831501168549, guid: b17dcdfd91e7bfc438c89c0e492afec1, type: 3}
+  m_Mesh: {fileID: -3824287831501168549, guid: 4962635e13fe94b10b660dd0cfda6a9f, type: 3}
 --- !u!1 &8083067205597820158
 GameObject:
   m_ObjectHideFlags: 0
@@ -557,7 +624,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8083067205597820158}
-  m_Mesh: {fileID: -6734236012490125393, guid: d47ab4bb4ec197d47b4da22e88ab49dc, type: 3}
+  m_Mesh: {fileID: -6734236012490125393, guid: 41d072f0b7b4149fc89c02e431fa4dae, type: 3}
 --- !u!23 &2390100285490336234
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -628,7 +695,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -6734236012490125393, guid: d47ab4bb4ec197d47b4da22e88ab49dc, type: 3}
+  m_Mesh: {fileID: -6734236012490125393, guid: 41d072f0b7b4149fc89c02e431fa4dae, type: 3}
 --- !u!1 &8577205553347389716
 GameObject:
   m_ObjectHideFlags: 0

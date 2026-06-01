@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: f77ef9158b4fe78439749cb5084eae7a
+labels:
+- FusionPrefab
 PrefabImporter:
   externalObjects: {}
   userData: 
