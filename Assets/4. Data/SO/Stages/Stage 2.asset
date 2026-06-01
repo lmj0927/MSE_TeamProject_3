@@ -15,7 +15,7 @@ MonoBehaviour:
   stageName: Stage 2
   sceneName: Stage 2
   stageTimeLimit: 300
-  spawnRate: 15
+  spawnRate: 3
   oneStarScore: 0
   twoStarScore: 0
   threeStarScore: 0

@@ -4859,6 +4859,14 @@ PrefabInstance:
       propertyPath: m_NavMeshData
       value: 
       objectReference: {fileID: 23800000, guid: c12177c3364aa7e47ba3b9d712d8dede, type: 2}
+    - target: {fileID: 4777158231579040248, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
+      propertyPath: m_UseGeometry
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4777158231579040248, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
+      propertyPath: m_GenerateLinks
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6719011591418183117, guid: 88f1d7dbef66cb34080119bfdc3746ba, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -10479,7 +10487,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1910784263
 Transform:
   m_ObjectHideFlags: 0

@@ -567,7 +567,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RefrigeratorCounter
   foodPoint: {fileID: 0}
-  foodSpawner: {fileID: 0}
   outlineRoot: {fileID: 0}
   ingredientPopupUI: {fileID: 2117089050705044222}
   hinges:
@@ -1082,7 +1081,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!114 &4956798763623375735
 MonoBehaviour:

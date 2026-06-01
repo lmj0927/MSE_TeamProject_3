@@ -86,7 +86,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
                         if (currentP >= reading.threeStarScore) star++; // 세번째 별 표시 예정
                     }
 
-                    //OnPointUpdated?.Invoke(currentP, star);
+                    OnPointUpdated?.Invoke(currentP, star);
                 }
                 break;
             default:
