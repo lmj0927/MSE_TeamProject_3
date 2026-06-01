@@ -69,7 +69,14 @@ public abstract class AFireCounter : ACounter
     public float CookTime => cookTime;
     public float BurnTime => burnTime;
 
-    public FoodSO resultFood;
+    protected abstract RecipeType CookRecipeType { get; }
+
+    public void ApplyCookResult()
+    {
+        var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), CookRecipeType);
+        if (recipe == null) return;
+        Replace(GetLastFood(), recipe.Result, Vector3.zero);
+    }
 
     public void SetState(IState newState)
     {

@@ -11,6 +11,8 @@ public class FrierCounter : AFireCounter
 
     private Vector3 offset = new Vector3(0, -0.13f, 0.05f);
 
+    protected override RecipeType CookRecipeType => RecipeType.Oil;
+
     public override void Spawned()
     {
         base.Spawned();
@@ -46,7 +48,6 @@ public class FrierCounter : AFireCounter
                                     }
 
                                     cookTime = recipe.Value;
-                                    resultFood = recipe.Result;
                                 }
                             });
                         }
@@ -63,10 +64,7 @@ public class FrierCounter : AFireCounter
                         else if (isDone || CanRemoveFood(player))
                         {
                             isDone = false;
-                            HandoffTo(player, GetLastFood(), Vector3.zero, () =>
-                            {
-                                resultFood = null;
-                            });
+                            HandoffTo(player, GetLastFood(), Vector3.zero);
                         }
                     },
                     onNotAuthorized: () => Debug.LogWarning("[FrierCounter Interact] Otherside Denied")

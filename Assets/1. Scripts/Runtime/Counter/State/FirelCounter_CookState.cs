@@ -36,7 +36,7 @@ public class FireCounter_CookState : BaseState<AFireCounter>
             if(controller.HasStateAuthority)
             {
                 controller.SetDone(true);
-                controller.AddResultFood(controller.resultFood);
+                controller.ApplyCookResult();
                 controller.SetState(controller.BurnState);
             }
         }

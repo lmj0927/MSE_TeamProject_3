@@ -6,6 +6,9 @@ using UnityEngine;
 public class GrillCounter : AFireCounter
 {
     [SerializeField] private ParticleSystem smoke;
+
+    protected override RecipeType CookRecipeType => RecipeType.Grill;
+
     public override void Interact(PlayerController player)
     {
         if(!player.HasStateAuthority) return;
@@ -20,7 +23,6 @@ public class GrillCounter : AFireCounter
                         if (recipe != null)
                         {
                             cookTime = recipe.Value;
-                            resultFood = recipe.Result;
                         }
 
                         SetState(CookState);
@@ -35,7 +37,6 @@ public class GrillCounter : AFireCounter
                         RPC_StopEffects();
 
                         isDone = false;
-                        resultFood = null;
                     });
                 }
             },

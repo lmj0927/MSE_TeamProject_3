@@ -61,6 +61,8 @@ public class DrinkCounter : ACounter
 
         if (player.HasFood()) return;
 
+        if (isUsing && player != currentUser) return;
+
         AuthorityHandler.RequestStateAuthority(
             onAuthorized: () =>
             {

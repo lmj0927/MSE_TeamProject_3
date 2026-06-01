@@ -9,7 +9,6 @@ public class SliceCounter : ACounter
 
     [Networked, OnChangedRender(nameof(OnIsSlicingChanged))] private bool isSlicing { get; set; }
     [Networked, OnChangedRender(nameof(OnSlicingCountChanged))] private int currentSliceCount { get; set; }
-    private RecipeSO recipe;
 
     public override void Spawned()
     {
@@ -38,7 +37,7 @@ public class SliceCounter : ACounter
                 {
                     player.HandoffTo(this, player.HeldFoodObject, Vector3.zero, () =>
                     {
-                        recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Slice);
+                        RecipeSO recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Slice);
                         if (recipe == null) return;
 
                         sliceCount = recipe.Value;
@@ -58,6 +57,7 @@ public class SliceCounter : ACounter
                         isSlicing = false;
                         currentSliceCount = 0;
 
+                        RecipeSO recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Slice);
                         FoodSO resultSO = (recipe == null) ? RecipeManager.Instance.GetTrashFood() : recipe.Result;
                         Replace(GetLastFood(), resultSO, Vector3.zero);
                     }
