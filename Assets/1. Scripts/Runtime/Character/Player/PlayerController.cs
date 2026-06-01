@@ -120,6 +120,13 @@ public class PlayerController : FoodHolder
         Discard(HeldFoodObject, onDone);
     }
 
+    public NetworkObject ReleaseFood()
+    {
+        NetworkObject released = HeldFoodObject;
+        HeldFoodObject = null;
+        return released;
+    }
+
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_HandleStageStart() {
         if(!HasStateAuthority) return;

@@ -502,7 +502,7 @@ public class Customer : FoodHolder, IInteractable
         if (drinkOrder != null) orders.Add(drinkOrder.Result);
         if (sideOrder != null) orders.Add(sideOrder.Result);
 
-        List<FoodSO> servedFoods = served.GetComponentsInChildren<Food>().Select(f => f.Data).ToList();
+        List<FoodSO> servedFoods = served.GetComponentsInChildren<Food>().Select(f => f.Data).Where(d => d != null).ToList();
 
         if (orders.Count != servedFoods.Count) return points;
 
@@ -633,30 +633,14 @@ public class Customer : FoodHolder, IInteractable
 
     public void Interact(PlayerController player)
     {
+        if (!player.HasStateAuthority) return;
         if (!isWaiting) return;
         if (!player.HasFood()) return;
 
         NetworkObject served = player.HeldFoodObject;
         int points = CheckOrder(served);
-
-        if (points == 0)
-        {
-            if (patienceBar != null) patienceBar.gameObject.SetActive(false);
-            isWaiting = false;
-            OrderManager.Instance.RemoveOrder(this);
-
-            OnEmotionChange?.Invoke();
-            SoundManager.Instance.Angry(this, pitch);
-            faceIdx = 2;
-            RPC_PlayAnim(AnimTrigger.Wrong);
-            Stand();
-
-            player.Discard(served);
-            return;
-        }
-
-        GameManager.Instance.AddPoint(points);
-        player.HandoffTo(this, served, Vector3.zero);
+        player.ReleaseFood();
+        RPC_Serve(served, points);
     }
 
     public void ForceExit(Transform exitPos)
@@ -695,5 +679,50 @@ public class Customer : FoodHolder, IInteractable
     private void RPC_SetPatience(int state, float duration)
     {
         patienceColor?.SetColorState(state, duration);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_Serve(NetworkObject served, int points)
+    {
+        if (served == null) return;
+
+        if (!isWaiting)
+        {
+            Discard(served);
+            return;
+        }
+
+        if (patienceBar != null) patienceBar.gameObject.SetActive(false);
+        isWaiting = false;
+        OrderManager.Instance.RemoveOrder(this);
+        OnEmotionChange?.Invoke();
+
+        if (points == 0)
+        {
+            SoundManager.Instance.Angry(this, pitch);
+            faceIdx = 2;
+            RPC_PlayAnim(AnimTrigger.Wrong);
+            Stand();
+            Discard(served);
+            return;
+        }
+
+        GameManager.Instance.AddPoint(points);
+        SoundManager.Instance.Happy(this, pitch);
+        faceIdx = 0;
+        RPC_PlayAnim(AnimTrigger.Correct);
+        isEating = true;
+        agent.stoppingDistance = 1.5f;
+        food = served;
+        RPC_AttachFood(served);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_AttachFood(NetworkObject served)
+    {
+        if (served == null) return;
+        served.transform.SetParent(holdAnchor, true);
+        served.transform.localPosition = Vector3.zero;
+        served.transform.localRotation = Quaternion.identity;
     }
 }
