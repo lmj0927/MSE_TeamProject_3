@@ -35,3 +35,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e38924b304554414cacd7113bf110d07, type: 2}
   - {fileID: 11400000, guid: 5f577420f36348b449a2d3be07d47070, type: 2}
   - {fileID: 11400000, guid: f5dd0d0199dfd1d44bcee894768fd780, type: 2}
+  availableSide:
+  - {fileID: 11400000, guid: da74f0f3c86674d408893227dd341af0, type: 2}
+  - {fileID: 11400000, guid: af35eca2de76ba745b01fefc4e495831, type: 2}
+  availableBeverage:
+  - {fileID: 11400000, guid: 9a880120662d27a409a2ff3b9f52e13e, type: 2}

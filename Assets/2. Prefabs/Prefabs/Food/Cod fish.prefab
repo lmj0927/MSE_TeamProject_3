@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1921620475342581826}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cod fish
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 4711447956942282160}
   - component: {fileID: 279128480593954374}
   - component: {fileID: 5764164773148935643}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cod fish
   m_TagString: Untagged
   m_Icon: {fileID: 0}

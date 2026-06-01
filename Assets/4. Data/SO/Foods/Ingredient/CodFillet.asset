@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CodFillet
   m_EditorClassIdentifier: Assembly-CSharp::FoodSO
   foodName: CodFillet
-  prefab: {fileID: 1547623806640765413, guid: 9bc364ab9538558448865cb7fca5c23b, type: 3}
+  prefab: {fileID: 1547623806640765413, guid: 14fe70c2a695f4436ab8d77a86acbf1b, type: 3}
   sprite: {fileID: 21300000, guid: 5c1a51903e5ef3b4390df08d40fade9d, type: 3}
   type: 2
   point: 0

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ChickenLegRaw
   m_EditorClassIdentifier: Assembly-CSharp::FoodSO
   foodName: RawChickenLeg
-  prefab: {fileID: 9058849866393672627, guid: a81a5789c72593e48af2d8d37e6b4933, type: 3}
+  prefab: {fileID: 9058849866393672627, guid: 557914a77291c4facb75a51dded9069f, type: 3}
   sprite: {fileID: 21300000, guid: 8dc93d3cd00536c4b9f579fc5915be15, type: 3}
   type: 0
+  point: 0

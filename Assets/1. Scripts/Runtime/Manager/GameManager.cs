@@ -224,7 +224,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
         Debug.Log($"[GameManager OnReadingIdxChanged] called with readingIdx {readingIdx}");
         if(readingIdx < 0) return;
         reading = stages[readingIdx];
-        RecipeManager.Instance.SetData(reading.availableIngredients.ToList(), reading.availableAssemble.ToList());
+        RecipeManager.Instance.SetData(reading.availableIngredients.ToList(), reading.availableAssemble.ToList(), reading.availableSide.ToList(), reading.availableBeverage.ToList());
         ChangeState(GameState.Loading);
     }
 

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2777841929887597814}
   - component: {fileID: 7879967998964805856}
   - component: {fileID: 7671738839700144415}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cod fish fillet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -150,7 +150,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8749740293432586741}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cod fish fillet
   m_TagString: Untagged
   m_Icon: {fileID: 0}

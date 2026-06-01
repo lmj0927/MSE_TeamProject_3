@@ -34,10 +34,12 @@ public class RecipeManager : Singleton<RecipeManager>
     private bool hasData = false;
     public bool HasData => hasData;
 
-    public void SetData(List<FoodSO> ing, List<RecipeSO> assemble)
+    public void SetData(List<FoodSO> ing, List<RecipeSO> assemble, List<RecipeSO> side, List<RecipeSO> beverage)
     {
         ingredients = ing;
         assembleRecipes = assemble;
+        sideMenuRecipes = side;
+        beverageRecipes = beverage;
         hasData = true;
         Debug.Log("[RecipeManager SetData] data filled");
     }

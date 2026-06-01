@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1803588239641091897}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 4252968752512115085}
   - component: {fileID: 822521075715862047}
   - component: {fileID: 7919215104074165845}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FishFry (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -157,7 +157,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6797787413203004782}
   - component: {fileID: 352260858881798391}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FishFry_Cooked
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -219,7 +219,7 @@ GameObject:
   - component: {fileID: 8003468993732029139}
   - component: {fileID: 1031511600823035068}
   - component: {fileID: 821921918414858413}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FishFry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -332,7 +332,7 @@ GameObject:
   - component: {fileID: 263594288898696456}
   - component: {fileID: 1060519173891390500}
   - component: {fileID: 2156558707344837799}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FishFry (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
