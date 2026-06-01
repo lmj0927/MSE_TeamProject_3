@@ -75,7 +75,7 @@ public abstract class ACounter : FoodHolder, IInteractable
 
         var foodName = food != null ? food.name : "null";
         Debug.Log($"[Counter/{name}] RPC_SetParent received on local. food={foodName} pos={offset} foodPoint={foodPoint.position}");
-        food.transform.SetParent(foodPoint, false);
+        food.transform.SetParent(foodPoint, true);
         food.transform.SetLocalPositionAndRotation(offset, Quaternion.identity);
     }
 
