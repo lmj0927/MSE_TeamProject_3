@@ -95,6 +95,19 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
         
     }
 
+    private int GetSceneIndexByName(string sceneName)
+    {
+        for (int i = 0; i < UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings; i++)
+        {
+            string path = SceneUtility.GetScenePathByBuildIndex(i);
+            if (path.Contains(sceneName + ".unity"))
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void ChangeState(GameState newState)
     {
         if(!HasStateAuthority) return;
@@ -120,9 +133,17 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
                 // SceneManager.sceneLoaded += OnLoad;
 
                 // SceneManager.LoadScene(reading.sceneName);
-                if(HasStateAuthority)
+                if (HasStateAuthority)
                 {
-                    inGameScene = SceneRef.FromIndex(SceneUtility.GetBuildIndexByScenePath("Assets/3. Scenes/YongKyu/" + reading.sceneName + ".unity"));
+                    int buildIndex = GetSceneIndexByName(reading.sceneName);
+
+                    if (buildIndex < 0)
+                    {
+                        Debug.LogError($"[GameManager] '{reading.sceneName}' Can't found! Please check whether the scene is registered in Build Settings.");
+                        return;
+                    }
+
+                    inGameScene = SceneRef.FromIndex(buildIndex);
                     Runner.LoadScene(inGameScene.Value, LoadSceneMode.Single);
                 }
                 break;
