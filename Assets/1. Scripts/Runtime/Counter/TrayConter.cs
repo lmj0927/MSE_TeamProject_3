@@ -1,11 +1,13 @@
-﻿// Owned by JunYoung Park
+// Owned by JunYoung Park
+using System;
+using System.Linq;
+using Fusion;
 using UnityEngine;
 
 public class TrayCounter : ACounter
 {
-    private Food mainFood;
-    [SerializeField]
-    private Transform currentTray;
+    [Networked] private NetworkObject mainFood { get; set; }
+    [Networked] private NetworkObject currentTray { get; set; }
 
     [SerializeField] private GameObject Tray;
     [SerializeField] private Transform[] subPoints;
@@ -19,79 +21,127 @@ public class TrayCounter : ACounter
 
     public override void Interact(PlayerController player)
     {
-        if (player.HasFood())
-        {
-            var type = player.HeldFood.Data.Type;
-
-            if (type == FoodSO.FoodType.Main && mainFood != null) return;
-
-            if (type == FoodSO.FoodType.Main || type == FoodSO.FoodType.Side || type == FoodSO.FoodType.Beverage)
+        if(!player.HasStateAuthority) return;
+        AuthorityHandler.RequestStateAuthority(
+            onAuthorized: () =>
             {
-                AddFood(player.RemoveFood());
-            }
-        }
-        else
-        {
-            if (mainFood != null)
-            {
-                currentTray = mainFood.transform.Find("Tray_Root");
-
-                if (currentTray == null)
+                if (player.HasFood())
                 {
-                    currentTray = Instantiate(Tray).transform;
-                    currentTray.name = "Tray_Root";
-                    currentTray.SetParent(mainFood.transform, true);
-                    currentTray.localPosition = Vector3.zero;
+                    var type = player.HeldFood.Data.Type;
+
+                    if (type == FoodSO.FoodType.Main && mainFood != null) return;
+
+                    Vector3 offset;
+                    if (type == FoodSO.FoodType.Main) offset = Vector3.zero;
+                    else if (type == FoodSO.FoodType.Side) offset = subPoints[0].position - foodPoint.position;
+                    else if (type == FoodSO.FoodType.Beverage) offset = subPoints[1].position - foodPoint.position;
+                    else return;
+
+                    player.HandoffTo(this, player.HeldFoodObject, offset);
                 }
+                else // player has no food
+                {
+                    if (mainFood != null)
+                    {
+                        Transform traytransform = mainFood.transform.Find("Tray_Root");
 
-                CombineAllToMain();
+                        if (traytransform == null)
+                        {
+                            currentTray = Runner.Spawn(Tray);
+                            RPC_SetTrayParent();
+                        }
+                        else currentTray = traytransform.GetComponent<NetworkObject>();
 
-                player.AddFood(mainFood);
-
-                mainFood = null;
-                currentTray = null;
-            }
-            else if (HasFood())
+                        CombineAllToMain(() =>
+                        {
+                            HandoffTo(player, mainFood, Vector3.zero, () =>
+                            {
+                                currentTray = null;
+                            });
+                        });
+                    }
+                    else if (HasFood())
+                    {
+                        HandoffTo(player, GetLastFood(), Vector3.zero);
+                    }
+                }
+            },
+            onNotAuthorized: () =>
             {
-                player.AddFood(RemoveFood());
+
             }
+        );
+    }
+
+    protected override void OnAdded(NetworkObject food, Vector3 offset)
+    {
+        if (food == null) return;
+        var data = food.GetComponent<Food>().Data;
+        if (data.Type == FoodSO.FoodType.Main) mainFood = food;
+        base.OnAdded(food, offset);
+    }
+
+    protected override void OnRemoved(NetworkObject food)
+    {
+        if (food != null && food == mainFood) mainFood = null;
+        base.OnRemoved(food);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_SetTrayParent()
+    {
+        Debug.Log($"[Counter/{name}] RPC_SetTrayParent");
+        currentTray.name = "Tray_Root";
+        currentTray.transform.SetParent(mainFood.transform, true);
+        currentTray.transform.localPosition = Vector3.zero;
+    }
+
+    private void CombineAllToMain(Action onDone)
+    {
+        if (mainFood == null || currentTray == null)
+        {
+            onDone?.Invoke();
+            return;
+        }
+
+        var snapshot = foods
+            .Select(fid => Runner.FindObject(fid))
+            .Where(f => f != null && f != mainFood)
+            .ToList();
+
+        if (snapshot.Count == 0)
+        {
+            onDone?.Invoke();
+            return;
+        }
+
+        int remaining = snapshot.Count;
+        foreach (var foodNO in snapshot)
+        {
+            foodNO.GetComponent<AuthorityHandler>().RequestStateAuthority(
+                onAuthorized: () =>
+                {
+                    foodNO.transform.SetParent(currentTray.transform, true);
+                    foods.Remove(foodNO);
+                    remaining--;
+                    if (remaining == 0) onDone?.Invoke();
+                },
+                onNotAuthorized: () =>
+                {
+                    Debug.LogWarning("[TrayCounter CombineAllToMain] denied.");
+                    remaining--;
+                    if (remaining == 0) onDone?.Invoke();
+                }
+            );
         }
     }
 
-    private void CombineAllToMain()
+    public override bool CanAdd(Food food)
     {
-        if (mainFood == null || currentTray == null) return;
-
-        foreach (var food in foods)
-        {
-            food.transform.SetParent(currentTray, true);
-
-            var rb = food.GetComponent<Rigidbody>();
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            rb.isKinematic = true;
-        }
-        foods.Clear();
-    }
-
-    protected override void AddFood(Food food)
-    {
-        foods.Add(food);
-
-        if (food.Data.Type == FoodSO.FoodType.Main)
-        {
-            mainFood = food;
-            food.transform.position = foodPoint.position;
-        }
-        else if (food.Data.Type == FoodSO.FoodType.Side)
-        {
-            food.transform.position = subPoints[0].position;
-        }
-        else if (food.Data.Type == FoodSO.FoodType.Beverage)
-        {
-            food.transform.position = subPoints[1].position;
-        }
-
-        food.transform.rotation = Quaternion.identity;
+        var accept = food != null && AcceptsFood(food.Data);
+        var ok = accept;
+        var foodDesc = food != null && food.Data != null ? food.Data.FoodName : "null";
+        Debug.Log($"[Counter/{name}] CanAdd({foodDesc}) = {ok} (HasFood={HasFood()} AcceptsFood={accept})");
+        return ok;
     }
 }

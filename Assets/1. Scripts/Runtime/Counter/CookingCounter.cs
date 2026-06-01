@@ -6,32 +6,51 @@ public class CookingCounter : ACounter
     private RecipeSO recipe;
     public override void Interact(PlayerController player)
     {
-        // Cooking Counter는 음식 여러개 추가 가능
-        if (player.HasFood() && AcceptsFood(player.HeldFood.data))
-        {
-            AddFood(player.RemoveFood());
-            recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Assemble);
-        }
-        else if (!player.HasFood())
-        {
-            if (recipe != null)
+        if(!player.HasStateAuthority) return;
+
+        AuthorityHandler.RequestStateAuthority(
+            onAuthorized: () =>
             {
-                ClearFood();
-                player.AddFood(recipe.Result.CreateFood());
-                recipe = null;
-            }
-            else
+                if(player.HasFood() && AcceptsFood(player.HeldFood.Data))
+                {
+                    player.HandoffTo(this, player.HeldFoodObject, Vector3.up * foods.Count * 0.1f);
+                }
+                else if(CanRemoveFood(player))
+                {
+                    recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Assemble);
+
+                    if (recipe != null)
+                    {
+                        var assembled = recipe.Result;
+                        recipe = null;
+                        ClearAll(() =>
+                        {
+                            Place(assembled, foodPoint.position, spawned =>
+                            {
+                                if (spawned == null) return;
+                                HandoffTo(player, spawned, Vector3.zero);
+                            });
+                        });
+                    }
+                    else
+                    {
+                        HandoffTo(player, GetLastFood(), Vector3.zero);
+                    }
+                }
+            },
+            onNotAuthorized: () =>
             {
-                var temp = RemoveFood();
-                
-                if (temp != null) player.AddFood(temp);
+                Debug.LogWarning("[CookingCounter Interact] Denied");
             }
-        }
+        );
     }
 
-    protected override void AddFood(Food food)
+    public override bool CanAdd(Food food)
     {
-        foods.Add(food);
-        food.transform.position = foodPoint.position + (Vector3.up * foods.Count * 0.1f);
+        var accept = food != null && AcceptsFood(food.Data);
+        var ok = accept;
+        var foodDesc = food != null && food.Data != null ? food.Data.FoodName : "null";
+        Debug.Log($"[Counter/{name}] CanAdd({foodDesc}) = {ok} (HasFood={HasFood()} AcceptsFood={accept})");
+        return ok;
     }
 }

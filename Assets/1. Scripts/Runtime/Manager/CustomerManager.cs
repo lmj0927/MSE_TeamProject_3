@@ -1,10 +1,11 @@
 // Owned by JunYoung Park
 using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 
-public class CustomerManager : MonoBehaviour
+public class CustomerManager : NetworkBehaviour
 {
-    private bool isPlaying = false;
+    [Networked] private bool isPlaying { get; set; } = false;
 
     [SerializeField]
     private GameObject customer;
@@ -44,7 +45,7 @@ public class CustomerManager : MonoBehaviour
 
     [Tooltip("Probability of ordering wiht sidemenu (0.0 ~ 1.0)")]
     [SerializeField] private float sideRatio = 0.5f;
-    private void Awake()
+    public override void Spawned()
     {
         kioskState = new bool[waitingPoint.Length];
         kCustomers = new Customer[waitingPoint.Length];
@@ -57,26 +58,32 @@ public class CustomerManager : MonoBehaviour
         }
         useState = new bool[chairs.Length];
         customers = new Customer[chairs.Length];
+
+        if(GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
+        else GameManagerActionsSetup();
     }
 
-    private void Start()
+    private void GameManagerActionsSetup()
     {
-        GameManager.Instance.OnStageStart += HandleStageStart;
-        GameManager.Instance.OnStageEnd += HandleStageEnd;
-        spawnTerm = GameManager.Instance.Reading.spawnRate;
+        spawnTerm = GameManager.Instance.reading.spawnRate;
+        GameManager.Instance.OnStageStart += RPC_HandleStageStart;
+        GameManager.Instance.OnStageEnd += RPC_HandleStageEnd;
     }
-    void Update()
+    public override void FixedUpdateNetwork()
     {
+        if(!HasStateAuthority) return;
+
         if (!isPlaying) return;
 
         int emptyK = GetEmptyKiosk();
 
         if (emptyK != -1)
         {
-            spawnTimer -= Time.deltaTime;
+            spawnTimer -= Runner.DeltaTime;
 
             if (spawnTimer <= 0)
             {
+                Debug.Log("Spawn");
                 spawnTimer = spawnTerm;
                 Customer c = GetCustomer();
 
@@ -122,8 +129,8 @@ public class CustomerManager : MonoBehaviour
     {
         if (GameManager.Instance == null) return;
 
-        GameManager.Instance.OnStageStart -= HandleStageStart;
-        GameManager.Instance.OnStageEnd -= HandleStageEnd;
+        GameManager.Instance.OnStageStart -= RPC_HandleStageStart;
+        GameManager.Instance.OnStageEnd -= RPC_HandleStageEnd;
     }
 
     private Transform GetOutside()
@@ -135,27 +142,32 @@ public class CustomerManager : MonoBehaviour
     }
     private Customer GetCustomer()
     {
-
         Customer c;
-
         Transform outside = GetOutside();
+
+        bool beverage = UnityEngine.Random.value <= beverageRatio;
+        bool sidemenu = UnityEngine.Random.value <= sideRatio;
 
         if (pool.Count == 0)
         {
-            c = Instantiate(customer, outside.position, outside.rotation).GetComponent<Customer>();
-            c.OnSleep += AddToPool;
+            // Init via onBeforeSpawned: SetValues runs before Spawned() so Networked props are ready for initial sync
+            NetworkObject no = Runner.Spawn(customer, outside.position, outside.rotation, null,
+                (runner, obj) =>
+                {
+                    var newC = obj.GetComponent<Customer>();
+                    newC.OnSleep += AddToPool;
+                    newC.SetValues(sitTimerRange, mealTimerRange, walkSpeedRange, beverage, sidemenu);
+                });
+            c = no.GetComponent<Customer>();
         }
         else
         {
             c = pool.Dequeue();
             c.transform.position = outside.position;
             c.transform.rotation = outside.rotation;
-
             c.gameObject.SetActive(true);
+            c.SetValues(sitTimerRange, mealTimerRange, walkSpeedRange, beverage, sidemenu);
         }
-        bool beverage = UnityEngine.Random.value <= beverageRatio;
-        bool sidemenu = UnityEngine.Random.value <= sideRatio;
-        c.SetValues(sitTimerRange, mealTimerRange, walkSpeedRange, beverage, sidemenu);
         return c;
     }
 
@@ -197,10 +209,16 @@ public class CustomerManager : MonoBehaviour
         customers[idx] = null;
     }
 
-    private void HandleStageStart() {
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_HandleStageStart() {
+        if(!HasStateAuthority) return;
         isPlaying = true;
+        Debug.Log($"[CustomerManager RPC_HandleStageStart] isPlaying = {isPlaying}");
     }
-    private void HandleStageEnd() {
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_HandleStageEnd() {
+        if(!HasStateAuthority) return;
         isPlaying = false;
 
         foreach(var kC in kCustomers) {

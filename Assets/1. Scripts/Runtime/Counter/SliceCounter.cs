@@ -1,68 +1,92 @@
 // Owned by MinJun Lee
+using Fusion;
 using UnityEngine;
 
 public class SliceCounter : ACounter
 {
-    private int sliceCount = 5;
+    [Networked] private int sliceCount { get; set; } = 5;
     [SerializeField] private ProgressBar progressBar;
 
-    private bool isSlicing = false;
-    private int currentSliceCount = 0;
-    private RecipeSO recipe;
+    [Networked, OnChangedRender(nameof(OnIsSlicingChanged))] private bool isSlicing { get; set; }
+    [Networked, OnChangedRender(nameof(OnSlicingCountChanged))] private int currentSliceCount { get; set; }
 
-    private void Awake()
+    public override void Spawned()
     {
+        base.Spawned();
+
         if (progressBar != null)
         {
             progressBar.gameObject.SetActive(false);
             progressBar.SetProgress(0f);
         }
+
+        if(HasStateAuthority)
+        {
+            isSlicing = false;
+            currentSliceCount = 0;
+        }
     }
 
     public override void Interact(PlayerController player)
     {
-        if (CanAddFood(player))
-        {
-            AddFood(player.RemoveFood());
-            recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Slice);
-            if (recipe == null) return;
-
-            sliceCount = recipe.Value;
-
-            isSlicing = true;
-            if (progressBar != null)
-                progressBar.gameObject.SetActive(true);
-            return;
-        }
-        else if (CanRemoveFood(player) && !isSlicing)
-        {
-            player.AddFood(RemoveFood());
-            return;
-        }
-        else if (isSlicing)
-        {
-            SoundManager.Instance.Slice();
-            currentSliceCount++;
-            if (progressBar != null)
-                progressBar.SetProgress((float)currentSliceCount / sliceCount);
-            if (currentSliceCount >= sliceCount)
+        if(!player.HasStateAuthority) return;
+        AuthorityHandler.RequestStateAuthority(
+            onAuthorized: () =>
             {
-                isSlicing = false;
-                currentSliceCount = 0;
-                if (progressBar != null)
+                if (CanAddFood(player))
                 {
-                    progressBar.gameObject.SetActive(false);
-                    progressBar.SetProgress(0f);
+                    player.HandoffTo(this, player.HeldFoodObject, Vector3.zero, () =>
+                    {
+                        RecipeSO recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Slice);
+                        if (recipe == null) return;
+
+                        sliceCount = recipe.Value;
+                        isSlicing = true;
+                    });
                 }
-                var food = RemoveFood();
-                Destroy(food.gameObject);
-                if (recipe == null) AddFood(RecipeManager.Instance.GetTrashFood().CreateFood());
-                else
+                else if (CanRemoveFood(player) && !isSlicing)
                 {
-                    AddFood(recipe.Result.CreateFood());
-                    recipe = null;
+                    HandoffTo(player, GetLastFood(), Vector3.zero);
                 }
+                else if (isSlicing)
+                {
+                    currentSliceCount++;
+
+                    if (currentSliceCount >= sliceCount)
+                    {
+                        isSlicing = false;
+                        currentSliceCount = 0;
+
+                        RecipeSO recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Slice);
+                        FoodSO resultSO = (recipe == null) ? RecipeManager.Instance.GetTrashFood() : recipe.Result;
+                        Replace(GetLastFood(), resultSO, Vector3.zero);
+                    }
+                }
+            },
+            onNotAuthorized: () =>
+            {
+
             }
-        }
+        );
+    }
+
+    private void OnIsSlicingChanged()
+    {
+        if(progressBar == null) return;
+        progressBar.gameObject.SetActive(isSlicing);
+    }
+
+    private void OnSlicingCountChanged()
+    {
+        if (progressBar != null)
+            progressBar.SetProgress((float)currentSliceCount / sliceCount);
+
+        SoundManager.Instance.Slice();
+
+        // if(currentSliceCount >= sliceCount)
+        // {
+        //     progressBar.gameObject.SetActive(false);
+        //     progressBar.SetProgress(0f);
+        // }
     }
 }

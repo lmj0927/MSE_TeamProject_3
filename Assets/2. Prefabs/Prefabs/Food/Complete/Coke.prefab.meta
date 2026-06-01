@@ -1,10 +1,7 @@
 fileFormatVersion: 2
-guid: 1cff3a1b0b6ee354eb7c3d77cd360026
-PrefabImporter:
-  externalObjects: {}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
+guid: 83a5c8192417a41839e6f8194dbb5d2c
+labels:
+- FusionPrefab
 AssetOrigin:
   serializedVersion: 1
   productId: 301805
@@ -12,3 +9,8 @@ AssetOrigin:
   packageVersion: 1.0
   assetPath: Assets/Toony Kitchen Ingredients Free/Prefabs/Miscellaneous/fastfood_Cup_2.prefab
   uploadId: 708770
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

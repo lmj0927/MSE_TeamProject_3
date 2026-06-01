@@ -8,26 +8,28 @@ public class BaseCounter : ACounter
 
     public override void Interact(PlayerController player)
     {
-        if (player.HasFood())
-        {
-            AddFood(player.RemoveFood());
-            return;
-        }
-        else if (CanRemoveFood(player))
-        {
-            player.AddFood(RemoveFood());
-            return;
-        }
-    }
+        if(!player.HasStateAuthority) return;
+        AuthorityHandler.RequestStateAuthority(
+            onAuthorized: () =>
+            {
+                if (player.HasFood())
+                {
+                    Debug.Log("Player to counter");
+                    float randomX = Random.Range(-scatterRadius, scatterRadius);
+                    float randomZ = Random.Range(-scatterRadius, scatterRadius);
+                    Vector3 randomOffset = new Vector3(randomX, 0f, randomZ);
 
-    protected override void AddFood(Food food)
-    {
-        foods.Add(food);
-
-        float randomX = Random.Range(-scatterRadius, scatterRadius);
-        float randomZ = Random.Range(-scatterRadius, scatterRadius);
-        Vector3 randomOffset = new Vector3(randomX, 0f, randomZ);
-
-        food.transform.position = foodPoint.position + (Vector3.up * foods.Count * 0.1f) + randomOffset;
+                    player.HandoffTo(this, player.HeldFoodObject, (Vector3.up * foods.Count * 0.1f) + randomOffset);
+                }
+                else if (CanRemoveFood(player))
+                {
+                    HandoffTo(player, GetLastFood(), Vector3.zero);
+                }
+            },
+            onNotAuthorized: () =>
+            {
+                Debug.LogWarning("[BaseCounter Interact] Denied");
+            }
+        );
     }
 }

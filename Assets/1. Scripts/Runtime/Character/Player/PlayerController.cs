@@ -1,100 +1,47 @@
 // Owned by SeungYeon Jung
-using UnityEngine;
+using System;
 using System.Collections.Generic;
+using Fusion;
+using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : FoodHolder
 {
     [Header("Food")]
-    [SerializeField] private Food heldFood;
+    [Networked] public NetworkObject HeldFoodObject { get; set; }
     [SerializeField] private Transform holdAnchor;
 
-    public Food HeldFood => heldFood;
-    public bool HasFood() => heldFood != null;
+    public Transform HoldAnchor => holdAnchor;
+    public Food HeldFood => HeldFoodObject != null ? HeldFoodObject.GetComponent<Food>() : null;
 
-    private void Awake()
+
+    public bool HasFood() => HeldFoodObject != null;
+
+    public override void Spawned()
     {
         if (holdAnchor == null)
             holdAnchor = transform;
+
+        if (HasStateAuthority)
+        {
+            HeldFoodObject = null;
+            if(GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
+            else GameManagerActionsSetup();
+        }
+
     }
-    private void Start()
+    private void GameManagerActionsSetup()
     {
         FreezeMovement(true);
-        GameManager.Instance.OnStageStart += HandleStageStart;
-        GameManager.Instance.OnResult += HandleStageEnd;
+        GameManager.Instance.OnStageStart += RPC_HandleStageStart;
+        GameManager.Instance.OnResult += RPC_HandleStageEnd;
     }
 
     private void OnDestroy()
     {
         if (GameManager.Instance == null) return;
 
-        GameManager.Instance.OnStageStart -= HandleStageStart;
-        GameManager.Instance.OnResult -= HandleStageEnd;
-    }
-    public bool AddFood(Food food)
-    {
-        if (food == null || heldFood != null)
-            return false;
-
-        var otherOwner = food.GetComponentInParent<PlayerController>();
-        if (otherOwner != null && otherOwner != this)
-            return false;
-
-        List<FoodSO> holding = new List<FoodSO>();
-
-        holding.Add(food.data); 
-        var recipe = RecipeManager.Instance.Cook(holding, RecipeType.Side);
-        if (recipe != null)
-        {
-            Destroy(food.gameObject);
-            food = recipe.Result.CreateFood();
-        }
-
-        heldFood = food;
-        AttachHeldFood(food);
-        return true;
-    }
-
-    public Food RemoveFood()
-    {
-        var removed = heldFood;
-        if (removed == null)
-            return null;
-
-        DetachHeldFood(removed);
-        heldFood = null;
-        return removed;
-    }
-
-    private void AttachHeldFood(Food food)
-    {
-        food.transform.SetParent(holdAnchor, true);
-        food.transform.localPosition = Vector3.zero;
-        food.transform.localRotation = Quaternion.identity;
-
-        foreach (var rb in food.GetComponentsInChildren<Rigidbody>())
-        {
-            if (!rb.isKinematic)
-            {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-            }
-            rb.isKinematic = true;
-            
-        }
-
-        foreach (var col in food.GetComponentsInChildren<Collider>())
-            col.enabled = false;
-    }
-
-    private void DetachHeldFood(Food food)
-    {
-        food.transform.SetParent(null, true);
-
-        foreach (var rb in food.GetComponentsInChildren<Rigidbody>())
-            rb.isKinematic = false;
-
-        foreach (var col in food.GetComponentsInChildren<Collider>())
-            col.enabled = true;
+        GameManager.Instance.OnStageStart -= RPC_HandleStageStart;
+        GameManager.Instance.OnResult -= RPC_HandleStageEnd;
     }
 
     public void FreezeMovement(bool apply)
@@ -102,6 +49,93 @@ public class PlayerController : MonoBehaviour
         GetComponent<PlayerMovement>().SetInteracting(apply);
     }
 
-    private void HandleStageStart() => FreezeMovement(false);
-    private void HandleStageEnd() => FreezeMovement(true);
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_SetParent(NetworkObject food, Vector3 pos)
+    {
+        var foodName = food != null ? food.name : "null";
+        Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] RPC_SetParent received on local. food={foodName} pos={pos} holdAnchor={holdAnchor.position}");
+        food.transform.SetParent(holdAnchor, false);
+        food.transform.SetLocalPositionAndRotation(pos, Quaternion.identity);
+    }
+
+    protected override void OnAdded(NetworkObject food, Vector3 pos)
+    {
+        var foodName = food != null ? food.name : "null";
+        Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] OnAdded called. food={foodName} pos={pos} HasFoodAuth={(food != null && food.HasStateAuthority)} HasPlayerAuth={HasStateAuthority}");
+
+        // Side menu check
+        List<FoodSO> holding = new List<FoodSO>();
+        holding.Add(food.GetComponent<Food>().Data);
+        var recipe = RecipeManager.Instance.Cook(holding, RecipeType.Side);
+        if (recipe != null)
+        {
+            Debug.Log("[PlayerController OnAdded] Side menu detected");
+            Runner.Despawn(food);
+            food = Runner.Spawn(recipe.Result.Prefab);
+        }
+        else Debug.Log("[PlayerController OnAdded] not side menu");
+
+        // Hold
+        HeldFoodObject = food;
+        RPC_SetParent(HeldFoodObject, pos);
+        HeldFood.SetHeld();
+        var heldName = HeldFoodObject != null ? HeldFoodObject.name : "null";
+        Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] OnAdded done. HeldFoodObject={heldName} food.IsHeld={HeldFood.IsHeld}");
+    }
+
+    protected override void OnRemoved(NetworkObject food)
+    {
+        var foodName = food != null ? food.name : "null";
+        Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] OnRemoved called. food={foodName} HasFoodAuth={(food != null && food.HasStateAuthority)} HasPlayerAuth={HasStateAuthority}");
+        if (HeldFood != null) HeldFood.SetDrop();
+        HeldFoodObject = null;
+        Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] OnRemoved done. HeldFoodObject=null");
+    }
+
+    public override bool CanAdd(Food food)
+    {
+        var ok = food != null && HeldFoodObject == null;
+        var foodName = food != null ? food.name : "null";
+        var heldName = HeldFoodObject != null ? HeldFoodObject.name : "null";
+        Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] CanAdd({foodName}) = {ok} (HeldFoodObject={heldName})");
+        return ok;
+    }
+
+    public override bool CanRemove()
+    {
+        var ok = HeldFoodObject != null;
+        var heldName = HeldFoodObject != null ? HeldFoodObject.name : "null";
+        Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] CanRemove() = {ok} (HeldFoodObject={heldName})");
+        return ok;
+    }
+
+    public override void ClearAll(Action onDone = null)
+    {
+        if (HeldFoodObject == null)
+        {
+            onDone?.Invoke();
+            return;
+        }
+        Discard(HeldFoodObject, onDone);
+    }
+
+    public NetworkObject ReleaseFood()
+    {
+        NetworkObject released = HeldFoodObject;
+        HeldFoodObject = null;
+        return released;
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_HandleStageStart() {
+        if(!HasStateAuthority) return;
+        Debug.Log("[PlayerController HandleStageStart] called to unfreeze player.");
+        FreezeMovement(false);
+    }
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_HandleStageEnd() {
+        if(!HasStateAuthority) return;
+        FreezeMovement(true);
+    }
 }

@@ -302,6 +302,7 @@ GameObject:
   - component: {fileID: 2490135565072762047}
   - component: {fileID: 6976196477328287918}
   - component: {fileID: 2126985303935368853}
+  - component: {fileID: 5778720634773616612}
   m_Layer: 0
   m_Name: TrayCounter
   m_TagString: Untagged
@@ -410,7 +411,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -7201565908688825660, guid: 3ba6f838fa2934e42a30c19fb88c9677, type: 3}
 --- !u!65 &6976196477328287918
@@ -447,12 +448,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrayCounter
   foodPoint: {fileID: 316395569190402455}
+  foodSpawner: {fileID: 0}
   outlineRoot: {fileID: 0}
   currentTray: {fileID: 0}
   Tray: {fileID: 2333169965421215431, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
   subPoints:
   - {fileID: 6552099507338814530}
   - {fileID: 3452457632263071079}
+--- !u!114 &5778720634773616612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3597091641127603654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 2132896435
+  ObjectInterest: 1
+  Flags: 786433
+  NestedObjects:
+  - {fileID: 1336097538926908972}
+  - {fileID: 8228904643863936621}
+  - {fileID: 5380315915068709423}
+  - {fileID: 8376035876193127895}
+  NetworkedBehaviours:
+  - {fileID: 2126985303935368853}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &3684772016725899284
 GameObject:
   m_ObjectHideFlags: 0
@@ -527,6 +552,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tray
       objectReference: {fileID: 0}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: Flags
+      value: 262145
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: SortKey
+      value: 3794179288
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: NetworkedBehaviours.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: 'NetworkedBehaviours.Array.data[0]'
+      value: 
+      objectReference: {fileID: 6602035685999692926}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: 'NetworkedBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 5037743801576930208}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: 'NetworkedBehaviours.Array.data[2]'
+      value: 
+      objectReference: {fileID: 8390251753393903967}
     - target: {fileID: 8385078384781938900, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -573,11 +622,55 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+--- !u!114 &1336097538926908972 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+  m_PrefabInstance: {fileID: 3971782577562076457}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
 --- !u!4 &4846809332640617981 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8385078384781938900, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
   m_PrefabInstance: {fileID: 3971782577562076457}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5037743801576930208 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -939226480019800439, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+  m_PrefabInstance: {fileID: 3971782577562076457}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+--- !u!114 &6602035685999692926 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7818740777585641815, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+  m_PrefabInstance: {fileID: 3971782577562076457}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Food
+--- !u!114 &8390251753393903967 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4859017524840766582, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+  m_PrefabInstance: {fileID: 3971782577562076457}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5c32f2cd570402f83de085663572a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AuthorityHandler
 --- !u!1001 &5884505780002234066
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -590,6 +683,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tray (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: Flags
+      value: 262145
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: SortKey
+      value: 2263024502
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: NetworkedBehaviours.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: 'NetworkedBehaviours.Array.data[0]'
+      value: 
+      objectReference: {fileID: 4406853168019707781}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: 'NetworkedBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2548690674786721883}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: 'NetworkedBehaviours.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1353125415816528548}
     - target: {fileID: 8385078384781938900, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -636,11 +753,55 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+--- !u!114 &1353125415816528548 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4859017524840766582, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+  m_PrefabInstance: {fileID: 5884505780002234066}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5c32f2cd570402f83de085663572a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AuthorityHandler
+--- !u!114 &2548690674786721883 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -939226480019800439, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+  m_PrefabInstance: {fileID: 5884505780002234066}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
 --- !u!4 &2734879632883961350 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8385078384781938900, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
   m_PrefabInstance: {fileID: 5884505780002234066}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4406853168019707781 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7818740777585641815, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+  m_PrefabInstance: {fileID: 5884505780002234066}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Food
+--- !u!114 &8376035876193127895 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+  m_PrefabInstance: {fileID: 5884505780002234066}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
 --- !u!1001 &6315928735627160936
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -653,6 +814,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tray (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: Flags
+      value: 262145
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: SortKey
+      value: 2540350918
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: NetworkedBehaviours.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: 'NetworkedBehaviours.Array.data[0]'
+      value: 
+      objectReference: {fileID: 4262394225496663103}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: 'NetworkedBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2689103929861100513}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: 'NetworkedBehaviours.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1497478801065849118}
     - target: {fileID: 8385078384781938900, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -699,11 +884,55 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+--- !u!114 &1497478801065849118 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4859017524840766582, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+  m_PrefabInstance: {fileID: 6315928735627160936}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5c32f2cd570402f83de085663572a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AuthorityHandler
 --- !u!4 &2592780246462168508 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8385078384781938900, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
   m_PrefabInstance: {fileID: 6315928735627160936}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2689103929861100513 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -939226480019800439, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+  m_PrefabInstance: {fileID: 6315928735627160936}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+--- !u!114 &4262394225496663103 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7818740777585641815, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+  m_PrefabInstance: {fileID: 6315928735627160936}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Food
+--- !u!114 &8228904643863936621 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+  m_PrefabInstance: {fileID: 6315928735627160936}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
 --- !u!1001 &8016097573286857002
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -716,6 +945,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tray (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: Flags
+      value: 262145
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: SortKey
+      value: 115281840
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: NetworkedBehaviours.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: 'NetworkedBehaviours.Array.data[0]'
+      value: 
+      objectReference: {fileID: 270032403667927165}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: 'NetworkedBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2146480049608800163}
+    - target: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+      propertyPath: 'NetworkedBehaviours.Array.data[2]'
+      value: 
+      objectReference: {fileID: 3193145543847728476}
     - target: {fileID: 8385078384781938900, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -762,8 +1015,52 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+--- !u!114 &270032403667927165 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7818740777585641815, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+  m_PrefabInstance: {fileID: 8016097573286857002}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c55d746ff7052469ea2cbc6e5a056141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Food
 --- !u!4 &1973471746595592702 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8385078384781938900, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
   m_PrefabInstance: {fileID: 8016097573286857002}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2146480049608800163 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -939226480019800439, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+  m_PrefabInstance: {fileID: 8016097573286857002}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+--- !u!114 &3193145543847728476 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4859017524840766582, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+  m_PrefabInstance: {fileID: 8016097573286857002}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5c32f2cd570402f83de085663572a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AuthorityHandler
+--- !u!114 &5380315915068709423 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2707893265800057605, guid: d1d450e554ae9f44e8ad86c2fe9a3175, type: 3}
+  m_PrefabInstance: {fileID: 8016097573286857002}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject

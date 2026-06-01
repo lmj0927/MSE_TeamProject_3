@@ -3,11 +3,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
+using Fusion;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class Customer : MonoBehaviour, IInteractable
+public class Customer : FoodHolder, IInteractable
 {
     public enum cState { Entering, GoingSeat, Sitting, GoingTrash, Leaving, StageEnd }
     public enum Emotion { Happy, Boring, Angry}
@@ -41,11 +43,11 @@ public class Customer : MonoBehaviour, IInteractable
     private int seatNum = -1;
     private float dragChair = 0.25f;
 
-    private bool isDecided = false;
-    public bool isWaiting { get; private set; } = false;
-    public float sitTimer { get; private set; } = 60.0f;
-    private float maxSit;
-    private Emotion emotion = Emotion.Happy;
+    [Networked] private bool isDecided { get; set; }= false;
+    [Networked] public bool isWaiting { get; private set; } = false;
+    [Networked] public float sitTimer { get; private set; } = 60.0f;
+    [Networked] private float maxSit { get; set; }
+    [Networked] private Emotion emotion { get; set; } = Emotion.Happy;
     private float boring = 30.0f;
     private float angry = 10.0f;
 
@@ -53,26 +55,41 @@ public class Customer : MonoBehaviour, IInteractable
     private Vector2 pitchRange = new Vector2(0.8f, 2f);
     private float pitch;
 
-    private bool isEating = false;
-    private bool hasEaten = false;
+    [Networked] private bool isEating { get; set; }= false;
+    [Networked] private bool hasEaten { get; set; } = false;
+
     private float mealTimer = 10.0f;
 
-    public RecipeSO mainOrder { get; private set; }
-    public RecipeSO drinkOrder { get; private set; }
-    public RecipeSO sideOrder { get; private set; }
-    private Food food;
+    // Recipe selection synced by idx; SO looked up locally via RecipeManager
+    [Networked] private int mainOrderIdx { get; set; } = -1;
+    [Networked] private int drinkOrderIdx { get; set; } = -1;
+    [Networked] private int sideOrderIdx { get; set; } = -1;
+    public RecipeSO mainOrder => mainOrderIdx >= 0 ? RecipeManager.Instance?.GetAssemble(mainOrderIdx) : null;
+    public RecipeSO drinkOrder => drinkOrderIdx >= 0 ? RecipeManager.Instance?.GetBeverage(drinkOrderIdx) : null;
+    public RecipeSO sideOrder => sideOrderIdx >= 0 ? RecipeManager.Instance?.GetSide(sideOrderIdx) : null;
+    private NetworkObject food;
     [SerializeField] private Image[] menuImages;
     [SerializeField] private Transform holdAnchor;
     [SerializeField] private GameObject trayPrefab;
-    private GameObject tray;
+    private NetworkObject tray;
 
     public Action<int> OnMealFinished;
     public Action<Customer> OnSleep;
 
-    private cState current = cState.Entering;
-    private bool arriveHandled = false;
-    private bool alreadyDeciding = false;
-    private bool alreadyStand = false;
+    [Networked] private cState current { get; set; } = cState.Entering;
+    [Networked] private bool arriveHandled { get; set; } = false;
+    [Networked] private bool alreadyDeciding { get; set; } = false;
+    [Networked] private bool alreadyStand { get; set; } = false;
+
+    // Networked costume (replicates appearance to all clients)
+    [Networked] private Color bodyColor { get; set; }
+    [Networked] private int hatIdx { get; set; }
+    [Networked] private int glassesIdx { get; set; }
+    [Networked] private int mouthIdx { get; set; }
+    [Networked, OnChangedRender(nameof(OnFaceChanged))] private int faceIdx { get; set; }
+    [Networked, OnChangedRender(nameof(OnCostumeChanged))] private int costumeVersion { get; set; }
+
+    private enum AnimTrigger { Idle, Angry, Boring, Sit, Wrong, Correct, Stand }
 
     private Transform exit;
 
@@ -88,8 +105,17 @@ public class Customer : MonoBehaviour, IInteractable
             patienceColor = patienceBar.GetComponent<StateChanger>();
         }
     }
-    private void Update()
+
+    // Proxy: initial state already synced -> apply now. Master: skip (values still default, InitializeStats will apply).
+    public override void Spawned()
     {
+        base.Spawned();
+        if (costumeVersion > 0) OnCostumeChanged();
+    }
+
+    public override void FixedUpdateNetwork()
+    {
+        if(!HasStateAuthority) return;
         // Arrival Triggers
         if (agent.enabled && !arriveHandled && IsArrived())
         {
@@ -100,7 +126,7 @@ public class Customer : MonoBehaviour, IInteractable
         // Waiting Food
         if (isWaiting)
         {
-            sitTimer -= Time.deltaTime;
+            sitTimer -= Runner.DeltaTime;
 
             if (patienceBar != null)
             {
@@ -109,30 +135,32 @@ public class Customer : MonoBehaviour, IInteractable
 
             if (sitTimer <= 0 )
             {
-                SetFace(2);
+                faceIdx = 2;
                 isWaiting = false;
                 OrderManager.Instance.RemoveOrder(this);
                 Stand();
-                if (food != null) Destroy(food.gameObject);
+                Discard(food);
 
             } else if (emotion == Emotion.Boring && sitTimer <= angry)
             {
                 emotion = Emotion.Angry;
-                SetFace(2);
+
                 OnEmotionChange?.Invoke();
                 SoundManager.Instance.Angry(this, pitch);
-                anim.SetTrigger("angry");
-                patienceColor.SetColorState(2, 0f);
+                faceIdx = 2;
+                RPC_PlayAnim(AnimTrigger.Angry);
+                RPC_SetPatience(2, 0f);
             }
             else if (emotion == Emotion.Happy && sitTimer <= boring)
             {
-                patienceColor.SetColorState(1, 0f);
+                RPC_SetPatience(1, 0f);
                 emotion = Emotion.Boring;
+
                 OnEmotionChange?.Invoke();
                 SoundManager.Instance.Boring(this, pitch);
-                SetFace(1);
-                anim.SetTrigger("boring");
-                patienceColor.SetColorState(2, boring - angry);
+                faceIdx = 1;
+                RPC_PlayAnim(AnimTrigger.Boring);
+                RPC_SetPatience(2, boring - angry);
             }
 
         }
@@ -140,7 +168,7 @@ public class Customer : MonoBehaviour, IInteractable
         // Eating food
         if (isEating)
         {
-            mealTimer -= Time.deltaTime;
+            mealTimer -= Runner.DeltaTime;
 
             if (mealTimer <= 0)
             {
@@ -168,25 +196,13 @@ public class Customer : MonoBehaviour, IInteractable
 
     private void InitializeStats()
     {
-        // Random Appearance
-        RandomColor();
-        int hatType = UnityEngine.Random.Range(0, hat.transform.childCount + 1);
-        int glassesType = UnityEngine.Random.Range(0, glasses.transform.childCount + 1);
-        int mouthType = UnityEngine.Random.Range(0, mouth.transform.childCount + 1);
-        SetCostume(hatType, glassesType, mouthType);
-        SetFace(0);
-
-        
-        if (anim != null) anim.Update(0f);
-
-        if (portrait != null)
-        {
-            if (portrait.texture != null) Destroy(portrait.texture);
-            Destroy(portrait);
-        }
-
-        portrait = PreviewGenerator.TakeLiveSnapshot(this.gameObject, 512, 512, false);
-        
+        // Random Appearance (sync via Networked + costumeVersion bump triggers ApplyCostume on all)
+        bodyColor = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+        hatIdx = UnityEngine.Random.Range(0, hat.transform.childCount + 1);
+        glassesIdx = UnityEngine.Random.Range(0, glasses.transform.childCount + 1);
+        mouthIdx = UnityEngine.Random.Range(0, mouth.transform.childCount + 1);
+        faceIdx = 0;
+        costumeVersion++;
 
         // Random Timer
         sitTimer = UnityEngine.Random.Range(sitRange.x, sitRange.y);
@@ -201,7 +217,7 @@ public class Customer : MonoBehaviour, IInteractable
             patienceBar.SetProgress(1f);
             patienceBar.gameObject.SetActive(false);
         }
-        patienceColor?.SetColorState(0, 0);
+        RPC_SetPatience(0, 0f);
 
         mealTimer = UnityEngine.Random.Range(mealRange.x, mealRange.y);
 
@@ -230,6 +246,9 @@ public class Customer : MonoBehaviour, IInteractable
         alreadyDeciding = false;
         alreadyStand = false;
         agent.stoppingDistance = 0.3f;
+
+        // Apply locally on master (OnChangedRender on authority isn't guaranteed same-tick)
+        OnCostumeChanged();
     }
     
     private void SetMenuImg(RecipeSO r, int idx)
@@ -243,11 +262,40 @@ public class Customer : MonoBehaviour, IInteractable
         menuImages[idx].gameObject.SetActive(true);
         menuImages[idx].sprite = r.Result.Sprite;
     }
-    private void RandomColor()
-    {
-        Color randomC = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+    // OnChangedRender callbacks: replicate appearance to all clients
+    private void OnFaceChanged() => SetFace(faceIdx);
 
-        mat[0].SetColor("_BaseColor", randomC);
+    private void OnCostumeChanged()
+    {
+        if (mat != null && mat.Length > 0) mat[0].SetColor("_BaseColor", bodyColor);
+        SetCostume(hatIdx, glassesIdx, mouthIdx);
+        SetFace(faceIdx);
+
+        if (anim != null) anim.Update(0f);
+        TakeSnapshot();
+    }
+
+    private int lastSnapshotVersion = -1;
+
+    // Defer to end-of-frame: camera.Render() during Fusion tick breaks URP render pass state
+    private void TakeSnapshot()
+    {
+        StartCoroutine(TakeSnapshotRoutine());
+    }
+
+    private IEnumerator TakeSnapshotRoutine()
+    {
+        yield return new WaitForEndOfFrame();
+        if (this == null || gameObject == null) yield break;
+        if (lastSnapshotVersion == costumeVersion) yield break; // dedupe per costume version
+        lastSnapshotVersion = costumeVersion;
+
+        if (portrait != null)
+        {
+            if (portrait.texture != null) Destroy(portrait.texture);
+            Destroy(portrait);
+        }
+        portrait = PreviewGenerator.TakeLiveSnapshot(this.gameObject, 512, 512, false);
     }
 
     // h = Hat type
@@ -271,6 +319,7 @@ public class Customer : MonoBehaviour, IInteractable
     // 3 is pacifier
     private void SetCostume(int h, int g, int m)
     {
+        if (hat == null || glasses == null || mouth == null) return;
         int hMax = hat.transform.childCount;
 
         for (int i = 0; i < hMax; i++)
@@ -301,9 +350,10 @@ public class Customer : MonoBehaviour, IInteractable
     // 2 is angry
     private void SetFace(int type)
     {
+        if (mat == null || mat.Length < 2 || faces == null || faces.Length == 0) return;
         type = Mathf.Abs(type);
         int idx = faces.Length > type ? type : 0;
-        
+
         mat[1].SetTexture("_BaseMap", faces[idx]);
     }
 
@@ -333,14 +383,14 @@ public class Customer : MonoBehaviour, IInteractable
         switch (current)
         {
             case cState.Entering:
-                anim.SetTrigger("idle");
+                RPC_PlayAnim(AnimTrigger.Idle);
                 Order();
                 break;
             case cState.GoingSeat:
                 Sit();
                 break;
             case cState.GoingTrash:
-                if (tray != null) Destroy(tray);
+                if (tray != null) Runner.Despawn(tray);
                 setPath(cState.Leaving, exit);
                 break;
             case cState.Leaving:
@@ -349,7 +399,7 @@ public class Customer : MonoBehaviour, IInteractable
                 break;
             case cState.StageEnd:
                 GameManager.Instance.CompleteTask();
-                Destroy(gameObject);
+                Runner.Despawn(Object);
                 break;
         }
     }
@@ -385,7 +435,7 @@ public class Customer : MonoBehaviour, IInteractable
         transform.position = destination.GetChild(0).position + (-transform.forward * 0.1f);
         destination.position += (-destination.forward * dragChair);
 
-        anim.SetTrigger("sit");
+        RPC_PlayAnim(AnimTrigger.Sit);
         current = cState.Sitting;
 
         StartCoroutine(SitRoutine());
@@ -401,47 +451,49 @@ public class Customer : MonoBehaviour, IInteractable
             isWaiting = true;
             if (patienceBar != null) patienceBar.gameObject.SetActive(true);
 
-            patienceColor?.SetColorState(1, maxSit - boring);
+            RPC_SetPatience(1, maxSit - boring);
         }
     }
 
-    private void GetFood(Food served)
+    protected override void OnAdded(NetworkObject served, Vector3 _)
     {
         if (patienceBar != null) patienceBar.gameObject.SetActive(false);
         isWaiting = false;
-
         OrderManager.Instance.RemoveOrder(this);
-        served.transform.position = destination.GetChild(1).position;
-
-        int points = CheckOrder(served);
-
-        if (points == 0)
-        {
-            OnEmotionChange?.Invoke();
-            SoundManager.Instance.Angry(this, pitch);
-            SetFace(2);
-            anim.SetTrigger("wrong");
-            Stand();
-            Destroy(served.gameObject);
-
-            return;
-        }
-        else GameManager.Instance.AddPoint(points);
 
         OnEmotionChange?.Invoke();
         SoundManager.Instance.Happy(this, pitch);
-        SetFace(0);
-        anim.SetTrigger("correct");
+        faceIdx = 0;
+        RPC_PlayAnim(AnimTrigger.Correct);
         isEating = true;
         agent.stoppingDistance = 1.5f;
         food = served;
 
-        food.transform.SetParent(holdAnchor, true);
-        food.transform.localPosition = Vector3.zero;
-        food.transform.localRotation = Quaternion.identity;
+        served.GetComponent<Food>().SetHeld();
+        served.transform.SetParent(holdAnchor, true);
+        served.transform.localPosition = Vector3.zero;
+        served.transform.localRotation = Quaternion.identity;
     }
 
-    private int CheckOrder(Food served)
+    protected override void OnRemoved(NetworkObject served)
+    {
+        if (served != null && served == food) food = null;
+    }
+
+    public override bool CanAdd(Food f) => isWaiting && food == null;
+    public override bool CanRemove() => food != null;
+
+    public override void ClearAll(Action onDone = null)
+    {
+        if (food == null)
+        {
+            onDone?.Invoke();
+            return;
+        }
+        Discard(food, onDone);
+    }
+
+    private int CheckOrder(NetworkObject served)
     {
         List<FoodSO> orders = new List<FoodSO>();
         int points = 0;
@@ -450,7 +502,7 @@ public class Customer : MonoBehaviour, IInteractable
         if (drinkOrder != null) orders.Add(drinkOrder.Result);
         if (sideOrder != null) orders.Add(sideOrder.Result);
 
-        List<FoodSO> servedFoods = served.GetComponentsInChildren<Food>().Select(f => f.Data).ToList();
+        List<FoodSO> servedFoods = served.GetComponentsInChildren<Food>().Select(f => f.Data).Where(d => d != null).ToList();
 
         if (orders.Count != servedFoods.Count) return points;
 
@@ -485,10 +537,7 @@ public class Customer : MonoBehaviour, IInteractable
 
         alreadyStand = true;
 
-        if (food != null)
-        {
-            Destroy(food.gameObject);
-        }
+        Discard(food);
 
         StartCoroutine(StandRoutine());
         
@@ -499,7 +548,7 @@ public class Customer : MonoBehaviour, IInteractable
         yield return new WaitForSeconds(0.1f);
         if (!anim.GetCurrentAnimatorStateInfo(0).IsName("wrong"))   // Default Stand Scenario
         {
-            anim.SetTrigger("stand");
+            RPC_PlayAnim(AnimTrigger.Stand);
             yield return new WaitForSeconds(0.1f);
         }
         else
@@ -520,7 +569,7 @@ public class Customer : MonoBehaviour, IInteractable
         
         if (hasEaten)
         {
-            tray = Instantiate(trayPrefab);
+            tray = Runner.Spawn(trayPrefab);
 
             tray.transform.SetParent(holdAnchor, true);
             
@@ -549,9 +598,9 @@ public class Customer : MonoBehaviour, IInteractable
         mealRange = meal;
         speedRange = speed;
 
-        mainOrder = RecipeManager.Instance.GiveRandomAssembleRecipe();
-        drinkOrder = beverage ? RecipeManager.Instance.GiveRandomBeverageRecipe() : null;
-        sideOrder = sidemenu ? RecipeManager.Instance.GiveRandomSideRecipe() : null;
+        mainOrderIdx = RecipeManager.Instance.RandomAssembleIdx();
+        drinkOrderIdx = beverage ? RecipeManager.Instance.RandomBeverageIdx() : -1;
+        sideOrderIdx = sidemenu ? RecipeManager.Instance.RandomSideIdx() : -1;
 
         InitializeStats();
     }
@@ -573,9 +622,7 @@ public class Customer : MonoBehaviour, IInteractable
         if (agent.enabled)
         {
             agent.SetDestination(destination.position);
-            
-            anim.SetBool("hasTrash", next != null);
-            anim.SetTrigger("walk");
+            RPC_PlayWalk(next != null);
         }
     }
     public float GetPatienceHueShift()
@@ -586,11 +633,14 @@ public class Customer : MonoBehaviour, IInteractable
 
     public void Interact(PlayerController player)
     {
+        if (!player.HasStateAuthority) return;
         if (!isWaiting) return;
         if (!player.HasFood()) return;
-        print(pitch);
-        Food served = player.RemoveFood();
-        GetFood(served);
+
+        NetworkObject served = player.HeldFoodObject;
+        int points = CheckOrder(served);
+        player.ReleaseFood();
+        RPC_Serve(served, points);
     }
 
     public void ForceExit(Transform exitPos)
@@ -599,5 +649,80 @@ public class Customer : MonoBehaviour, IInteractable
         destination = exitPos;
         Stand();
         GameManager.Instance.RegisterTask();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayAnim(AnimTrigger trigger)
+    {
+        if (anim == null) return;
+        switch (trigger)
+        {
+            case AnimTrigger.Idle: anim.SetTrigger("idle"); break;
+            case AnimTrigger.Angry: anim.SetTrigger("angry"); break;
+            case AnimTrigger.Boring: anim.SetTrigger("boring"); break;
+            case AnimTrigger.Sit: anim.SetTrigger("sit"); break;
+            case AnimTrigger.Wrong: anim.SetTrigger("wrong"); break;
+            case AnimTrigger.Correct: anim.SetTrigger("correct"); break;
+            case AnimTrigger.Stand: anim.SetTrigger("stand"); break;
+        }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayWalk(bool trash)
+    {
+        if (anim == null) return;
+        anim.SetBool("hasTrash", trash);
+        anim.SetTrigger("walk");
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_SetPatience(int state, float duration)
+    {
+        patienceColor?.SetColorState(state, duration);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_Serve(NetworkObject served, int points)
+    {
+        if (served == null) return;
+
+        if (!isWaiting)
+        {
+            Discard(served);
+            return;
+        }
+
+        if (patienceBar != null) patienceBar.gameObject.SetActive(false);
+        isWaiting = false;
+        OrderManager.Instance.RemoveOrder(this);
+        OnEmotionChange?.Invoke();
+
+        if (points == 0)
+        {
+            SoundManager.Instance.Angry(this, pitch);
+            faceIdx = 2;
+            RPC_PlayAnim(AnimTrigger.Wrong);
+            Stand();
+            Discard(served);
+            return;
+        }
+
+        GameManager.Instance.AddPoint(points);
+        SoundManager.Instance.Happy(this, pitch);
+        faceIdx = 0;
+        RPC_PlayAnim(AnimTrigger.Correct);
+        isEating = true;
+        agent.stoppingDistance = 1.5f;
+        food = served;
+        RPC_AttachFood(served);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_AttachFood(NetworkObject served)
+    {
+        if (served == null) return;
+        served.transform.SetParent(holdAnchor, true);
+        served.transform.localPosition = Vector3.zero;
+        served.transform.localRotation = Quaternion.identity;
     }
 }

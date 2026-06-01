@@ -30,10 +30,16 @@ public class RecipeManager : Singleton<RecipeManager>
 
     private List<FoodSO> copyIng = new List<FoodSO>();
 
+
+    private bool hasData = false;
+    public bool HasData => hasData;
+
     public void SetData(List<FoodSO> ing, List<RecipeSO> assemble)
     {
         ingredients = ing;
         assembleRecipes = assemble;
+        hasData = true;
+        Debug.Log("[RecipeManager SetData] data filled");
     }
     /// <summary>
     /// Returns a randomly selected assemble/beverage/sidemenu recipe from the assembleRecipes list.
@@ -71,6 +77,15 @@ public class RecipeManager : Singleton<RecipeManager>
         }
         return sideMenuRecipes[Random.Range(0, sideMenuRecipes.Count)];
     }
+
+    // Index-based API for network sync (master picks idx, others look up locally)
+    public int RandomAssembleIdx() => (assembleRecipes == null || assembleRecipes.Count == 0) ? -1 : Random.Range(0, assembleRecipes.Count);
+    public int RandomBeverageIdx() => (beverageRecipes == null || beverageRecipes.Count == 0) ? -1 : Random.Range(0, beverageRecipes.Count);
+    public int RandomSideIdx() => (sideMenuRecipes == null || sideMenuRecipes.Count == 0) ? -1 : Random.Range(0, sideMenuRecipes.Count);
+
+    public RecipeSO GetAssemble(int idx) => (assembleRecipes == null || idx < 0 || idx >= assembleRecipes.Count) ? null : assembleRecipes[idx];
+    public RecipeSO GetBeverage(int idx) => (beverageRecipes == null || idx < 0 || idx >= beverageRecipes.Count) ? null : beverageRecipes[idx];
+    public RecipeSO GetSide(int idx) => (sideMenuRecipes == null || idx < 0 || idx >= sideMenuRecipes.Count) ? null : sideMenuRecipes[idx];
 
     /// <summary>
     /// Attempts to cook a food item using the given ingredients and recipe type.

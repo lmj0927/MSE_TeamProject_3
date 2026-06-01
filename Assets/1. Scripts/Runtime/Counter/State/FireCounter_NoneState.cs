@@ -9,9 +9,10 @@ public class FireCounter_NoneState : BaseState<AFireCounter>
 
     public override void Enter()
     {
-        controller.HideCookProgress();
-        controller.SetCookProgress(0f);
-        controller.SetBurnProgress(0f);
+        // controller.HideCookProgress();
+        // controller.SetCookProgress(0f);
+        // controller.SetBurnProgress(0f);
+        controller.showCookProgress = false; // call callback
     }
 
     public override void UpdateState()
