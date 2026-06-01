@@ -75,8 +75,13 @@ public abstract class ACounter : FoodHolder, IInteractable
 
         var foodName = food != null ? food.name : "null";
         Debug.Log($"[Counter/{name}] RPC_SetParent received on local. food={foodName} pos={offset} foodPoint={foodPoint.position}");
+        Vector3 targetWorldPos = foodPoint.TransformPoint(offset);
+        Quaternion targetWorldRot = foodPoint.rotation;
+
+        food.transform.position = targetWorldPos;
+        food.transform.rotation = targetWorldRot;
+
         food.transform.SetParent(foodPoint, true);
-        food.transform.SetLocalPositionAndRotation(offset, Quaternion.identity);
     }
 
     protected override void OnAdded(NetworkObject food, Vector3 offset)

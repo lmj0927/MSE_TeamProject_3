@@ -11367,6 +11367,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2012876508}
     - target: {fileID: 2993785195219144874, guid: 3d4e26bfea0879d438a9b2c3ff199a12, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2993785195219144874, guid: 3d4e26bfea0879d438a9b2c3ff199a12, type: 3}
       propertyPath: foodSpawner
       value: 
       objectReference: {fileID: 0}
