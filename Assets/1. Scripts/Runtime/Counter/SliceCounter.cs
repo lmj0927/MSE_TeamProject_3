@@ -72,11 +72,8 @@ public class SliceCounter : ACounter
 
     private void OnIsSlicingChanged()
     {
-        if(isSlicing)
-        {
-            if (progressBar != null)
-                progressBar.gameObject.SetActive(true);    
-        }
+        if(progressBar == null) return;
+        progressBar.gameObject.SetActive(isSlicing);
     }
 
     private void OnSlicingCountChanged()
@@ -86,10 +83,10 @@ public class SliceCounter : ACounter
 
         SoundManager.Instance.Slice();
 
-        if(currentSliceCount >= sliceCount)
-        {
-            progressBar.gameObject.SetActive(false);
-            progressBar.SetProgress(0f);
-        }
+        // if(currentSliceCount >= sliceCount)
+        // {
+        //     progressBar.gameObject.SetActive(false);
+        //     progressBar.SetProgress(0f);
+        // }
     }
 }
