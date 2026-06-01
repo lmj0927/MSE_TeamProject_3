@@ -55,7 +55,7 @@ public class PlayerController : FoodHolder
     {
         var foodName = food != null ? food.name : "null";
         Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] RPC_SetParent received on local. food={foodName} pos={pos} holdAnchor={holdAnchor.position}");
-        food.transform.SetParent(holdAnchor, false);
+        food.transform.SetParent(holdAnchor, true);
         food.transform.SetLocalPositionAndRotation(pos, Quaternion.identity);
     }
 
