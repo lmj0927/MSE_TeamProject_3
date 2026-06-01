@@ -1,5 +1,9 @@
 fileFormatVersion: 2
-guid: 69307629b1b0a5f4cbbb57fc8ec8269e
+<<<<<<<< HEAD:Assets/3. Scenes/JunYoung/Stage 1.unity.meta
+guid: 0060d86a85bf34bbfb6c8f55e8e085dc
+========
+guid: 7496f67aa7aa249618402d69a72eecc4
+>>>>>>>> origin/Photon:Assets/3. Scenes/YongKyu/Multi Main Test.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
