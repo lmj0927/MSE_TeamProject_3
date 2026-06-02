@@ -11,12 +11,19 @@ using UnityEngine.Networking;
 /// </summary>
 public class NetworkManager : Singleton<NetworkManager>
 {
+    [SerializeField] private bool useLocal = true;
     [SerializeField] private string baseUrl = "http://localhost:8080";
+    [SerializeField] private string awsUrl = "https://mse-server.onrender.com";
+
+    const string DefaultLocalUrl = "http://localhost:8080";
+    const string DefaultAwsUrl = "https://mse-server.onrender.com";
+
+    public bool UseLocal => useLocal;
 
     public string BaseUrl
     {
-        get => baseUrl;
-        set => baseUrl = string.IsNullOrWhiteSpace(value) ? "http://localhost:8080" : value.TrimEnd('/');
+        get => ResolveBaseUrl();
+        set => baseUrl = string.IsNullOrWhiteSpace(value) ? DefaultLocalUrl : value.TrimEnd('/');
     }
 
     public string AccessToken { get; private set; }
@@ -35,13 +42,23 @@ public class NetworkManager : Singleton<NetworkManager>
         LocalUserId = null;
     }
 
-    string Root => baseUrl.TrimEnd('/');
+    string Root => ResolveBaseUrl();
+
+    string ResolveBaseUrl()
+    {
+        if (useLocal)
+            return string.IsNullOrWhiteSpace(baseUrl) ? DefaultLocalUrl : baseUrl.TrimEnd('/');
+        return string.IsNullOrWhiteSpace(awsUrl) ? DefaultAwsUrl : awsUrl.TrimEnd('/');
+    }
 
     protected override void Initialize()
     {
         base.Initialize();
         if (string.IsNullOrWhiteSpace(baseUrl))
-            baseUrl = "http://localhost:8080";
+            baseUrl = DefaultLocalUrl;
+        if (string.IsNullOrWhiteSpace(awsUrl))
+            awsUrl = DefaultAwsUrl;
+        Debug.Log($"[NetworkManager] useLocal={useLocal} BaseUrl={BaseUrl}");
     }
 
     /// <summary>
