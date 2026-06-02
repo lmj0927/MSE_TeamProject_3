@@ -59,10 +59,11 @@ public class PlayerController : FoodHolder
         Vector3 targetWorldPos = holdAnchor.TransformPoint(pos);
         Quaternion targetWorldRot = holdAnchor.rotation;
 
-        food.transform.position = targetWorldPos;
-        food.transform.rotation = targetWorldRot;
-
         food.transform.SetParent(holdAnchor, true);
+
+        NetworkTransform fnt = food.GetComponent<NetworkTransform>();
+        if(fnt == null) return;
+        fnt.Teleport(targetWorldPos, targetWorldRot);
     }
 
     protected override void OnAdded(NetworkObject food, Vector3 pos)

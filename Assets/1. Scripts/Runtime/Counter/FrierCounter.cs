@@ -89,7 +89,12 @@ public class FrierCounter : AFireCounter
             foreach (var f in foods.Select(food => Runner.FindObject(food)))
             {
                 f.GetComponent<AuthorityHandler>().RequestStateAuthority(
-                    onAuthorized: () => f.transform.position += offset,
+                    // onAuthorized: () => f.transform.position += offset,
+                    onAuthorized: () => 
+                    {
+                        NetworkTransform fnt = f.GetComponent<NetworkTransform>();
+                        fnt.Teleport(transform.position + offset);
+                    },
                     onNotAuthorized: () => {}
                 );
             }
@@ -111,7 +116,12 @@ public class FrierCounter : AFireCounter
             foreach (var f in foods.Select(food => Runner.FindObject(food)))
             {
                 f.GetComponent<AuthorityHandler>().RequestStateAuthority(
-                    onAuthorized: () => f.transform.position = foodPoint.position,
+                    // onAuthorized: () => f.transform.position = foodPoint.position,
+                    onAuthorized: () => 
+                    {
+                        NetworkTransform fnt = f.GetComponent<NetworkTransform>();
+                        fnt.Teleport(foodPoint.position);
+                    },
                     onNotAuthorized: () => {}
                 );
             }
