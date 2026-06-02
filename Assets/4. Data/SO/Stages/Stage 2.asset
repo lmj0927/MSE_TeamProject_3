@@ -10,19 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 619db966a75a9f2488eef8723a08234b, type: 3}
-  m_Name: Stage 1
+  m_Name: Stage 2
   m_EditorClassIdentifier: Assembly-CSharp::StageSO
-  stageName: Stage 1
-  sceneName: Stage 1
+  stageName: Stage 2
+  sceneName: Stage 2
   stageTimeLimit: 300
-  spawnRate: 15
+  spawnRate: 3
   oneStarScore: 0
   twoStarScore: 0
   threeStarScore: 0
   availableIngredients:
   - {fileID: 11400000, guid: 483349d683bf44a409b8799e9760e500, type: 2}
   - {fileID: 11400000, guid: 0ed4b2ad98e0e420d801dfb60234d087, type: 2}
+  - {fileID: 11400000, guid: 164fef8b1ea14e54dafe2e99f770b5b8, type: 2}
   - {fileID: 11400000, guid: f3e22cbb482a74764a7a768e65fe6d27, type: 2}
+  - {fileID: 11400000, guid: ba5ecfc393177c24c9722f79a1bdf3ce, type: 2}
+  - {fileID: 11400000, guid: b20a7f54da13f864da1997f77714f6c9, type: 2}
+  - {fileID: 11400000, guid: 24126e021057a83469dd87f563835657, type: 2}
   - {fileID: 11400000, guid: 8996c515460bc96459a4d360f088e50e, type: 2}
   - {fileID: 11400000, guid: c713607e84def4676acdc9357bf1759b, type: 2}
   - {fileID: 11400000, guid: 1d0e5bc9f2fbfcb4b846174c21af9e8b, type: 2}
@@ -32,8 +36,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c2daf7a725f2141f6b7b8dd8670f85bf, type: 2}
   - {fileID: 11400000, guid: e38924b304554414cacd7113bf110d07, type: 2}
   - {fileID: 11400000, guid: 5f577420f36348b449a2d3be07d47070, type: 2}
+  - {fileID: 11400000, guid: f5dd0d0199dfd1d44bcee894768fd780, type: 2}
+  - {fileID: 11400000, guid: e93e68b7dc3442648b5ca4a7d7f4e434, type: 2}
+  - {fileID: 11400000, guid: 1417d33f602db4b4897950bea39e87a7, type: 2}
+  - {fileID: 11400000, guid: 43ce99c3102e3bf41ba8ce9084e3d63e, type: 2}
+  - {fileID: 11400000, guid: 7c2976c3c030a664e8f4e4d373b12887, type: 2}
   availableSide:
   - {fileID: 11400000, guid: da74f0f3c86674d408893227dd341af0, type: 2}
   - {fileID: 11400000, guid: af35eca2de76ba745b01fefc4e495831, type: 2}
+  - {fileID: 11400000, guid: dbf0f714636b419409d6275496bd4e34, type: 2}
   availableBeverage:
   - {fileID: 11400000, guid: 9a880120662d27a409a2ff3b9f52e13e, type: 2}

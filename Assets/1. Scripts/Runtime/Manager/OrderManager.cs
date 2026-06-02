@@ -25,6 +25,7 @@ public class OrderManager : NetworkSingleton<OrderManager>
         uiSlots = orderUI.GetComponentsInChildren<OrderItem>(true);
         CloseOrder();
         timerUI.gameObject.SetActive(false);
+        point.gameObject.SetActive(false);
 
         if(GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
         else GameManagerActionsSetup();
@@ -134,8 +135,10 @@ public class OrderManager : NetworkSingleton<OrderManager>
     {
         CloseOrder();
         timerUI.gameObject.SetActive(true);
+        point.gameObject.SetActive(true);
 
         timerUI.SetProgress(0);
+        point.text = "Point: 0";
         isPlaying = true;
     }
     [Rpc(RpcSources.All, RpcTargets.All)]
@@ -159,13 +162,17 @@ public class OrderManager : NetworkSingleton<OrderManager>
     {
         point.text = "Point: " + p;
 
-       foreach (GameObject star in starParent.transform)
+        if (starParent != null)
         {
-            if (grade > 0)
+            foreach (GameObject star in starParent.transform)
             {
-                star.SetActive(true);
-                grade--;
-            } else star.SetActive(false);
+                if (grade > 0)
+                {
+                    star.SetActive(true);
+                    grade--;
+                }
+                else star.SetActive(false);
+            }
         }
     }
 }

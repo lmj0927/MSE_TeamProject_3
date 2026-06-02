@@ -32,6 +32,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/3. Scenes/JunYoung/Test Restaurant.unity
     guid: 69307629b1b0a5f4cbbb57fc8ec8269e
+  - enabled: 1
+    path: Assets/3. Scenes/JunYoung/Stage 1.unity
+    guid: 82c791caf7d277146bd5a8f299b80406
+  - enabled: 1
+    path: Assets/3. Scenes/JunYoung/Stage 2.unity
+    guid: 8e549a39f7862b64987a839a794bd9a4
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
