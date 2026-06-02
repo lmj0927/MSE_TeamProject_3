@@ -550,3 +550,7 @@ FodyWeavers.xsd
 /[Aa]ssets/FREE/
 /[Aa]ssets/FREE.meta
 /[Aa]ssets/Downloads/Toony Kitchen Ingredients Free*
+
+# Crash restore
+/[Aa]ssets/_Recovery/
+/[Aa]ssets/_Recovery.meta
