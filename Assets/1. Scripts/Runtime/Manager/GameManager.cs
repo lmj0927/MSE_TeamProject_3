@@ -5,7 +5,7 @@ using Fusion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
+public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlayerJoined
 {
     public enum GameState {
         MainMenu,
@@ -35,6 +35,9 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
 
     [Networked] public int currentP { get; private set; } = 0;
 
+    // 로비(Multi Main Test)에서 전원 합류 시 1회만 자동 EnterStage 하기 위한 가드.
+    [Networked] private bool stageAutoStarted { get; set; }
+
     public bool IsBusy => throw new NotImplementedException();
 
     public Scene MainRunnerScene => throw new NotImplementedException();
@@ -53,7 +56,16 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
             currentP = 0;
             isPlaying = false;
             readingIdx = -1;
+
+            // 마스터 스폰 시점에 이미 들어와 있는 인원(또는 솔로) 즉시 체크.
+            TryAutoStartStage();
         }
+    }
+
+    // 플레이어가 세션에 합류할 때마다 마스터가 정원 충족 여부를 재확인.
+    public void PlayerJoined(PlayerRef player)
+    {
+        TryAutoStartStage();
     }
     public override void FixedUpdateNetwork()
     {
@@ -168,6 +180,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
                 currentP = 0;
                 task = 0;
                 reading = null;
+                stageAutoStarted = false;   // 로비 복귀 시 다음 라운드 자동 진입 허용
                 break;
 
             default:
@@ -227,6 +240,26 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone
     public void AddPoint(int p)            
     {
         currentP += p;
+    }
+
+    // 로비에서 roster 인원이 모두 Photon 세션에 합류하면, 방 생성 시 정해진 stage로 자동 진입.
+    private void TryAutoStartStage()
+    {
+        if (!HasStateAuthority) return;          // 정원 판단/진입은 마스터만
+        if (stageAutoStarted) return;
+        if (state != GameState.MainMenu) return; // 로비 상태에서만
+        if (!RoomSession.HasRoom) return;
+        if (stages == null || stages.Length == 0) return;
+
+        int expected = RoomSession.CurrentRoom.participantUserIds?.Length ?? 1;
+        if (expected < 1) expected = 1;
+
+        if (Runner.ActivePlayers.Count() < expected) return;   // 아직 전원 합류 전
+
+        stageAutoStarted = true;
+        int idx = Mathf.Clamp(RoomSession.CurrentRoom.stage - 1, 0, stages.Length - 1);
+        Debug.Log($"[GameManager] All {expected} player(s) joined → auto EnterStage({idx}) for room stage {RoomSession.CurrentRoom.stage}");
+        EnterStage(idx);
     }
 
     public void EnterStage(int idx)         // 버튼에서 구독할 함수
