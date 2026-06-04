@@ -15,7 +15,7 @@ public class InRoomLobbyController : MonoBehaviour
     [SerializeField] private GameObject playerCharacterPrefab;
     [SerializeField] private TextMeshProUGUI roomTitleText;
     [SerializeField] private Button leaveButton;
-    [SerializeField] private Button startButton;
+    [SerializeField] private Button startButton;   // 게임 시작 → Photon 세션 진입
     [SerializeField] private string joinRoomSceneName = "JoinRoom";
     [SerializeField] private float pollIntervalSeconds = 2.5f;
 
@@ -55,6 +55,9 @@ public class InRoomLobbyController : MonoBehaviour
         if (startButton != null)
             startButton.onClick.RemoveListener(OnStartClicked);
 
+        if (startButton != null)
+            startButton.onClick.RemoveListener(OnStartClicked);
+
         _lobbyCts?.Cancel();
         _lobbyCts?.Dispose();
         ClearSpawnedCharacters();
@@ -67,6 +70,17 @@ public class InRoomLobbyController : MonoBehaviour
 
     void OnStartClicked()
     {
+        if (_isLeavingScene || !RoomSession.HasRoom)
+            return;
+
+        // NOTE(연결 우선): 서버에 "게임 시작" 알림 엔드포인트가 아직 없어,
+        // 현재는 각 플레이어가 직접 Start를 눌러 같은 SessionName(roomId)으로
+        // Photon Shared 세션에 모인다. (호스트 전용 + 클라 자동 입장은 정리 단계에서)
+        if (startButton != null)
+            startButton.interactable = false;
+
+        Debug.Log($"[InRoomLobbyController] Start → launching Photon session for room {RoomSession.RoomId}");
+        GameLauncher.Launch(RoomSession.RoomId);
         StartRoomFlow().Forget();
     }
 
