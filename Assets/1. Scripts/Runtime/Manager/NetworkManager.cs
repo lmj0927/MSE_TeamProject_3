@@ -322,6 +322,35 @@ public class NetworkManager : Singleton<NetworkManager>
         return FailureFromRequest<RoomResponse>(req, body);
     }
 
+    /// <summary>POST /api/rooms/{roomId}/start — Host only. OPEN → IN_PROGRESS.</summary>
+    public async UniTask<ApiResult<RoomResponse>> StartRoomAsync(string roomId,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrEmpty(roomId))
+            return ApiResult<RoomResponse>.Failure(0, "CLIENT", "roomId is empty", string.Empty);
+
+        var url = $"{Root}/api/rooms/{Uri.EscapeDataString(roomId)}/start";
+        using var req = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST);
+        req.uploadHandler = new UploadHandlerRaw(Array.Empty<byte>());
+        req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
+        SetBearerIfNeeded(req, true, AccessToken);
+        await SendWebRequestAsync(req, cancellationToken);
+        var body = req.downloadHandler?.text ?? string.Empty;
+        var code = (int)req.responseCode;
+
+        if (IsNetworkFailure(req))
+            return ApiResult<RoomResponse>.Failure(0, "NETWORK", req.error ?? "Network error", body);
+
+        if (code == 200)
+        {
+            var room = JsonUtility.FromJson<RoomResponse>(body);
+            return ApiResult<RoomResponse>.Success(room, code, body);
+        }
+
+        return FailureFromRequest<RoomResponse>(req, body);
+    }
+
     /// <summary>
     /// POST /api/rooms/{roomId}/leave — Host: 204 (room deleted). Guest: 200 + updated <see cref="RoomResponse"/>.
     /// </summary>

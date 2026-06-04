@@ -15,13 +15,16 @@ public class InRoomLobbyController : MonoBehaviour
     [SerializeField] private GameObject playerCharacterPrefab;
     [SerializeField] private TextMeshProUGUI roomTitleText;
     [SerializeField] private Button leaveButton;
+    [SerializeField] private Button startButton;   // 게임 시작 → Photon 세션 진입
     [SerializeField] private string joinRoomSceneName = "JoinRoom";
     [SerializeField] private float pollIntervalSeconds = 2.5f;
 
     readonly List<GameObject> _spawnedCharacters = new();
     string[] _lastParticipantIds = System.Array.Empty<string>();
+    string _lastRoomStatus;
     CancellationTokenSource _lobbyCts;
     bool _isLeavingScene;
+    bool _photonSessionLaunched;
 
     void Awake()
     {
@@ -29,6 +32,8 @@ public class InRoomLobbyController : MonoBehaviour
 
         if (leaveButton != null)
             leaveButton.onClick.AddListener(OnLeaveClicked);
+        if (startButton != null)
+            startButton.onClick.AddListener(OnStartClicked);
     }
 
     void Start()
@@ -48,6 +53,8 @@ public class InRoomLobbyController : MonoBehaviour
     {
         if (leaveButton != null)
             leaveButton.onClick.RemoveListener(OnLeaveClicked);
+        if (startButton != null)
+            startButton.onClick.RemoveListener(OnStartClicked);
 
         _lobbyCts?.Cancel();
         _lobbyCts?.Dispose();
@@ -57,6 +64,53 @@ public class InRoomLobbyController : MonoBehaviour
     void OnLeaveClicked()
     {
         LeaveRoomFlow().Forget();
+    }
+
+    void OnStartClicked()
+    {
+        StartRoomFlow().Forget();
+    }
+
+    async UniTaskVoid StartRoomFlow()
+    {
+        if (_isLeavingScene || !RoomSession.HasRoom)
+            return;
+
+        var room = RoomSession.CurrentRoom;
+        if (!IsLocalHost(room))
+        {
+            Debug.LogWarning("[InRoomLobbyController] Only the host can start the game.");
+            return;
+        }
+
+        if (!IsRoomOpen(room))
+        {
+            Debug.LogWarning("[InRoomLobbyController] Room is not OPEN.");
+            return;
+        }
+
+        if (!NetworkManager.Instance.HasAccessToken)
+        {
+            Debug.LogWarning("[InRoomLobbyController] Not logged in.");
+            return;
+        }
+
+        SetStartBusy(true);
+
+        var roomId = RoomSession.RoomId;
+        var result = await NetworkManager.Instance.StartRoomAsync(roomId, _lobbyCts.Token);
+
+        SetStartBusy(false);
+
+        if (!result.Ok)
+        {
+            Debug.LogError(
+                $"[InRoomLobbyController] Start failed | roomId={roomId} HTTP={result.StatusCode} code={result.ErrorCode} message={result.ErrorMessage} raw={result.RawBody}");
+            return;
+        }
+
+        ApplyRoomState(result.Value);
+        Debug.Log($"[InRoomLobbyController] Game started roomId={roomId} status={result.Value?.status}");
     }
 
     async UniTaskVoid LeaveRoomFlow()
@@ -102,7 +156,62 @@ public class InRoomLobbyController : MonoBehaviour
 
         RebuildCharacters(room);
         _lastParticipantIds = CopyParticipantIds(room.participantUserIds);
+        _lastRoomStatus = room.status;
+        UpdateStartButton(room);
+        TryEnterPhotonSession(room);
     }
+
+    void TryEnterPhotonSession(RoomResponse room)
+    {
+        if (_photonSessionLaunched || _isLeavingScene || room == null)
+            return;
+
+        if (!IsRoomInProgress(room))
+            return;
+
+        if (string.IsNullOrEmpty(room.roomId))
+            return;
+
+        if (GameLauncher.IsRunning)
+        {
+            _photonSessionLaunched = true;
+            return;
+        }
+
+        _photonSessionLaunched = true;
+        _lobbyCts?.Cancel();
+        Debug.Log($"[InRoomLobbyController] Room IN_PROGRESS → launching Photon session roomId={room.roomId}");
+        GameLauncher.Launch(room.roomId);
+    }
+
+    void UpdateStartButton(RoomResponse room)
+    {
+        if (startButton == null)
+            return;
+
+        var isHost = IsLocalHost(room);
+        var canStart = isHost && IsRoomOpen(room);
+        startButton.interactable = canStart;
+        startButton.gameObject.SetActive(isHost);
+    }
+
+    static bool IsLocalHost(RoomResponse room)
+    {
+        if (room == null || string.IsNullOrEmpty(room.hostUserId))
+            return false;
+
+        var localUserId = NetworkManager.Instance.LocalUserId;
+        if (string.IsNullOrEmpty(localUserId))
+            localUserId = RoomSession.LocalUserId;
+
+        return room.hostUserId == localUserId;
+    }
+
+    static bool IsRoomOpen(RoomResponse room) =>
+        room != null && string.Equals(room.status, "OPEN", System.StringComparison.OrdinalIgnoreCase);
+
+    static bool IsRoomInProgress(RoomResponse room) =>
+        room != null && string.Equals(room.status, "IN_PROGRESS", System.StringComparison.OrdinalIgnoreCase);
 
     void RebuildCharacters(RoomResponse room)
     {
@@ -169,7 +278,8 @@ public class InRoomLobbyController : MonoBehaviour
                 continue;
 
             var ids = result.Value.participantUserIds;
-            if (!ParticipantIdsEqual(_lastParticipantIds, ids))
+            var status = result.Value.status;
+            if (!ParticipantIdsEqual(_lastParticipantIds, ids) || status != _lastRoomStatus)
                 ApplyRoomState(result.Value);
         }
     }
@@ -193,6 +303,20 @@ public class InRoomLobbyController : MonoBehaviour
     {
         if (leaveButton != null)
             leaveButton.interactable = !busy;
+    }
+
+    void SetStartBusy(bool busy)
+    {
+        if (startButton == null || !RoomSession.HasRoom)
+            return;
+
+        if (busy)
+        {
+            startButton.interactable = false;
+            return;
+        }
+
+        UpdateStartButton(RoomSession.CurrentRoom);
     }
 
     static bool ParticipantIdsEqual(string[] a, string[] b)

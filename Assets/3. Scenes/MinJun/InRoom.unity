@@ -474,18 +474,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 295960069}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: PerformTransition
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 295960067}
         m_TargetAssemblyTypeName: 
         m_MethodName: Play
@@ -810,8 +798,9 @@ MonoBehaviour:
   playerCharacterPrefab: {fileID: 6279296621252099018, guid: d93040130331ff24cac933fba71026c6, type: 3}
   roomTitleText: {fileID: 1362171554}
   leaveButton: {fileID: 1419274951}
+  startButton: {fileID: 295960070}
   joinRoomSceneName: JoinRoom
-  pollIntervalSeconds: 2.5
+  pollIntervalSeconds: 1
 --- !u!4 &1352325715
 Transform:
   m_ObjectHideFlags: 0
