@@ -1,4 +1,5 @@
 // owned by YongKyu Lee
+using System.Collections;
 using Fusion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,10 +12,15 @@ public class GameLauncher : MonoBehaviour
     // Photon-networked lobby scene name
     public const string RootSceneName = "Multi Main Test";
 
+    // Room-selection lobby scene to return to when the game ends
+    public const string LobbySceneName = "JoinRoom";
+    const float ReturnDelay = 2f;
+
     static GameLauncher _instance;
     public static bool IsRunning => _instance != null;
 
     NetworkRunner _runner;
+    bool _returning;
 
     /// <summary>
     /// Local RestAPI server to Photon server
@@ -82,6 +88,40 @@ public class GameLauncher : MonoBehaviour
         }
 
         Debug.Log("[GameLauncher] Photon session started.");
+    }
+
+    /// <summary>
+    /// Game finished: tear down the Photon session and return to the room-selection lobby.
+    /// Runs on every client (called from GameManager.RPC_ReturnToLobby).
+    /// </summary>
+    public static void ReturnToLobby()
+    {
+        if (_instance == null)
+        {
+            SceneManager.LoadScene(LobbySceneName);
+            return;
+        }
+
+        if (_instance._returning) return;
+        _instance._returning = true;
+        _instance.StartCoroutine(_instance.ReturnRoutine());
+    }
+
+    IEnumerator ReturnRoutine()
+    {
+        yield return new WaitForSeconds(ReturnDelay);
+
+        if (_runner != null)
+        {
+            var task = _runner.Shutdown(destroyGameObject: false);
+            while (task != null && !task.IsCompleted) yield return null;
+        }
+
+        RoomSession.Clear();
+        _instance = null;
+
+        SceneManager.LoadScene(LobbySceneName);
+        Destroy(gameObject);
     }
 
     void Cleanup()

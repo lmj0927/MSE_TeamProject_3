@@ -37,6 +37,7 @@ public abstract class NetworkSingleton<T> : NetworkBehaviour where T : Component
         }
 
         initializer?.Invoke();
+        initializer = null;
     }
     protected virtual void OnApplicationQuit()
     {

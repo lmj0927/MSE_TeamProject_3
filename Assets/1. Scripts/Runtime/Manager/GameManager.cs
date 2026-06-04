@@ -18,8 +18,9 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
 
     [Networked] private GameState state { get; set; }
     [SerializeField] private StageSO[] stages;
-    public StageSO reading { get; private set; }
-    
+    public StageSO reading =>
+        (stages != null && readingIdx >= 0 && readingIdx < stages.Length) ? stages[readingIdx] : null;
+
     [Networked, OnChangedRender(nameof(OnReadingIdxChanged))] private int readingIdx { get; set; }
 
     [Networked] private bool isPlaying { get; set; }
@@ -45,6 +46,8 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
     private int pastP = 0;
 
     private SceneRef? inGameScene = null;
+
+    private int appliedReadingIdx = -1;
 
     public override void Spawned()
     {
@@ -101,10 +104,13 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
                     OnPointUpdated?.Invoke(currentP, star);
                 }
                 break;
+            case GameState.MainMenu:
+                TryAutoStartStage();
+                break;
             default:
                 break;
         }
-        
+
     }
 
     private int GetSceneIndexByName(string sceneName)
@@ -166,6 +172,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
 
             case GameState.EndPlay:
                 OnStageEnd?.Invoke();
+                RPC_ReturnToLobby();
                 break;
 
             case GameState.Result:
@@ -179,7 +186,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
                 stageTimer = 0f;
                 currentP = 0;
                 task = 0;
-                reading = null;
+                readingIdx = -1;
                 stageAutoStarted = false;   // 로비 복귀 시 다음 라운드 자동 진입 허용
                 break;
 
@@ -242,19 +249,28 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
         currentP += p;
     }
 
+    private string lastAutoGate;
+    private void LogAutoGate(string gate)
+    {
+        if (gate == lastAutoGate) return;
+        lastAutoGate = gate;
+        Debug.Log($"[GameManager AutoStart] blocked at: {gate}");
+    }
+
     // 로비에서 roster 인원이 모두 Photon 세션에 합류하면, 방 생성 시 정해진 stage로 자동 진입.
     private void TryAutoStartStage()
     {
-        if (!HasStateAuthority) return;          // 정원 판단/진입은 마스터만
+        if (!HasStateAuthority) { LogAutoGate("not master (no state authority)"); return; }
         if (stageAutoStarted) return;
-        if (state != GameState.MainMenu) return; // 로비 상태에서만
-        if (!RoomSession.HasRoom) return;
-        if (stages == null || stages.Length == 0) return;
+        if (state != GameState.MainMenu) { LogAutoGate($"state={state} (not MainMenu)"); return; }
+        if (!RoomSession.HasRoom) { LogAutoGate("RoomSession empty on master"); return; }
+        if (stages == null || stages.Length == 0) { LogAutoGate("stages array empty"); return; }
 
         int expected = RoomSession.CurrentRoom.participantUserIds?.Length ?? 1;
         if (expected < 1) expected = 1;
 
-        if (Runner.ActivePlayers.Count() < expected) return;   // 아직 전원 합류 전
+        int active = Runner.ActivePlayers.Count();
+        if (active < expected) { LogAutoGate($"active={active} < expected={expected} session='{RoomSession.RoomId}'"); return; }
 
         stageAutoStarted = true;
         int idx = Mathf.Clamp(RoomSession.CurrentRoom.stage - 1, 0, stages.Length - 1);
@@ -271,15 +287,39 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
         }
         Debug.Log($"[GameManager EnterStage] stage {readingIdx} to {idx}");
         readingIdx = idx;
+        ChangeState(GameState.Loading);
+        ApplyRecipeData();
     }
 
     public void OnReadingIdxChanged()
     {
         Debug.Log($"[GameManager OnReadingIdxChanged] called with readingIdx {readingIdx}");
         if(readingIdx < 0) return;
-        reading = stages[readingIdx];
-        RecipeManager.Instance.SetData(reading.availableIngredients.ToList(), reading.availableAssemble.ToList(), reading.availableSide.ToList(), reading.availableBeverage.ToList());
-        ChangeState(GameState.Loading);
+        ApplyRecipeData();
+    }
+
+    private void ApplyRecipeData()
+    {
+        var r = reading;
+        if (r == null || RecipeManager.Instance == null) return;
+        RecipeManager.Instance.SetData(
+            (r.availableIngredients ?? new FoodSO[0]).ToList(),
+            (r.availableAssemble ?? new RecipeSO[0]).ToList(),
+            (r.availableSide ?? new RecipeSO[0]).ToList(),
+            (r.availableBeverage ?? new RecipeSO[0]).ToList());
+        appliedReadingIdx = readingIdx;
+    }
+
+    public override void Render()
+    {
+        if (readingIdx >= 0 && readingIdx != appliedReadingIdx)
+            ApplyRecipeData();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_ReturnToLobby()
+    {
+        GameLauncher.ReturnToLobby();
     }
 
     public void LeaveStage()               // 버튼에서 구독할 함수
@@ -289,6 +329,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
 
     public void SceneLoadDone(in SceneLoadDoneArgs sceneInfo)
     {
+        ApplyRecipeData();
         if(inGameScene.HasValue && sceneInfo.SceneRef == inGameScene.Value)
         {
             Debug.Log("[GameManager SceneLoadDone] Scene Loaded?");
