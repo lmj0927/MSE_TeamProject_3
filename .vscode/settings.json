@@ -64,8 +64,7 @@
     },
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.patterns": {
-        "*.sln": "*.csproj",
-        "*.slnx": "*.csproj"
+        "*.sln": "*.csproj"
     },
     "dotnet.defaultSolution": "MSE_TeamProject_3.slnx"
 }
