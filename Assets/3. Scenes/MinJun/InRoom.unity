@@ -800,7 +800,7 @@ MonoBehaviour:
   leaveButton: {fileID: 1419274951}
   startButton: {fileID: 295960070}
   joinRoomSceneName: JoinRoom
-  pollIntervalSeconds: 2.5
+  pollIntervalSeconds: 1
 --- !u!4 &1352325715
 Transform:
   m_ObjectHideFlags: 0

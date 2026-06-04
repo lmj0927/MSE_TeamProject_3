@@ -24,6 +24,7 @@ public class InRoomLobbyController : MonoBehaviour
     string _lastRoomStatus;
     CancellationTokenSource _lobbyCts;
     bool _isLeavingScene;
+    bool _photonSessionLaunched;
 
     void Awake()
     {
@@ -55,9 +56,6 @@ public class InRoomLobbyController : MonoBehaviour
         if (startButton != null)
             startButton.onClick.RemoveListener(OnStartClicked);
 
-        if (startButton != null)
-            startButton.onClick.RemoveListener(OnStartClicked);
-
         _lobbyCts?.Cancel();
         _lobbyCts?.Dispose();
         ClearSpawnedCharacters();
@@ -70,17 +68,6 @@ public class InRoomLobbyController : MonoBehaviour
 
     void OnStartClicked()
     {
-        if (_isLeavingScene || !RoomSession.HasRoom)
-            return;
-
-        // NOTE(연결 우선): 서버에 "게임 시작" 알림 엔드포인트가 아직 없어,
-        // 현재는 각 플레이어가 직접 Start를 눌러 같은 SessionName(roomId)으로
-        // Photon Shared 세션에 모인다. (호스트 전용 + 클라 자동 입장은 정리 단계에서)
-        if (startButton != null)
-            startButton.interactable = false;
-
-        Debug.Log($"[InRoomLobbyController] Start → launching Photon session for room {RoomSession.RoomId}");
-        GameLauncher.Launch(RoomSession.RoomId);
         StartRoomFlow().Forget();
     }
 
@@ -171,6 +158,30 @@ public class InRoomLobbyController : MonoBehaviour
         _lastParticipantIds = CopyParticipantIds(room.participantUserIds);
         _lastRoomStatus = room.status;
         UpdateStartButton(room);
+        TryEnterPhotonSession(room);
+    }
+
+    void TryEnterPhotonSession(RoomResponse room)
+    {
+        if (_photonSessionLaunched || _isLeavingScene || room == null)
+            return;
+
+        if (!IsRoomInProgress(room))
+            return;
+
+        if (string.IsNullOrEmpty(room.roomId))
+            return;
+
+        if (GameLauncher.IsRunning)
+        {
+            _photonSessionLaunched = true;
+            return;
+        }
+
+        _photonSessionLaunched = true;
+        _lobbyCts?.Cancel();
+        Debug.Log($"[InRoomLobbyController] Room IN_PROGRESS → launching Photon session roomId={room.roomId}");
+        GameLauncher.Launch(room.roomId);
     }
 
     void UpdateStartButton(RoomResponse room)
@@ -198,6 +209,9 @@ public class InRoomLobbyController : MonoBehaviour
 
     static bool IsRoomOpen(RoomResponse room) =>
         room != null && string.Equals(room.status, "OPEN", System.StringComparison.OrdinalIgnoreCase);
+
+    static bool IsRoomInProgress(RoomResponse room) =>
+        room != null && string.Equals(room.status, "IN_PROGRESS", System.StringComparison.OrdinalIgnoreCase);
 
     void RebuildCharacters(RoomResponse room)
     {
