@@ -145,12 +145,8 @@ public class PlayerMovement : NetworkBehaviour
             if (stamina != null)
                 stamina.RegenWhileIdle(Runner.DeltaTime);
             
-            // no need to change here because it will be managed via callbacks
-            // if (animator != null)
-            // {
-            //     animator.SetBool(isMovingParam, false);
-            //     animator.SetBool(isRunningParam, false);
-            // }
+            isMoving = false;
+            isRunning = false;
 
             if (playerController.isGrounded && velocity.y < 0)
             {

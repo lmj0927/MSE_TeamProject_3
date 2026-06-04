@@ -93,7 +93,10 @@ public class TrayCounter : ACounter
         Debug.Log($"[Counter/{name}] RPC_SetTrayParent");
         currentTray.name = "Tray_Root";
         currentTray.transform.SetParent(mainFood.transform, true);
-        currentTray.transform.localPosition = Vector3.zero;
+        // currentTray.transform.localPosition = Vector3.zero;
+        NetworkTransform cnt = currentTray.GetComponent<NetworkTransform>();
+        if(cnt == null) return;
+        cnt.Teleport(mainFood.transform.position, mainFood.transform.rotation);
     }
 
     private void CombineAllToMain(Action onDone)

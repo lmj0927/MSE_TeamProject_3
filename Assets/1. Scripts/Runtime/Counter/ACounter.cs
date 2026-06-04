@@ -78,10 +78,11 @@ public abstract class ACounter : FoodHolder, IInteractable
         Vector3 targetWorldPos = foodPoint.TransformPoint(offset);
         Quaternion targetWorldRot = foodPoint.rotation;
 
-        food.transform.position = targetWorldPos;
-        food.transform.rotation = targetWorldRot;
-
         food.transform.SetParent(foodPoint, true);
+
+        NetworkTransform fnt = food.GetComponent<NetworkTransform>();
+        if(fnt == null) return;
+        fnt.Teleport(targetWorldPos, targetWorldRot);
     }
 
     protected override void OnAdded(NetworkObject food, Vector3 offset)

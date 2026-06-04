@@ -471,8 +471,11 @@ public class Customer : FoodHolder, IInteractable
 
         served.GetComponent<Food>().SetHeld();
         served.transform.SetParent(holdAnchor, true);
-        served.transform.localPosition = Vector3.zero;
-        served.transform.localRotation = Quaternion.identity;
+        // served.transform.localPosition = Vector3.zero;
+        // served.transform.localRotation = Quaternion.identity;
+        NetworkTransform snt = served.GetComponent<NetworkTransform>();
+        if(snt == null) return;
+        snt.Teleport(holdAnchor.transform.position, holdAnchor.transform.rotation);
     }
 
     protected override void OnRemoved(NetworkObject served)
@@ -573,8 +576,11 @@ public class Customer : FoodHolder, IInteractable
 
             tray.transform.SetParent(holdAnchor, true);
             
-            tray.transform.localPosition = Vector3.zero;
-            tray.transform.localRotation = Quaternion.identity;
+            // tray.transform.localPosition = Vector3.zero;
+            // tray.transform.localRotation = Quaternion.identity;
+
+            NetworkTransform tnt = tray.GetComponent<NetworkTransform>();
+            if(tnt != null) tnt.Teleport(holdAnchor.transform.position, holdAnchor.transform.rotation);
 
             var rb = tray.GetComponent<Rigidbody>();
             rb.linearVelocity = Vector3.zero;
@@ -722,7 +728,9 @@ public class Customer : FoodHolder, IInteractable
     {
         if (served == null) return;
         served.transform.SetParent(holdAnchor, true);
-        served.transform.localPosition = Vector3.zero;
-        served.transform.localRotation = Quaternion.identity;
+        
+        NetworkTransform snt = served.GetComponent<NetworkTransform>();
+        if(snt == null) return;
+        snt.Teleport(holdAnchor.transform.position, holdAnchor.transform.rotation);
     }
 }
