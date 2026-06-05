@@ -14,9 +14,11 @@ public class JoinRoomUI : MonoBehaviour
     [SerializeField] private CreateRoomUI createRoomUI;
     [SerializeField] private Transform roomListContent;
     [SerializeField] private RoomItemUI roomItemPrefab;
+    [SerializeField] private StageSO[] stages;
     [SerializeField] private string inRoomSceneName = "InRoom";
 
     readonly List<RoomItemUI> _spawnedItems = new();
+    Dictionary<string, int> _cachedGameProgress = new();
 
     void Awake()
     {
@@ -106,19 +108,25 @@ public class JoinRoomUI : MonoBehaviour
 
         SetBusy(true);
 
-        var result = await NetworkManager.Instance.GetOpenRoomsAsync(destroyCancellationToken);
+        var roomsTask = NetworkManager.Instance.GetOpenRoomsAsync(destroyCancellationToken);
+        var meTask = NetworkManager.Instance.GetMeAsync(destroyCancellationToken);
+        var (roomsResult, meResult) = await UniTask.WhenAll(roomsTask, meTask);
 
         SetBusy(false);
 
-        if (!result.Ok)
+        if (!roomsResult.Ok)
         {
             Debug.LogError(
-                $"[JoinRoomUI] Get open rooms failed | HTTP={result.StatusCode} code={result.ErrorCode} message={result.ErrorMessage} raw={result.RawBody}");
+                $"[JoinRoomUI] Get open rooms failed | HTTP={roomsResult.StatusCode} code={roomsResult.ErrorCode} message={roomsResult.ErrorMessage} raw={roomsResult.RawBody}");
             return;
         }
 
-        RebuildRoomList(result.Value);
-        var count = result.Value?.Length ?? 0;
+        _cachedGameProgress = meResult.Ok && meResult.Value?.gameProgress != null
+            ? new Dictionary<string, int>(meResult.Value.gameProgress)
+            : new Dictionary<string, int>();
+
+        RebuildRoomList(roomsResult.Value);
+        var count = roomsResult.Value?.Length ?? 0;
         Debug.Log($"[JoinRoomUI] Room list refreshed count={count}");
     }
 
@@ -141,7 +149,7 @@ public class JoinRoomUI : MonoBehaviour
                 continue;
 
             var item = Instantiate(roomItemPrefab, roomListContent);
-            item.Bind(room);
+            item.Bind(room, _cachedGameProgress, stages);
             item.RoomJoined += OnRoomItemJoined;
             _spawnedItems.Add(item);
         }

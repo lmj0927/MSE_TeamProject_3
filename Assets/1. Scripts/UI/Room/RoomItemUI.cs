@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -17,6 +18,9 @@ public class RoomItemUI : MonoBehaviour
     [SerializeField] private Button joinButton;
 
     RoomResponse _room;
+    IReadOnlyDictionary<string, int> _gameProgress;
+    StageSO[] _stages;
+    bool _joinBusy;
 
     public RoomResponse Room => _room;
 
@@ -35,10 +39,13 @@ public class RoomItemUI : MonoBehaviour
     }
 
     /// <summary>Apply room data to title, player count, and badge.</summary>
-    public void Bind(RoomResponse room)
+    public void Bind(RoomResponse room, IReadOnlyDictionary<string, int> gameProgress = null, StageSO[] stages = null)
     {
         _room = room;
+        _gameProgress = gameProgress;
+        _stages = stages;
         RefreshDisplay();
+        UpdateJoinInteractable();
     }
 
     void RefreshDisplay()
@@ -63,6 +70,28 @@ public class RoomItemUI : MonoBehaviour
 
         if (currentPlayerBadgeText != null)
             currentPlayerBadgeText.text = _room.currentPlayerCount.ToString();
+
+        UpdateJoinInteractable();
+    }
+
+    void UpdateJoinInteractable()
+    {
+        if (joinButton == null)
+            return;
+
+        if (_joinBusy)
+        {
+            joinButton.interactable = false;
+            return;
+        }
+
+        if (_room == null)
+        {
+            joinButton.interactable = false;
+            return;
+        }
+
+        joinButton.interactable = StageProgressGate.IsStageUnlocked(_room.stage, _gameProgress, _stages);
     }
 
     void OnJoinClicked()
@@ -81,6 +110,13 @@ public class RoomItemUI : MonoBehaviour
         if (!NetworkManager.Instance.HasAccessToken)
         {
             Debug.LogWarning("[RoomItemUI] Not logged in.");
+            return;
+        }
+
+        if (!StageProgressGate.IsStageUnlocked(_room.stage, _gameProgress, _stages))
+        {
+            Debug.LogWarning(
+                $"[RoomItemUI] Stage {_room.stage} is locked. Clear the previous stage with at least 1 star first.");
             return;
         }
 
@@ -106,7 +142,7 @@ public class RoomItemUI : MonoBehaviour
 
     void SetJoinBusy(bool busy)
     {
-        if (joinButton != null)
-            joinButton.interactable = !busy;
+        _joinBusy = busy;
+        UpdateJoinInteractable();
     }
 }
