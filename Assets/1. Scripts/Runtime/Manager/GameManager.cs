@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using Fusion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -84,7 +85,6 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
                 if (stageTimer >= StageT)
                 {
                     stageTimer = 0f;
-                    // 현재 점수 서버에 저장 예정
                     ChangeState(GameState.EndPlay);
                 }
 
@@ -172,11 +172,13 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
 
             case GameState.EndPlay:
                 OnStageEnd?.Invoke();
+                RPC_SaveGameProgress();
                 RPC_ReturnToLobby();
                 break;
 
             case GameState.Result:
-                // 결과창 띄우기 예정
+                RPC_SaveGameProgress();
+                OnResult?.Invoke();
                 break;
 
             case GameState.MainMenu:
@@ -317,6 +319,46 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_SaveGameProgress()
+    {
+        SaveGameProgressFlow().Forget();
+    }
+
+    async UniTaskVoid SaveGameProgressFlow()
+    {
+        var network = NetworkManager.Instance;
+        if (network == null || !network.HasAccessToken)
+        {
+            Debug.LogWarning("[GameManager] Skip gameProgress save: not logged in.");
+            return;
+        }
+
+        int stageNumber = ResolveStageNumberForSave();
+        if (stageNumber < 1)
+        {
+            Debug.LogWarning("[GameManager] Skip gameProgress save: invalid stage number.");
+            return;
+        }
+
+        int score = currentP;
+        var result = await network.UpdateStageBestScoreAsync(stageNumber, score);
+        if (result.Ok)
+            Debug.Log($"[GameManager] gameProgress saved stage={stageNumber} score={score}");
+        else
+            Debug.LogWarning(
+                $"[GameManager] gameProgress save failed ({result.StatusCode} {result.ErrorCode}): {result.ErrorMessage}");
+    }
+
+    int ResolveStageNumberForSave()
+    {
+        if (RoomSession.HasRoom && RoomSession.CurrentRoom.stage >= 1)
+            return RoomSession.CurrentRoom.stage;
+        if (readingIdx >= 0)
+            return readingIdx + 1;
+        return 0;
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_ReturnToLobby()
     {
         GameLauncher.ReturnToLobby();
@@ -326,6 +368,41 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
     {
         ChangeState(GameState.MainMenu);
     }
+
+#if UNITY_EDITOR
+    /// <summary>
+    /// Inspector 디버그: 현재 스테이지를 1스타 점수로 즉시 종료하고 gameProgress 저장·로비 복귀 흐름을 태웁니다.
+    /// </summary>
+    public void DebugForceEndStageWithOneStar()
+    {
+        if (!Application.isPlaying)
+        {
+            Debug.LogWarning("[GameManager] Debug cheat is only available in Play mode.");
+            return;
+        }
+
+        if (!HasStateAuthority)
+        {
+            Debug.LogWarning("[GameManager] Debug cheat requires State Authority (host).");
+            return;
+        }
+
+        if (state != GameState.Playing && state != GameState.WaitSync)
+        {
+            Debug.LogWarning($"[GameManager] Debug cheat requires Playing/WaitSync. Current state={state}");
+            return;
+        }
+
+        var targetScore = reading != null && reading.oneStarScore > 0 ? reading.oneStarScore : 1;
+        currentP = Mathf.Max(currentP, targetScore);
+        pastP = currentP - 1;
+        stageTimer = 0f;
+
+        Debug.Log(
+            $"[GameManager] Debug cheat → EndPlay with score={currentP} (1★ target={targetScore}) stage={ResolveStageNumberForSave()}");
+        ChangeState(GameState.EndPlay);
+    }
+#endif
 
     public void SceneLoadDone(in SceneLoadDoneArgs sceneInfo)
     {

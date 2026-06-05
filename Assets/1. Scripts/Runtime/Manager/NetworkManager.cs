@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -238,6 +239,33 @@ public class NetworkManager : Singleton<NetworkManager>
         }
 
         return FailureFromRequest<UserResponse>(req, body);
+    }
+
+    /// <summary>
+    /// 스테이지 최고 점수를 <c>gameProgress</c>에 반영합니다.
+    /// PATCH가 전체 맵을 덮어쓰므로 GET 후 병합하며, 기존 기록보다 높을 때만 PATCH 합니다.
+    /// </summary>
+    public async UniTask<ApiResult<UserResponse>> UpdateStageBestScoreAsync(int stageNumber, int score,
+        CancellationToken cancellationToken = default)
+    {
+        if (!HasAccessToken)
+            return ApiResult<UserResponse>.Failure(0, "CLIENT", "Not logged in", string.Empty);
+        if (stageNumber < 1)
+            return ApiResult<UserResponse>.Failure(0, "CLIENT", "Invalid stage number", string.Empty);
+        if (score < 0)
+            return ApiResult<UserResponse>.Failure(0, "CLIENT", "Invalid score", string.Empty);
+
+        var me = await GetMeAsync(cancellationToken);
+        if (!me.Ok)
+            return me;
+
+        var progress = me.Value?.gameProgress ?? new Dictionary<string, int>();
+        var key = stageNumber.ToString();
+        if (progress.TryGetValue(key, out var existing) && score <= existing)
+            return me;
+
+        var merged = new Dictionary<string, int>(progress) { [key] = score };
+        return await PatchMeAsync(new UserPatchRequest { GameProgress = merged }, cancellationToken);
     }
 
     /// <summary>POST /api/rooms</summary>
