@@ -121,6 +121,8 @@ public class PlayerInteractInput : MonoBehaviour
 
             foreach (var r in renderers)
             {
+                if (r.GetComponentInParent<Food>() != null) continue;
+
                 if (show)
                 {
                     r.renderingLayerMask |= layerBit;
