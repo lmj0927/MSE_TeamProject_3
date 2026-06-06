@@ -16,6 +16,7 @@ public class InRoomLobbyController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI roomTitleText;
     [SerializeField] private Button leaveButton;
     [SerializeField] private Button startButton;   // 게임 시작 → Photon 세션 진입
+    [SerializeField] private ErrorPopup errorPopup;
     [SerializeField] private string joinRoomSceneName = "JoinRoom";
     [SerializeField] private float pollIntervalSeconds = 2.5f;
 
@@ -40,8 +41,7 @@ public class InRoomLobbyController : MonoBehaviour
     {
         if (!RoomSession.HasRoom)
         {
-            Debug.LogWarning("[InRoomLobbyController] No room in RoomSession. Returning to JoinRoom.");
-            ReturnToJoinRoom("No active room.");
+            ReturnToJoinRoom("No active room session was found.");
             return;
         }
 
@@ -79,19 +79,19 @@ public class InRoomLobbyController : MonoBehaviour
         var room = RoomSession.CurrentRoom;
         if (!IsLocalHost(room))
         {
-            Debug.LogWarning("[InRoomLobbyController] Only the host can start the game.");
+            UserErrorPresenter.Show(errorPopup, "Start game", "Only the host can start the game.");
             return;
         }
 
         if (!IsRoomOpen(room))
         {
-            Debug.LogWarning("[InRoomLobbyController] Room is not OPEN.");
+            UserErrorPresenter.Show(errorPopup, "Start game", "This room is no longer open.");
             return;
         }
 
         if (!NetworkManager.Instance.HasAccessToken)
         {
-            Debug.LogWarning("[InRoomLobbyController] Not logged in.");
+            UserErrorPresenter.Show(errorPopup, "Start game", "You are not logged in. Please log in again.");
             return;
         }
 
@@ -104,8 +104,8 @@ public class InRoomLobbyController : MonoBehaviour
 
         if (!result.Ok)
         {
-            Debug.LogError(
-                $"[InRoomLobbyController] Start failed | roomId={roomId} HTTP={result.StatusCode} code={result.ErrorCode} message={result.ErrorMessage} raw={result.RawBody}");
+            UserErrorPresenter.ShowApiFailure(errorPopup, "Start game", result.StatusCode, result.ErrorCode,
+                result.ErrorMessage, result.RawBody);
             return;
         }
 
@@ -120,7 +120,7 @@ public class InRoomLobbyController : MonoBehaviour
 
         if (!NetworkManager.Instance.HasAccessToken)
         {
-            Debug.LogWarning("[InRoomLobbyController] Not logged in.");
+            UserErrorPresenter.Show(errorPopup, "Leave room", "You are not logged in. Please log in again.");
             return;
         }
 
@@ -133,15 +133,15 @@ public class InRoomLobbyController : MonoBehaviour
 
         if (!result.Ok)
         {
-            Debug.LogError(
-                $"[InRoomLobbyController] Leave failed | roomId={roomId} HTTP={result.StatusCode} code={result.ErrorCode} message={result.ErrorMessage} raw={result.RawBody}");
+            UserErrorPresenter.ShowApiFailure(errorPopup, "Leave room", result.StatusCode, result.ErrorCode,
+                result.ErrorMessage, result.RawBody);
             return;
         }
 
         if (result.StatusCode == 204)
-            ReturnToJoinRoom("Left room (host — room deleted).");
+            ReturnToJoinRoom("You left the room. The room was closed because you were the host.");
         else
-            ReturnToJoinRoom("Left room.");
+            ReturnToJoinRoom("You left the room.");
     }
 
     void ApplyRoomState(RoomResponse room)
@@ -223,7 +223,7 @@ public class InRoomLobbyController : MonoBehaviour
 
         if (playerCharacterPrefab == null)
         {
-            Debug.LogWarning("[InRoomLobbyController] playerCharacterPrefab is not assigned.");
+            UserErrorPresenter.Show(errorPopup, "In-room lobby", "Player display is not configured.");
             return;
         }
 
@@ -270,7 +270,7 @@ public class InRoomLobbyController : MonoBehaviour
             if (!result.Ok)
             {
                 if (IsRoomGone(result.StatusCode, result.ErrorCode))
-                    ReturnToJoinRoom("Room was closed (host left or room no longer exists).");
+                    ReturnToJoinRoom("This room was closed. The host may have left.");
                 continue;
             }
 
@@ -287,7 +287,7 @@ public class InRoomLobbyController : MonoBehaviour
     static bool IsRoomGone(int statusCode, string errorCode) =>
         statusCode == 404 || errorCode == "NOT_FOUND";
 
-    void ReturnToJoinRoom(string reason)
+    void ReturnToJoinRoom(string userMessage)
     {
         if (_isLeavingScene)
             return;
@@ -295,7 +295,8 @@ public class InRoomLobbyController : MonoBehaviour
         _isLeavingScene = true;
         _lobbyCts?.Cancel();
         RoomSession.Clear();
-        Debug.Log($"[InRoomLobbyController] {reason} Loading {joinRoomSceneName}.");
+        UserErrorPresenter.SetPending(userMessage);
+        Debug.Log($"[InRoomLobbyController] {userMessage} Loading {joinRoomSceneName}.");
         SceneManager.LoadScene(joinRoomSceneName);
     }
 
