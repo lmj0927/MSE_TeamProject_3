@@ -20,6 +20,7 @@ public class RoomItemUI : MonoBehaviour
     RoomResponse _room;
     IReadOnlyDictionary<string, int> _gameProgress;
     StageSO[] _stages;
+    ErrorPopup _errorPopup;
     bool _joinBusy;
 
     public RoomResponse Room => _room;
@@ -39,11 +40,13 @@ public class RoomItemUI : MonoBehaviour
     }
 
     /// <summary>Apply room data to title, player count, and badge.</summary>
-    public void Bind(RoomResponse room, IReadOnlyDictionary<string, int> gameProgress = null, StageSO[] stages = null)
+    public void Bind(RoomResponse room, IReadOnlyDictionary<string, int> gameProgress = null, StageSO[] stages = null,
+        ErrorPopup errorPopup = null)
     {
         _room = room;
         _gameProgress = gameProgress;
         _stages = stages;
+        _errorPopup = errorPopup;
         RefreshDisplay();
         UpdateJoinInteractable();
     }
@@ -103,20 +106,20 @@ public class RoomItemUI : MonoBehaviour
     {
         if (_room == null || string.IsNullOrEmpty(_room.roomId))
         {
-            Debug.LogWarning("[RoomItemUI] No room bound.");
+            UserErrorPresenter.Show(_errorPopup, "Join room", "This room is no longer available.");
             return;
         }
 
         if (!NetworkManager.Instance.HasAccessToken)
         {
-            Debug.LogWarning("[RoomItemUI] Not logged in.");
+            UserErrorPresenter.Show(_errorPopup, "Join room", "You are not logged in. Please log in again.");
             return;
         }
 
         if (!StageProgressGate.IsStageUnlocked(_room.stage, _gameProgress, _stages))
         {
-            Debug.LogWarning(
-                $"[RoomItemUI] Stage {_room.stage} is locked. Clear the previous stage with at least 1 star first.");
+            UserErrorPresenter.Show(_errorPopup, "Join room",
+                $"Clear Stage {_room.stage - 1} with at least 1 star before joining Stage {_room.stage}.");
             return;
         }
 
@@ -136,8 +139,8 @@ public class RoomItemUI : MonoBehaviour
             return;
         }
 
-        Debug.LogError(
-            $"[RoomItemUI] Join failed | roomId={_room.roomId} HTTP={result.StatusCode} code={result.ErrorCode} message={result.ErrorMessage} raw={result.RawBody}");
+        UserErrorPresenter.ShowApiFailure(_errorPopup, "Join room", result.StatusCode, result.ErrorCode,
+            result.ErrorMessage, result.RawBody);
     }
 
     void SetJoinBusy(bool busy)

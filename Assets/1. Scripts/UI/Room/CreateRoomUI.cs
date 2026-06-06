@@ -25,6 +25,7 @@ public class CreateRoomUI : BasePopupUI
     [SerializeField] private Button createRoomButton;
     [SerializeField] private Button closeButton;
     [SerializeField] private StageSO[] stages;
+    [SerializeField] private ErrorPopup errorPopup;
     [SerializeField] private string defaultMaxPlayersText = "4";
 
     readonly List<int> _allStageNumbers = new();
@@ -97,7 +98,7 @@ public class CreateRoomUI : BasePopupUI
             maxPlayersInputField.text = defaultMaxPlayersText;
 
         if (!NetworkManager.Instance.HasAccessToken)
-            Debug.LogWarning("[CreateRoomUI] Not logged in. Create room will fail until a token is set.");
+            UserErrorPresenter.Show(errorPopup, "Create room", "You are not logged in. Please log in again.");
 
         RefreshStageDropdownFlow().Forget();
     }
@@ -123,8 +124,10 @@ public class CreateRoomUI : BasePopupUI
         var result = await NetworkManager.Instance.GetMeAsync(destroyCancellationToken);
         if (!result.Ok)
         {
+            UserErrorPresenter.Show(errorPopup, "Create room",
+                "Could not load your progress. Only the earliest stage is available.");
             Debug.LogWarning(
-                $"[CreateRoomUI] GetMe failed; only Stage 1 will be available. {result.ErrorMessage}");
+                $"[CreateRoomUI] GetMe failed | HTTP={result.StatusCode} code={result.ErrorCode} message={result.ErrorMessage}");
             return new Dictionary<string, int>();
         }
 
@@ -175,13 +178,13 @@ public class CreateRoomUI : BasePopupUI
     {
         if (!TryReadInputs(out var title, out var stage, out var maxPlayers, out var validationMessage))
         {
-            Debug.LogWarning($"[CreateRoomUI] {validationMessage}");
+            UserErrorPresenter.Show(errorPopup, "Create room", validationMessage);
             return;
         }
 
         if (!NetworkManager.Instance.HasAccessToken)
         {
-            Debug.LogWarning("[CreateRoomUI] Not logged in.");
+            UserErrorPresenter.Show(errorPopup, "Create room", "You are not logged in. Please log in again.");
             return;
         }
 
@@ -201,8 +204,8 @@ public class CreateRoomUI : BasePopupUI
             return;
         }
 
-        Debug.LogError(
-            $"[CreateRoomUI] Create room failed | HTTP={result.StatusCode} code={result.ErrorCode} message={result.ErrorMessage} raw={result.RawBody}");
+        UserErrorPresenter.ShowApiFailure(errorPopup, "Create room", result.StatusCode, result.ErrorCode,
+            result.ErrorMessage, result.RawBody);
     }
 
     bool TryReadInputs(out string title, out int stage, out int maxPlayers, out string errorMessage)
