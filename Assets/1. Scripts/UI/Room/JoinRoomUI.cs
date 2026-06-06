@@ -15,6 +15,7 @@ public class JoinRoomUI : MonoBehaviour
     [SerializeField] private Transform roomListContent;
     [SerializeField] private RoomItemUI roomItemPrefab;
     [SerializeField] private StageSO[] stages;
+    [SerializeField] private ErrorPopup errorPopup;
     [SerializeField] private string inRoomSceneName = "InRoom";
 
     readonly List<RoomItemUI> _spawnedItems = new();
@@ -30,6 +31,7 @@ public class JoinRoomUI : MonoBehaviour
         if (createRoomUI != null)
             createRoomUI.RoomCreated += OnRoomCreated;
 
+        UserErrorPresenter.ShowPending(errorPopup);
         RefreshRoomListFlow().Forget();
     }
 
@@ -50,7 +52,7 @@ public class JoinRoomUI : MonoBehaviour
     {
         if (createRoomUI == null)
         {
-            Debug.LogWarning("[JoinRoomUI] CreateRoomUI is not assigned.");
+            UserErrorPresenter.Show(errorPopup, "Create room", "Create room screen is not available.");
             return;
         }
 
@@ -76,20 +78,20 @@ public class JoinRoomUI : MonoBehaviour
     {
         if (room == null || string.IsNullOrEmpty(room.roomId))
         {
-            Debug.LogWarning("[JoinRoomUI] Cannot enter InRoom: invalid room.");
+            UserErrorPresenter.Show(errorPopup, "Join room", "This room is no longer available.");
             return;
         }
 
         if (!NetworkManager.Instance.HasAccessToken)
         {
-            Debug.LogWarning("[JoinRoomUI] Not logged in.");
+            UserErrorPresenter.Show(errorPopup, "Join room", "You are not logged in. Please log in again.");
             return;
         }
 
         var localUserId = NetworkManager.Instance.LocalUserId;
         if (string.IsNullOrEmpty(localUserId))
         {
-            Debug.LogWarning("[JoinRoomUI] Local user id is missing. Log in again.");
+            UserErrorPresenter.Show(errorPopup, "Join room", "Your session expired. Please log in again.");
             return;
         }
 
@@ -102,7 +104,7 @@ public class JoinRoomUI : MonoBehaviour
     {
         if (!NetworkManager.Instance.HasAccessToken)
         {
-            Debug.LogWarning("[JoinRoomUI] Not logged in.");
+            UserErrorPresenter.Show(errorPopup, "Room list", "You are not logged in. Please log in again.");
             return;
         }
 
@@ -116,9 +118,17 @@ public class JoinRoomUI : MonoBehaviour
 
         if (!roomsResult.Ok)
         {
-            Debug.LogError(
-                $"[JoinRoomUI] Get open rooms failed | HTTP={roomsResult.StatusCode} code={roomsResult.ErrorCode} message={roomsResult.ErrorMessage} raw={roomsResult.RawBody}");
+            UserErrorPresenter.ShowApiFailure(errorPopup, "Room list", roomsResult.StatusCode,
+                roomsResult.ErrorCode, roomsResult.ErrorMessage, roomsResult.RawBody);
             return;
+        }
+
+        if (!meResult.Ok)
+        {
+            UserErrorPresenter.Show(errorPopup, "Room list",
+                "Could not load your profile. Stage unlock info may be outdated.");
+            Debug.LogWarning(
+                $"[JoinRoomUI] GetMe failed | HTTP={meResult.StatusCode} code={meResult.ErrorCode} message={meResult.ErrorMessage}");
         }
 
         _cachedGameProgress = meResult.Ok && meResult.Value?.gameProgress != null
@@ -139,7 +149,7 @@ public class JoinRoomUI : MonoBehaviour
 
         if (roomListContent == null || roomItemPrefab == null)
         {
-            Debug.LogWarning("[JoinRoomUI] roomListContent or roomItemPrefab is not assigned.");
+            UserErrorPresenter.Show(errorPopup, "Room list", "Room list UI is not configured.");
             return;
         }
 
@@ -149,7 +159,7 @@ public class JoinRoomUI : MonoBehaviour
                 continue;
 
             var item = Instantiate(roomItemPrefab, roomListContent);
-            item.Bind(room, _cachedGameProgress, stages);
+            item.Bind(room, _cachedGameProgress, stages, errorPopup);
             item.RoomJoined += OnRoomItemJoined;
             _spawnedItems.Add(item);
         }
