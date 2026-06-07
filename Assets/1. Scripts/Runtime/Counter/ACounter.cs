@@ -17,20 +17,15 @@ public abstract class ACounter : FoodHolder, IInteractable
     /// </summary>
     [Networked, Capacity(16)] protected NetworkLinkedList<NetworkId> foods { get; }
 
-    /// <summary>
-    /// List of the positions of each foods.
-    /// </summary>
-    // [Networked, Capacity(16)] protected NetworkLinkedList<Vector3> foodPositions { get; }
 
-    // public AuthorityHandler AuthorityHandler => GetComponent<AuthorityHandler>();
-
-    public override void Spawned()
-    {
-    }
 
     [SerializeField] private Transform outlineRoot;
 
     public Transform OutlineRoot => outlineRoot;
+
+    // public override void Spawned()
+    // {
+    // }
     public virtual void Interact(PlayerController player) { }
 
     protected bool HasFood()
@@ -56,20 +51,14 @@ public abstract class ACounter : FoodHolder, IInteractable
         return true;
     }
 
-    // 플레이어가 음식을 들고 있고 카운터에 음식이 없을 때 + 놓을 수 있는 음식일 때
-    protected bool CanAddFood(PlayerController player)
-    {
-        return player.HasFood() && !HasFood() && AcceptsFood(player.HeldFood.Data);
-    }
-
-    // 플레이어가 음식을 들고 있지 않고 카운터에 음식이 있을 때
-    protected bool CanRemoveFood(PlayerController player)
-    {
-        return !player.HasFood() && HasFood();
-    }
-
+    /// <summary>
+    /// Make the `foodPoint` be the parent of the `food` object and set the offset.
+    /// It is RPC since it should be executed on every player to.
+    /// </summary>
+    /// <param name="food"></param>
+    /// <param name="offset"></param>
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_SetParent(NetworkObject food, Vector3 offset)
+    private void RPC_SetParent(NetworkObject food, Vector3 offset)
     {
         if(food == null) return;
 
@@ -85,6 +74,11 @@ public abstract class ACounter : FoodHolder, IInteractable
         fnt.Teleport(targetWorldPos, targetWorldRot);
     }
 
+    /// <summary>
+    /// Add the `food` into this counter and set position using `offset`.
+    /// </summary>
+    /// <param name="food">Food to be added.</param>
+    /// <param name="offset">Offset from the position of the holder.</param>
     protected override void OnAdded(NetworkObject food, Vector3 offset)
     {
         if(food == null) return;
@@ -100,6 +94,11 @@ public abstract class ACounter : FoodHolder, IInteractable
         Debug.Log($"[Counter/{name}] OnAdded done. foodsCount(after)={foods.Count}");
     }
 
+    /// <summary>
+    /// Remove the `food` from this counter.
+    /// It suppose that the state authority of the `food` object is already achieved.
+    /// </summary>
+    /// <param name="food">Food to remove.</param>
     protected override void OnRemoved(NetworkObject food)
     {
         var foodName = food != null ? food.name : "null";
@@ -111,6 +110,11 @@ public abstract class ACounter : FoodHolder, IInteractable
         Debug.Log($"[Counter/{name}] OnRemoved done. foodsCount(after)={foods.Count}");
     }
 
+    /// <summary>
+    /// Check if a food can be held and this counter can hold it.
+    /// </summary>
+    /// <param name="food">Food which is going to be added.</param>
+    /// <returns>True if can be added.</returns>
     public override bool CanAdd(Food food)
     {
         var accept = food != null && AcceptsFood(food.Data);
@@ -120,6 +124,10 @@ public abstract class ACounter : FoodHolder, IInteractable
         return ok;
     }
 
+    /// <summary>
+    /// Check if the counter has food.
+    /// </summary>
+    /// <returns>True if this has foods.</returns>
     public override bool CanRemove()
     {
         var ok = HasFood();
@@ -127,6 +135,11 @@ public abstract class ACounter : FoodHolder, IInteractable
         return ok;
     }
 
+    /// <summary>
+    /// Despawn all food network objects and clear list.
+    /// Call `onDone` after removing all.
+    /// </summary>
+    /// <param name="onDone">Callback after removing all foods it has.</param>
     public override void ClearAll(Action onDone = null)
     {
         var snapshot = foods.Select(fid => Runner.FindObject(fid)).Where(f => f != null).ToList();

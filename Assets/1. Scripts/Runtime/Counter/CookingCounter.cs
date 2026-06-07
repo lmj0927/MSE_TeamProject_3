@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class CookingCounter : ACounter
 {
-    private RecipeSO recipe;
     public override void Interact(PlayerController player)
     {
         if(!player.HasStateAuthority) return;
@@ -11,13 +10,13 @@ public class CookingCounter : ACounter
         AuthorityHandler.RequestStateAuthority(
             onAuthorized: () =>
             {
-                if(player.HasFood() && AcceptsFood(player.HeldFood.Data))
+                if(CanAdd(player.HeldFood))
                 {
                     player.HandoffTo(this, player.HeldFoodObject, Vector3.up * foods.Count * 0.1f);
                 }
-                else if(CanRemoveFood(player))
+                else if(!player.HasFood() && CanRemove())
                 {
-                    recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Assemble);
+                    RecipeSO recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Assemble);
 
                     if (recipe != null)
                     {

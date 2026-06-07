@@ -15,7 +15,7 @@ public class GrillCounter : AFireCounter
         AuthorityHandler.RequestStateAuthority(
             onAuthorized: () =>
             {
-                if (CanAddFood(player))
+                if (CanAdd(player.HeldFood))
                 {
                     player.HandoffTo(this, player.HeldFoodObject, Vector3.zero, () =>
                     {
@@ -29,7 +29,7 @@ public class GrillCounter : AFireCounter
                         RPC_PlayEffects();
                     });
                 }
-                else if (isDone && CanRemoveFood(player))
+                else if (isDone && !player.HasFood() && CanRemove())
                 {
                     HandoffTo(player, GetLastFood(), Vector3.zero, () =>
                     {
@@ -47,6 +47,9 @@ public class GrillCounter : AFireCounter
         );
     }
 
+    /// <summary>
+    /// Play effects to all players.
+    /// </summary>
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_PlayEffects()
     {
@@ -55,6 +58,9 @@ public class GrillCounter : AFireCounter
     }
 
 
+    /// <summary>
+    /// Stop playing effects to all players.
+    /// </summary>
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_StopEffects()
     {

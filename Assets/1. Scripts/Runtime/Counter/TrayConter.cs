@@ -48,7 +48,7 @@ public class TrayCounter : ACounter
                         if (traytransform == null)
                         {
                             currentTray = Runner.Spawn(Tray);
-                            RPC_SetTrayParent();
+                            RPC_SetTrayParent(currentTray, mainFood);
                         }
                         else currentTray = traytransform.GetComponent<NetworkObject>();
 
@@ -88,15 +88,25 @@ public class TrayCounter : ACounter
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_SetTrayParent()
+    public void RPC_SetTrayParent(NetworkObject tray, NetworkObject main)
     {
         Debug.Log($"[Counter/{name}] RPC_SetTrayParent");
-        currentTray.name = "Tray_Root";
-        currentTray.transform.SetParent(mainFood.transform, true);
-        // currentTray.transform.localPosition = Vector3.zero;
-        NetworkTransform cnt = currentTray.GetComponent<NetworkTransform>();
+        if (tray == null || main == null) return;
+        tray.name = "Tray_Root";
+        tray.transform.SetParent(main.transform, true);
+        NetworkTransform cnt = tray.GetComponent<NetworkTransform>();
         if(cnt == null) return;
-        cnt.Teleport(mainFood.transform.position, mainFood.transform.rotation);
+        cnt.Teleport(main.transform.position, main.transform.rotation);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_AttachToTray(NetworkObject food, NetworkObject tray)
+    {
+        if (food == null || tray == null) return;
+        food.transform.SetParent(tray.transform, true);
+        NetworkTransform fnt = food.GetComponent<NetworkTransform>();
+        if(fnt == null) return;
+        fnt.Teleport(food.transform.position, food.transform.rotation);
     }
 
     private void CombineAllToMain(Action onDone)
@@ -124,7 +134,7 @@ public class TrayCounter : ACounter
             foodNO.GetComponent<AuthorityHandler>().RequestStateAuthority(
                 onAuthorized: () =>
                 {
-                    foodNO.transform.SetParent(currentTray.transform, true);
+                    RPC_AttachToTray(foodNO, currentTray);
                     foods.Remove(foodNO);
                     remaining--;
                     if (remaining == 0) onDone?.Invoke();
