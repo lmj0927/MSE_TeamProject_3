@@ -1,4 +1,4 @@
-// Owned by SeungYeon Jung
+// Owned by JunYoung Park
 using Fusion;
 using UnityEngine;
 

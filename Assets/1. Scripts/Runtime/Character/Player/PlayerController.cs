@@ -1,4 +1,4 @@
-// Owned by SeungYeon Jung
+// Owned by JunYoung Park
 using System;
 using System.Collections.Generic;
 using Fusion;
