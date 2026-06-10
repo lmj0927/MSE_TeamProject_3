@@ -90,7 +90,7 @@ public class CustomerManager : NetworkBehaviour
                 kioskState[emptyK] = true;
                 kCustomers[emptyK] = c;
 
-                c.setPath(Customer.cState.Entering, waitingPoint[emptyK]);
+                c.SetPath(Customer.cState.Entering, waitingPoint[emptyK]);
             }
         }
 
@@ -111,7 +111,7 @@ public class CustomerManager : NetworkBehaviour
 
                         c.AssignSeat(emptyC);
                         c.OnMealFinished += HandleGetout;
-                        c.setPath(Customer.cState.GoingSeat, chairs[emptyC]);
+                        c.SetPath(Customer.cState.GoingSeat, chairs[emptyC]);
 
                         kioskState[i] = false;
                         kCustomers[i] = null;
@@ -203,8 +203,8 @@ public class CustomerManager : NetworkBehaviour
 
         Transform outside = GetOutside();
 
-        if (c.HasEaten()) c.setPath(Customer.cState.GoingTrash, trashBin, outside);
-        else c.setPath(Customer.cState.Leaving, outside);
+        if (c.HasEaten()) c.SetPath(Customer.cState.GoingTrash, trashBin, outside);
+        else c.SetPath(Customer.cState.Leaving, outside);
 
         customers[idx] = null;
     }

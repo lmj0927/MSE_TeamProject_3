@@ -89,7 +89,7 @@ public class AuthorityHandler : NetworkBehaviour, IStateAuthorityChanged
         if(barrier)
         {
             Debug.LogWarning($"{Tag} Cannot grant - Barrier is active");
-            Rpc_NotAuthorized(info.Source, true);
+            RPC_NotAuthorized(info.Source, true);
             return;
         }
         else if(Object.HasStateAuthority && !isAuthorizing)
@@ -102,7 +102,7 @@ public class AuthorityHandler : NetworkBehaviour, IStateAuthorityChanged
         else // either we don't have authority anymore, or already giving it away
         {
             Debug.LogWarning($"{Tag} Cannot grant — HasAuth={Object.HasStateAuthority} isAuthorizing={isAuthorizing}. Sending Rpc_NotAuthorized to P{info.Source.PlayerId}.");
-            Rpc_NotAuthorized(info.Source, false);
+            RPC_NotAuthorized(info.Source, false);
         }
     }
 
@@ -123,7 +123,7 @@ public class AuthorityHandler : NetworkBehaviour, IStateAuthorityChanged
     /// <param name="player">In this case, the player is requester.</param>
     /// <param name="isBarriered">Whether it fails because of the barrier?</param>
 	[Rpc(RpcSources.All, RpcTargets.All)]
-	private void Rpc_NotAuthorized([RpcTarget] PlayerRef player, bool isBarriered)
+	private void RPC_NotAuthorized([RpcTarget] PlayerRef player, bool isBarriered)
 	{
         Debug.LogWarning($"{Tag} Rpc_NotAuthorized received. Firing onNotAuthorized. onAuthorized was {(onAuthorized==null ? "null" : "set")}.");
 		onNotAuthorized?.Invoke();

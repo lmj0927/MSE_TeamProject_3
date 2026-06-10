@@ -11,7 +11,7 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private float turnSpeed = 15f;
 
     private float gravity = -9.81f;
-    [SerializeField] private PlayerController controller;
+    // [SerializeField] private PlayerController controller;
     Vector3 moveVec;
     Vector3 velocity;
 

@@ -919,7 +919,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkManager
   isDontDestroyOnLoad: 1
-  useLocal: 1
+  useLocal: 0
   baseUrl: http://localhost:9090
   awsUrl: https://mse-server.onrender.com
 --- !u!4 &1973203636
