@@ -5,10 +5,21 @@ using UnityEngine;
 
 public class FrierCounter : AFireCounter
 {
+    /// <summary>
+    /// 2 frier slots are worked by one interaction.
+    /// </summary>
     [SerializeField] private FrierCounter otherside;
+
+    /// <summary>
+    /// Synced state of downed basket.
+    /// </summary>
     [Networked,  OnChangedRender(nameof(OnIsBasketDownChanged))] private bool isBasketDown { get; set; }
+
     [SerializeField] private ParticleSystem boiling;
 
+    /// <summary>
+    /// Offset for putting a food into an oil.
+    /// </summary>
     private Vector3 offset = new Vector3(0, -0.13f, 0.05f);
 
     protected override RecipeType CookRecipeType => RecipeType.Oil;
@@ -23,6 +34,9 @@ public class FrierCounter : AFireCounter
         }
     }
 
+    /// <summary>
+    /// Handles player interaction: add food, lower/raise basket, or take cooked food.
+    /// </summary>
     public override void Interact(PlayerController player)
     {
         if(!player.HasStateAuthority) return;
@@ -32,7 +46,7 @@ public class FrierCounter : AFireCounter
                 otherside.AuthorityHandler.RequestStateAuthority(
                     onAuthorized: () =>
                     {
-                        if (!isBasketDown && CanAddFood(player))
+                        if (!isBasketDown && CanAdd(player.HeldFood))
                         {
                             player.HandoffTo(this, player.HeldFoodObject, Vector3.zero, () =>
                             {
@@ -61,7 +75,7 @@ public class FrierCounter : AFireCounter
                             isBasketDown = false;
                             otherside.SetBasket(false);
                         }
-                        else if (isDone && CanRemoveFood(player))
+                        else if (isDone && !player.HasFood() && CanRemove())
                         {
                             isDone = false;
                             HandoffTo(player, GetLastFood(), Vector3.zero);
@@ -74,12 +88,18 @@ public class FrierCounter : AFireCounter
         );
     }
 
+    /// <summary>
+    /// Networked callback: starts or finishes frying when basket state changes.
+    /// </summary>
     private void OnIsBasketDownChanged()
     {
         if(isBasketDown) StartFry();
         else             FinishFry();
     }
 
+    /// <summary>
+    /// Lowers food into oil, plays effects, and begins cooking.
+    /// </summary>
     public void StartFry()
     {
         transform.position += offset;
@@ -103,6 +123,9 @@ public class FrierCounter : AFireCounter
         }
     }
 
+    /// <summary>
+    /// Raises food out of oil and stops effects. onlyBoil stops effects without moving food.
+    /// </summary>
     public void FinishFry(bool onlyBoil = false)
     {
         if (HasStateAuthority) RPC_StopEffects();
@@ -129,11 +152,17 @@ public class FrierCounter : AFireCounter
         }
     }
 
+    /// <summary>
+    /// Syncs basket state from the other paired frier.
+    /// </summary>
     public void SetBasket(bool val)
     {
         isBasketDown = val;
     }
 
+    /// <summary>
+    /// Plays fry sound and boiling particle on all clients.
+    /// </summary>
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_PlayEffects()
     {
@@ -142,6 +171,9 @@ public class FrierCounter : AFireCounter
     }
 
 
+    /// <summary>
+    /// Stops boiling particle and fry sound on all clients.
+    /// </summary>
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_StopEffects()
     {

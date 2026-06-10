@@ -391,7 +391,7 @@ public class Customer : FoodHolder, IInteractable
                 break;
             case cState.GoingTrash:
                 if (tray != null) Runner.Despawn(tray);
-                setPath(cState.Leaving, exit);
+                SetPath(cState.Leaving, exit);
                 break;
             case cState.Leaving:
                 OnSleep?.Invoke(this);
@@ -589,7 +589,7 @@ public class Customer : FoodHolder, IInteractable
         }
 
         if (current != cState.StageEnd) OnMealFinished?.Invoke(seatNum);
-        else setPath(current, destination);
+        else SetPath(current, destination);
     }
 
     public bool IsReady()
@@ -613,7 +613,7 @@ public class Customer : FoodHolder, IInteractable
 
     public bool HasEaten() => hasEaten;
 
-    public void setPath(cState state, Transform pos, Transform next = null)     // next is for special case(successful meal)
+    public void SetPath(cState state, Transform pos, Transform next = null)     // next is for special case(successful meal)
     {
         current = state;
         arriveHandled = false;

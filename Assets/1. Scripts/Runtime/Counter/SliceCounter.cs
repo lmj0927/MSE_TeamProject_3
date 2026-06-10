@@ -33,7 +33,7 @@ public class SliceCounter : ACounter
         AuthorityHandler.RequestStateAuthority(
             onAuthorized: () =>
             {
-                if (CanAddFood(player))
+                if (CanAdd(player.HeldFood))
                 {
                     player.HandoffTo(this, player.HeldFoodObject, Vector3.zero, () =>
                     {
@@ -44,7 +44,7 @@ public class SliceCounter : ACounter
                         isSlicing = true;
                     });
                 }
-                else if (CanRemoveFood(player) && !isSlicing)
+                else if (!player.HasFood() && CanRemove() && !isSlicing)
                 {
                     HandoffTo(player, GetLastFood(), Vector3.zero);
                 }

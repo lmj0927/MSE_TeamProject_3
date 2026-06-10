@@ -74,19 +74,6 @@ public class PlayerStaminaWorldBar : MonoBehaviour
             Destroy(_canvasRect.gameObject);
     }
 
-#if UNITY_EDITOR
-    private void OnValidate()
-    {
-        if (Application.isPlaying)
-            return;
-        if (followRoot == null)
-            followRoot = transform;
-        BindRefs();
-        if (_canvasRect != null && !_detached && _canvasRect.transform.IsChildOf(transform))
-            _canvasRect.localPosition = localOffset;
-    }
-#endif
-
     private void SyncWorldTransform()
     {
         if (followRoot == null || _canvasRect == null)
@@ -133,4 +120,19 @@ public class PlayerStaminaWorldBar : MonoBehaviour
         foreach (var lookAt in progressBar.GetComponentsInChildren<LookAtCamera>(true))
             lookAt.enabled = enable;
     }
+
+
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (Application.isPlaying)
+            return;
+        if (followRoot == null)
+            followRoot = transform;
+        BindRefs();
+        if (_canvasRect != null && !_detached && _canvasRect.transform.IsChildOf(transform))
+            _canvasRect.localPosition = localOffset;
+    }
+#endif
 }

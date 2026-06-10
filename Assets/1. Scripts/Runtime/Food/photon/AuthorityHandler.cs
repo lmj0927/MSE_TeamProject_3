@@ -1,23 +1,53 @@
 // owned by Yongkyu Lee
 using Fusion;
 using UnityEngine;
+using System;
 
+/// <summary>
+/// It is utility class for easy handling the authority handoff process.
+/// </summary>
 public class AuthorityHandler : NetworkBehaviour, IStateAuthorityChanged
 {
+    /// <summary>
+    /// It prevent the duplicated authorization.
+    /// </summary>
     bool isAuthorizing;
-    System.Action onAuthorized;
-    System.Action onNotAuthorized;
+    
+    /// <summary>
+    /// Callback for authorized state.
+    /// </summary>
+    Action onAuthorized;
+
+    /// <summary>
+    /// Callback for not authorized state.
+    /// </summary>
+    Action onNotAuthorized;
 
     /// <summary>
     /// It prevents stealing the state authority (similar to lock).
     /// </summary>
     bool barrier = false;
+    
+    /// <summary>
+    /// Block the new request on state authority.
+    /// </summary>
     public void Barrier() => barrier = true;
+    /// <summary>
+    /// Release the block of requesting state authority.
+    /// </summary>
     public void Unbarrier() => barrier = false;
 
+    /// <summary>
+    /// Tag for this object. (debug)
+    /// </summary>
     private string Tag => $"[Auth/{name}/P{Runner.LocalPlayer.PlayerId}]";
 
-    public void RequestStateAuthority(System.Action onAuthorized, System.Action onNotAuthorized)
+    /// <summary>
+    /// Request the state authority.
+    /// </summary>
+    /// <param name="onAuthorized">Callback for authorizing.</param>
+    /// <param name="onNotAuthorized">Callback for not authorizing.</param>
+    public void RequestStateAuthority(Action onAuthorized, Action onNotAuthorized)
     {
         Debug.Log($"{Tag} RequestStateAuthority called. HasAuth={HasStateAuthority} isAuthorizing={isAuthorizing} currentAuth=P{Object.StateAuthority.PlayerId}");
 
@@ -46,7 +76,11 @@ public class AuthorityHandler : NetworkBehaviour, IStateAuthorityChanged
         RPC_RequestStateAuthority(Object.StateAuthority);
     }
 
-    // rpc info is info of the sender. Runs only on the current state authority (target).
+    /// <summary>
+    /// Request the state authority to specific player.
+    /// </summary>
+    /// <param name="player">Player reference specified when calling this method</param>
+    /// <param name="info">Rpc info is info of the sender. Runs only on the current state authority (target).</param>
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_RequestStateAuthority([RpcTarget] PlayerRef player, RpcInfo info = default)
     {
@@ -55,7 +89,7 @@ public class AuthorityHandler : NetworkBehaviour, IStateAuthorityChanged
         if(barrier)
         {
             Debug.LogWarning($"{Tag} Cannot grant - Barrier is active");
-            Rpc_NotAuthorized(info.Source, true);
+            RPC_NotAuthorized(info.Source, true);
             return;
         }
         else if(Object.HasStateAuthority && !isAuthorizing)
@@ -68,10 +102,14 @@ public class AuthorityHandler : NetworkBehaviour, IStateAuthorityChanged
         else // either we don't have authority anymore, or already giving it away
         {
             Debug.LogWarning($"{Tag} Cannot grant — HasAuth={Object.HasStateAuthority} isAuthorizing={isAuthorizing}. Sending Rpc_NotAuthorized to P{info.Source.PlayerId}.");
-            Rpc_NotAuthorized(info.Source, false);
+            RPC_NotAuthorized(info.Source, false);
         }
     }
 
+    /// <summary>
+    /// Callback for requesting player when successed to get authority.
+    /// </summary>
+    /// <param name="player">In this case, the player is requester.</param>
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_Authorized([RpcTarget] PlayerRef player)
     {
@@ -79,9 +117,13 @@ public class AuthorityHandler : NetworkBehaviour, IStateAuthorityChanged
         Object.RequestStateAuthority(); // request and the result will be executed on StateAuthorityChanged
     }
 
-
+    /// <summary>
+    /// Callback for requesting player when failed to get authority.
+    /// </summary>
+    /// <param name="player">In this case, the player is requester.</param>
+    /// <param name="isBarriered">Whether it fails because of the barrier?</param>
 	[Rpc(RpcSources.All, RpcTargets.All)]
-	private void Rpc_NotAuthorized([RpcTarget] PlayerRef player, bool isBarriered)
+	private void RPC_NotAuthorized([RpcTarget] PlayerRef player, bool isBarriered)
 	{
         Debug.LogWarning($"{Tag} Rpc_NotAuthorized received. Firing onNotAuthorized. onAuthorized was {(onAuthorized==null ? "null" : "set")}.");
 		onNotAuthorized?.Invoke();
@@ -94,6 +136,9 @@ public class AuthorityHandler : NetworkBehaviour, IStateAuthorityChanged
         }
 	}
 
+    /// <summary>
+    /// Callback for success of changing state authority.
+    /// </summary>
     public void StateAuthorityChanged()
     {
         Debug.Log($"{Tag} StateAuthorityChanged fired. HasAuth={HasStateAuthority} isAuthorizing={isAuthorizing} newAuth=P{Object.StateAuthority.PlayerId}");

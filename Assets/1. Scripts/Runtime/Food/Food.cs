@@ -5,10 +5,9 @@ using UnityEngine;
 public class Food : NetworkBehaviour
 {
     [Networked, OnChangedRender(nameof(SyncPhysicalState))] private bool isHeld { get; set; }
+    public bool IsHeld => isHeld;
 
     [SerializeField] private FoodSO data;
-
-    public bool IsHeld => isHeld;
     public FoodSO Data => data;
     public void SetData(FoodSO data) => this.data = data;
     public void SetHeld() => isHeld = true;

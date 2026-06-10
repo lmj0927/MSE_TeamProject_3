@@ -554,3 +554,6 @@ FodyWeavers.xsd
 # Crash restore
 /[Aa]ssets/_Recovery/
 /[Aa]ssets/_Recovery.meta
+
+# (temp) uml ignore
+uml/

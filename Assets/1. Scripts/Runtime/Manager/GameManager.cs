@@ -40,9 +40,9 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
     // 로비(Multi Main Test)에서 전원 합류 시 1회만 자동 EnterStage 하기 위한 가드.
     [Networked] private bool stageAutoStarted { get; set; }
 
-    public bool IsBusy => throw new NotImplementedException();
+    // public bool IsBusy => throw new NotImplementedException();
 
-    public Scene MainRunnerScene => throw new NotImplementedException();
+    // public Scene MainRunnerScene => throw new NotImplementedException();
 
     private int pastP = 0;
 
@@ -210,7 +210,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
         else StartCoroutine(EnterRoutine());
     }
 
-    IEnumerator EnterRoutine()
+    private IEnumerator EnterRoutine()
     {
         yield return new WaitForSeconds(0.1f);        // 게임 시작 아이콘? 
 
@@ -324,7 +324,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
         SaveGameProgressFlow().Forget();
     }
 
-    async UniTaskVoid SaveGameProgressFlow()
+    private async UniTaskVoid SaveGameProgressFlow()
     {
         var network = NetworkManager.Instance;
         if (network == null || !network.HasAccessToken)
@@ -349,7 +349,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
                 $"[GameManager] gameProgress save failed ({result.StatusCode} {result.ErrorCode}): {result.ErrorMessage}");
     }
 
-    int ResolveStageNumberForSave()
+    private int ResolveStageNumberForSave()
     {
         if (RoomSession.HasRoom && RoomSession.CurrentRoom.stage >= 1)
             return RoomSession.CurrentRoom.stage;

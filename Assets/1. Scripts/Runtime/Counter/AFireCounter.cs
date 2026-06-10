@@ -140,8 +140,4 @@ public abstract class AFireCounter : ACounter
         isDone = val;
     }
 
-    public void OnChangedElapsedTime()
-    {
-
-    }
 }
