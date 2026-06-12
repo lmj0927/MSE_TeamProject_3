@@ -252,5 +252,4 @@ This immediately ends the stage with a 1-star clear score and saves progress. Us
 
 ## Related Documentation
 
-- [`Docs/API.md`](Docs/API.md) — REST API reference
 - [MSE_Server](https://github.com/lmj0927/MSE_Server) — Backend repository
