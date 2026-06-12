@@ -61,8 +61,6 @@ Use this if the hosted server is unavailable or you need offline API testing.
    - Check **Use Local**
    - Set **Base Url** to `http://localhost:9090`
 
-API details: [`Docs/API.md`](Docs/API.md)
-
 ---
 
 ## Account Registration & Login
