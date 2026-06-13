@@ -4,12 +4,15 @@ using System.Linq;
 using Fusion;
 using UnityEngine;
 
+// Counter that combines main food, sides, and beverages onto a single tray
 public class TrayCounter : ACounter
 {
     [Networked] private NetworkObject mainFood { get; set; }
     [Networked] private NetworkObject currentTray { get; set; }
 
     [SerializeField] private GameObject Tray;
+
+    // Positions for side menu (subPoints[0]) and beverage (subPoints[1])
     [SerializeField] private Transform[] subPoints;
 
     protected override bool AcceptsFood(FoodSO foodData)
@@ -21,7 +24,7 @@ public class TrayCounter : ACounter
 
     public override void Interact(PlayerController player)
     {
-        if(!player.HasStateAuthority) return;
+        if (!player.HasStateAuthority) return;
         AuthorityHandler.RequestStateAuthority(
             onAuthorized: () =>
             {
@@ -29,6 +32,7 @@ public class TrayCounter : ACounter
                 {
                     var type = player.HeldFood.Data.Type;
 
+                    // Prevent placing multiple main foods
                     if (type == FoodSO.FoodType.Main && mainFood != null) return;
 
                     Vector3 offset;
@@ -39,12 +43,14 @@ public class TrayCounter : ACounter
 
                     player.HandoffTo(this, player.HeldFoodObject, offset);
                 }
-                else // player has no food
+                // Player has no food: combine items into a tray and pick them up
+                else
                 {
                     if (mainFood != null)
                     {
                         Transform traytransform = mainFood.transform.Find("Tray_Root");
 
+                        // Spawn a new tray if it doesn't exist
                         if (traytransform == null)
                         {
                             currentTray = Runner.Spawn(Tray);
@@ -52,6 +58,7 @@ public class TrayCounter : ACounter
                         }
                         else currentTray = traytransform.GetComponent<NetworkObject>();
 
+                        // Combine all side/beverage items to the tray
                         CombineAllToMain(() =>
                         {
                             HandoffTo(player, mainFood, Vector3.zero, () =>
@@ -95,17 +102,18 @@ public class TrayCounter : ACounter
         tray.name = "Tray_Root";
         tray.transform.SetParent(main.transform, true);
         NetworkTransform cnt = tray.GetComponent<NetworkTransform>();
-        if(cnt == null) return;
+        if (cnt == null) return;
         cnt.Teleport(main.transform.position, main.transform.rotation);
     }
 
+    // Attach food items (sides/drinks) to the tray hierarchy
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_AttachToTray(NetworkObject food, NetworkObject tray)
     {
         if (food == null || tray == null) return;
         food.transform.SetParent(tray.transform, true);
         NetworkTransform fnt = food.GetComponent<NetworkTransform>();
-        if(fnt == null) return;
+        if (fnt == null) return;
         fnt.Teleport(food.transform.position, food.transform.rotation);
     }
 
