@@ -4,6 +4,7 @@ using System.Collections;
 using Fusion;
 using UnityEngine;
 
+// Counter that dispenses drinks
 public class DrinkCounter : ACounter
 {
     [SerializeField] private FoodSO[] drinks;
@@ -17,11 +18,14 @@ public class DrinkCounter : ACounter
     public Action OnDrinkFinished;
 
     private int selected = 0;
+
+    // Networked state tracking current usage and user
     [Networked] private bool isUsing { get; set; }
     [Networked] private PlayerController currentUser { get; set; }
 
     private float maxTimingRange;
     private float interactingTiming;
+
     [Networked] private float current { get; set; }
     private RecipeSO recipe;
 
@@ -46,18 +50,21 @@ public class DrinkCounter : ACounter
         if (!HasStateAuthority) return;
         if (!isUsing) return;
 
+        // Update dispensing progress and sync UI
         current += Runner.DeltaTime;
         if (progressBar != null) progressBar.SetProgress(current / maxTimingRange);
 
+        // Automatically fail and end if maximum time is reached
         if (current >= maxTimingRange)
         {
             EndDispensing(false);
         }
     }
 
+    // Handle interaction: start mini-game or check timing for success/failure
     public override void Interact(PlayerController player)
     {
-        if(!player.HasStateAuthority) return;
+        if (!player.HasStateAuthority) return;
 
         if (player.HasFood()) return;
 
@@ -73,6 +80,8 @@ public class DrinkCounter : ACounter
                 }
                 else if (player == currentUser)
                 {
+                    // [EN] Calculate success based on timing tolerance
+                    // [KR] 허용 오차 범위 내에서 타이밍 성공 여부 계산
                     float tolerance = maxTimingRange * acceptableRatio;
                     bool isSuccess = Mathf.Abs(current - interactingTiming) <= tolerance;
 
@@ -86,6 +95,7 @@ public class DrinkCounter : ACounter
         );
     }
 
+    // Initialize and start the dispensing mini-game
     private void StartDispensing(PlayerController player)
     {
         currentUser = player;
@@ -104,6 +114,7 @@ public class DrinkCounter : ACounter
                 return;
             }
 
+            // [EN] Look up recipe, set randomized target timing
             recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Beverage);
             maxTimingRange = recipe.Value;
 
@@ -144,6 +155,7 @@ public class DrinkCounter : ACounter
         }
     }
 
+    // Calculate and update the position and width of the target zone UI
     private void SetRangeUI()
     {
         if (range == null || progressBar == null) return;
@@ -208,6 +220,6 @@ public class DrinkCounter : ACounter
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_StopSound()
     {
-        OnDrinkFinished?.Invoke(); // fire on every client so each local SoundManager stops its drink audio
+        OnDrinkFinished?.Invoke();
     }
 }

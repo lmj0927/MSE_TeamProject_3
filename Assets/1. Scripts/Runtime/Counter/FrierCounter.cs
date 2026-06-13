@@ -13,7 +13,7 @@ public class FrierCounter : AFireCounter
     /// <summary>
     /// Synced state of downed basket.
     /// </summary>
-    [Networked,  OnChangedRender(nameof(OnIsBasketDownChanged))] private bool isBasketDown { get; set; }
+    [Networked, OnChangedRender(nameof(OnIsBasketDownChanged))] private bool isBasketDown { get; set; }
 
     [SerializeField] private ParticleSystem boiling;
 
@@ -28,18 +28,20 @@ public class FrierCounter : AFireCounter
     {
         base.Spawned();
 
-        if(HasStateAuthority)
+        if (HasStateAuthority)
         {
             isBasketDown = false;
         }
     }
 
     /// <summary>
-    /// Handles player interaction: add food, lower/raise basket, or take cooked food.
+    ///Handles player interaction: add food, lower/raise basket, or take cooked food.
     /// </summary>
     public override void Interact(PlayerController player)
     {
-        if(!player.HasStateAuthority) return;
+        if (!player.HasStateAuthority) return;
+
+        // Double authority check to sync both paired frier baskets safely
         AuthorityHandler.RequestStateAuthority(
             onAuthorized: () =>
             {
@@ -53,6 +55,7 @@ public class FrierCounter : AFireCounter
                                 var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Oil);
                                 if (recipe != null)
                                 {
+                                    // Limit max fry time to prevent SFX audio duration issues
                                     float maxAllowedTime = 10f - burnTime;
 
                                     if (recipe.Value > maxAllowedTime)
@@ -93,8 +96,8 @@ public class FrierCounter : AFireCounter
     /// </summary>
     private void OnIsBasketDownChanged()
     {
-        if(isBasketDown) StartFry();
-        else             FinishFry();
+        if (isBasketDown) StartFry();
+        else FinishFry();
     }
 
     /// <summary>
@@ -110,12 +113,12 @@ public class FrierCounter : AFireCounter
             {
                 f.GetComponent<AuthorityHandler>().RequestStateAuthority(
                     // onAuthorized: () => f.transform.position += offset,
-                    onAuthorized: () => 
+                    onAuthorized: () =>
                     {
                         NetworkTransform fnt = f.GetComponent<NetworkTransform>();
                         fnt.Teleport(transform.position + offset);
                     },
-                    onNotAuthorized: () => {}
+                    onNotAuthorized: () => { }
                 );
             }
             if (HasStateAuthority) RPC_PlayEffects();
@@ -140,12 +143,12 @@ public class FrierCounter : AFireCounter
             {
                 f.GetComponent<AuthorityHandler>().RequestStateAuthority(
                     // onAuthorized: () => f.transform.position = foodPoint.position,
-                    onAuthorized: () => 
+                    onAuthorized: () =>
                     {
                         NetworkTransform fnt = f.GetComponent<NetworkTransform>();
                         fnt.Teleport(foodPoint.position);
                     },
-                    onNotAuthorized: () => {}
+                    onNotAuthorized: () => { }
                 );
             }
             SetState(NoneState);
