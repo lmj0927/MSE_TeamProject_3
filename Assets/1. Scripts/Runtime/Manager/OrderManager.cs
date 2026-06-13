@@ -30,6 +30,7 @@ public class OrderManager : NetworkSingleton<OrderManager>
         timerUI.gameObject.SetActive(false);
         point.gameObject.SetActive(false);
 
+        // binding!!!
         if (GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
         else GameManagerActionsSetup();
     }
@@ -74,6 +75,7 @@ public class OrderManager : NetworkSingleton<OrderManager>
         RPC_RemoveOrder(customer);
     }
 
+    // adding and removing order to all of the players.
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_AddOrder(Customer customer)
     {

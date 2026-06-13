@@ -26,6 +26,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
     public StageSO reading =>
         (stages != null && readingIdx >= 0 && readingIdx < stages.Length) ? stages[readingIdx] : null;
 
+    // It helps the same stage moving across all players.
     [Networked, OnChangedRender(nameof(OnReadingIdxChanged))] private int readingIdx { get; set; }
 
     [Networked] private bool isPlaying { get; set; }
@@ -128,7 +129,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
     // Handle game state transitions and trigger corresponding logic (Server-Side)
     public void ChangeState(GameState newState)
     {
-        if (!HasStateAuthority) return;
+        if (!HasStateAuthority) return; // run on first-created player.
 
         Debug.Log($"[GameManager ChangeState] {state} to {newState}");
         state = newState;
@@ -149,7 +150,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
                     }
 
                     inGameScene = SceneRef.FromIndex(buildIndex);
-                    Runner.LoadScene(inGameScene.Value, LoadSceneMode.Single);
+                    Runner.LoadScene(inGameScene.Value, LoadSceneMode.Single); // move!
                 }
                 break;
 
@@ -275,6 +276,7 @@ public class GameManager : NetworkSingleton<GameManager>, ISceneLoadDone, IPlaye
         ApplyRecipeData();
     }
 
+    // when the valid reading idx(stage idx) is set, fill the recipe data of the stage.
     public void OnReadingIdxChanged()
     {
         Debug.Log($"[GameManager OnReadingIdxChanged] called with readingIdx {readingIdx}");

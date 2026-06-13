@@ -63,10 +63,12 @@ public class CustomerManager : NetworkBehaviour
         useState = new bool[chairs.Length];
         customers = new Customer[chairs.Length];
 
+        // binding since GM is network singleton
         if (GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
         else GameManagerActionsSetup();
     }
 
+    // initializer
     private void GameManagerActionsSetup()
     {
         spawnTerm = GameManager.Instance.reading.spawnRate;
