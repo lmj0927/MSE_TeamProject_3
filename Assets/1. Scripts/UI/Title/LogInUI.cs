@@ -1,18 +1,22 @@
+// Owned by MinJun Lee
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/// <summary>
+/// Title screen login UI.
+/// </summary>
 public class LogInUI : MonoBehaviour
 {
-    [SerializeField] private TMP_InputField idInputField;
-    [SerializeField] private TMP_InputField passwordInputField;
-    [SerializeField] private Button logInButton;
-    [SerializeField] private Button signUpButton;
-    [SerializeField] private SignUpUI signUpUI;
-    [SerializeField] private ErrorPopup errorPopup;
-    [SerializeField] private string joinRoomSceneName = "JoinRoom";
+    [SerializeField] private TMP_InputField idInputField; // user id input
+    [SerializeField] private TMP_InputField passwordInputField; // password input
+    [SerializeField] private Button logInButton; // login button
+    [SerializeField] private Button signUpButton; // open sign up popup
+    [SerializeField] private SignUpUI signUpUI; // sign up popup
+    [SerializeField] private ErrorPopup errorPopup; // error popup
+    [SerializeField] private string joinRoomSceneName = "JoinRoom"; // next scene after login
 
     void Awake()
     {
@@ -29,6 +33,7 @@ public class LogInUI : MonoBehaviour
         if (field == null)
             return;
 
+        // allow alphanumeric user id without masking
         field.contentType = TMP_InputField.ContentType.Standard;
         field.characterValidation = TMP_InputField.CharacterValidation.None;
         field.lineType = TMP_InputField.LineType.SingleLine;
@@ -81,6 +86,7 @@ public class LogInUI : MonoBehaviour
             return;
         }
 
+        // handle malformed login response separately
         if (result.ErrorMessage == "Missing token in response")
         {
             UserErrorPresenter.Show(errorPopup, "Login", "Login response was invalid. Please try again.");

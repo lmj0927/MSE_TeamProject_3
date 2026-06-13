@@ -1,3 +1,4 @@
+// Owned by MinJun Lee
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -7,25 +8,25 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// InRoom waiting lobby: character slots, leave room, poll join for roster / detect host-disbanded room (404).
+/// In-room lobby with player slots, leave, and room polling.
 /// </summary>
 public class InRoomLobbyController : MonoBehaviour
 {
-    [SerializeField] private Transform[] playerSlots;
-    [SerializeField] private GameObject playerCharacterPrefab;
-    [SerializeField] private TextMeshProUGUI roomTitleText;
-    [SerializeField] private Button leaveButton;
+    [SerializeField] private Transform[] playerSlots; // character spawn slots
+    [SerializeField] private GameObject playerCharacterPrefab; // lobby character prefab
+    [SerializeField] private TextMeshProUGUI roomTitleText; // room title label
+    [SerializeField] private Button leaveButton; // leave room button
     [SerializeField] private Button startButton;   // 게임 시작 → Photon 세션 진입
-    [SerializeField] private ErrorPopup errorPopup;
-    [SerializeField] private string joinRoomSceneName = "JoinRoom";
-    [SerializeField] private float pollIntervalSeconds = 2.5f;
+    [SerializeField] private ErrorPopup errorPopup; // error popup
+    [SerializeField] private string joinRoomSceneName = "JoinRoom"; // return scene name
+    [SerializeField] private float pollIntervalSeconds = 2.5f; // room poll interval
 
-    readonly List<GameObject> _spawnedCharacters = new();
-    string[] _lastParticipantIds = System.Array.Empty<string>();
-    string _lastRoomStatus;
-    CancellationTokenSource _lobbyCts;
-    bool _isLeavingScene;
-    bool _photonSessionLaunched;
+    readonly List<GameObject> _spawnedCharacters = new(); // spawned lobby characters
+    string[] _lastParticipantIds = System.Array.Empty<string>(); // last known participants
+    string _lastRoomStatus; // last known room status
+    CancellationTokenSource _lobbyCts; // lobby async token
+    bool _isLeavingScene; // scene transition flag
+    bool _photonSessionLaunched; // photon launch guard
 
     void Awake()
     {
@@ -109,6 +110,7 @@ public class InRoomLobbyController : MonoBehaviour
             return;
         }
 
+        // status becomes IN_PROGRESS → triggers Photon launch in ApplyRoomState
         ApplyRoomState(result.Value);
         Debug.Log($"[InRoomLobbyController] Game started roomId={roomId} status={result.Value?.status}");
     }
@@ -138,6 +140,7 @@ public class InRoomLobbyController : MonoBehaviour
             return;
         }
 
+        // 204 = host left and room deleted
         if (result.StatusCode == 204)
             ReturnToJoinRoom("You left the room. The room was closed because you were the host.");
         else
@@ -192,6 +195,7 @@ public class InRoomLobbyController : MonoBehaviour
         var isHost = IsLocalHost(room);
         var canStart = isHost && IsRoomOpen(room);
         startButton.interactable = canStart;
+        // only host sees start button
         startButton.gameObject.SetActive(isHost);
     }
 
@@ -266,6 +270,7 @@ public class InRoomLobbyController : MonoBehaviour
             if (_isLeavingScene || !NetworkManager.Instance.HasAccessToken)
                 continue;
 
+            // re-join polls latest room state from server
             var result = await NetworkManager.Instance.JoinRoomAsync(roomId, token);
             if (!result.Ok)
             {
@@ -279,6 +284,7 @@ public class InRoomLobbyController : MonoBehaviour
 
             var ids = result.Value.participantUserIds;
             var status = result.Value.status;
+            // refresh UI only when roster or status changed
             if (!ParticipantIdsEqual(_lastParticipantIds, ids) || status != _lastRoomStatus)
                 ApplyRoomState(result.Value);
         }

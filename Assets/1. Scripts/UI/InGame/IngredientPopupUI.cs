@@ -7,20 +7,22 @@ using UnityEngine.EventSystems;
 using DG.Tweening;
 using Fusion;
 
+/// <summary>
+/// Scrollable popup for selecting refrigerator ingredients.
+/// </summary>
 public class IngredientPopupUI : BasePopupUI
 {
-    [SerializeField] private List<FoodSO> ingredients;
+    [SerializeField] private List<FoodSO> ingredients; // available ingredients
 
     [Header("UI References")]
-    [SerializeField] private ScrollRect scrollRect;
-    [SerializeField] private IngredientButton buttonPrefab;
-    private List<IngredientButton> ingredientButtons = new List<IngredientButton>();
+    [SerializeField] private ScrollRect scrollRect; // ingredient scroll view
+    [SerializeField] private IngredientButton buttonPrefab; // button template
+    private List<IngredientButton> ingredientButtons = new List<IngredientButton>(); // spawned buttons
 
-    public Action<FoodSO> OnIngredientSelected;
+    public Action<FoodSO> OnIngredientSelected; // selection callback
 
-    private GameObject lastSelected;
-
-    private bool initialized = false;
+    private GameObject lastSelected; // last focused button
+    private bool initialized = false; // build done flag
 
     protected override void Awake()
     {
@@ -42,6 +44,7 @@ public class IngredientPopupUI : BasePopupUI
         {
             lastSelected = currentSelected;
 
+            // scroll list when focus moves to ingredient button
             if (lastSelected.GetComponent<IngredientButton>() != null)
             {
                 SnapTo(lastSelected.GetComponent<RectTransform>());
@@ -49,6 +52,7 @@ public class IngredientPopupUI : BasePopupUI
         }
         else if (currentSelected == null && lastSelected != null)
         {
+            // restore focus if selection is lost
             EventSystem.current.SetSelectedGameObject(lastSelected);
         }
     }
@@ -63,6 +67,7 @@ public class IngredientPopupUI : BasePopupUI
     }
 
     
+    // build ingredient buttons from recipe manager
     public void Initialize()
     {
         foreach (var btn in ingredientButtons)
@@ -80,6 +85,7 @@ public class IngredientPopupUI : BasePopupUI
             ingredientButtons.Add(newBtn);
         }
 
+        // wire up/down navigation in a vertical loop
         for (int i = 0; i < ingredientButtons.Count; i++)
         {
             Button btn = ingredientButtons[i].GetComponent<Button>();
@@ -115,6 +121,7 @@ public class IngredientPopupUI : BasePopupUI
         Hide();
     }
 
+    // scroll to top and select first button
     protected override void ResetTop()
     {
         if (scrollRect != null && scrollRect.content != null)
@@ -126,6 +133,7 @@ public class IngredientPopupUI : BasePopupUI
             scrollRect.StopMovement();
             scrollRect.verticalNormalizedPosition = 1f;
 
+            // second pass after layout settles
             DOVirtual.DelayedCall(0.01f, () =>
             {
                 if (scrollRect != null) scrollRect.verticalNormalizedPosition = 1f;
@@ -147,6 +155,7 @@ public class IngredientPopupUI : BasePopupUI
         }
     }
 
+    // tween scroll to selected item
     private void SnapTo(RectTransform target)
     {
         if (scrollRect == null || scrollRect.content == null) return;
@@ -156,6 +165,7 @@ public class IngredientPopupUI : BasePopupUI
 
         if (total > 1)
         {
+            // top = 1, bottom = 0 in vertical scroll
             float targetNormalizedPos = 1f - ((float)index / (total - 1));
 
             DOTween.Kill("PopupScroll");

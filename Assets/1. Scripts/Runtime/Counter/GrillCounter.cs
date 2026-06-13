@@ -3,9 +3,12 @@
 using Fusion;
 using UnityEngine;
 
+/// <summary>
+/// Grill counter with smoke and sound effects.
+/// </summary>
 public class GrillCounter : AFireCounter
 {
-    [SerializeField] private ParticleSystem smoke;
+    [SerializeField] private ParticleSystem smoke; // grill smoke effect
 
     protected override RecipeType CookRecipeType => RecipeType.Grill;
 
@@ -17,6 +20,7 @@ public class GrillCounter : AFireCounter
             {
                 if (CanAdd(player.HeldFood))
                 {
+                    // place food and start grill cook timer
                     player.HandoffTo(this, player.HeldFoodObject, Vector3.zero, () =>
                     {
                         var recipe = RecipeManager.Instance.Cook(GetFoodSOs(), RecipeType.Grill);
@@ -31,6 +35,7 @@ public class GrillCounter : AFireCounter
                 }
                 else if (isDone && !player.HasFood() && CanRemove())
                 {
+                    // pick up grilled food and reset counter
                     HandoffTo(player, GetLastFood(), Vector3.zero, () =>
                     {
                         SetState(NoneState);

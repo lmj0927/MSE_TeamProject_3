@@ -1,3 +1,4 @@
+// Owned by MinJun Lee
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -6,26 +7,24 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Single room row: displays <see cref="RoomResponse"/> and joins via <see cref="NetworkManager.JoinRoomAsync"/>.
-/// List refresh is handled by <see cref="JoinRoomUI"/>.
+/// Single room row with join button.
 /// </summary>
 public class RoomItemUI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI titleText;
-    [SerializeField] private TextMeshProUGUI stageText;
-    [SerializeField] private TextMeshProUGUI playerCountText;
-    [SerializeField] private TextMeshProUGUI currentPlayerBadgeText;
-    [SerializeField] private Button joinButton;
+    [SerializeField] private TextMeshProUGUI titleText; // room title
+    [SerializeField] private TextMeshProUGUI stageText; // stage label
+    [SerializeField] private TextMeshProUGUI playerCountText; // player count
+    [SerializeField] private TextMeshProUGUI currentPlayerBadgeText; // player badge
+    [SerializeField] private Button joinButton; // join button
 
-    RoomResponse _room;
-    IReadOnlyDictionary<string, int> _gameProgress;
-    StageSO[] _stages;
-    ErrorPopup _errorPopup;
-    bool _joinBusy;
+    RoomResponse _room; // bound room data
+    IReadOnlyDictionary<string, int> _gameProgress; // user progress
+    StageSO[] _stages; // stage definitions
+    ErrorPopup _errorPopup; // error popup
+    bool _joinBusy; // join in progress
 
     public RoomResponse Room => _room;
-
-    public event Action<RoomResponse> RoomJoined;
+    public event Action<RoomResponse> RoomJoined; // join success event
 
     void Awake()
     {
@@ -39,7 +38,7 @@ public class RoomItemUI : MonoBehaviour
             joinButton.onClick.RemoveListener(OnJoinClicked);
     }
 
-    /// <summary>Apply room data to title, player count, and badge.</summary>
+    // apply room data to UI
     public void Bind(RoomResponse room, IReadOnlyDictionary<string, int> gameProgress = null, StageSO[] stages = null,
         ErrorPopup errorPopup = null)
     {
@@ -94,6 +93,7 @@ public class RoomItemUI : MonoBehaviour
             return;
         }
 
+        // disable join if stage is locked for this user
         joinButton.interactable = StageProgressGate.IsStageUnlocked(_room.stage, _gameProgress, _stages);
     }
 
@@ -131,6 +131,7 @@ public class RoomItemUI : MonoBehaviour
 
         if (result.Ok)
         {
+            // refresh row with updated player count from server
             _room = result.Value;
             RefreshDisplay();
             Debug.Log(

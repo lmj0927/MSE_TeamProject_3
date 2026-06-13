@@ -1,16 +1,20 @@
 // Owned by MinJun Lee
 using UnityEngine;
 
+/// <summary>
+/// MonoBehaviour singleton base.
+/// </summary>
 public abstract class Singleton<T> : MonoBehaviour where T : Component
 {
-    [SerializeField] private bool isDontDestroyOnLoad = false;
-    private static T _instance;
-    private static bool quitting = false;
+    [SerializeField] private bool isDontDestroyOnLoad = false; // persist across scenes
+    private static T _instance; // singleton instance
+    private static bool quitting = false; // app quit flag
 
     public static T Instance
     {
         get
         {
+            // avoid creating instance during shutdown
             if (quitting)
             {
                 return null;
@@ -18,6 +22,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
 
             if (_instance == null)
             {
+                // find existing or create new GameObject
                 _instance = FindFirstObjectByType<T>();
                 if (_instance == null)
                 {
@@ -42,6 +47,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
         }
         else
         {
+            // destroy duplicate instance
             if (_instance != this)
             {
                 Destroy(gameObject);

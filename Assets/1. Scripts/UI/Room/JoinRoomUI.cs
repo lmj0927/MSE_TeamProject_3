@@ -1,3 +1,4 @@
+// Owned by MinJun Lee
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -5,21 +6,21 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Lobby hub: opens <see cref="CreateRoomUI"/>, refreshes open rooms, enters <see cref="RoomSession"/> + InRoom scene on create/join.
+/// Lobby hub for creating, refreshing, and joining rooms.
 /// </summary>
 public class JoinRoomUI : MonoBehaviour
 {
-    [SerializeField] private Button createButton;
-    [SerializeField] private Button refreshButton;
-    [SerializeField] private CreateRoomUI createRoomUI;
-    [SerializeField] private Transform roomListContent;
-    [SerializeField] private RoomItemUI roomItemPrefab;
-    [SerializeField] private StageSO[] stages;
-    [SerializeField] private ErrorPopup errorPopup;
-    [SerializeField] private string inRoomSceneName = "InRoom";
+    [SerializeField] private Button createButton; // open create room popup
+    [SerializeField] private Button refreshButton; // refresh room list
+    [SerializeField] private CreateRoomUI createRoomUI; // create room popup
+    [SerializeField] private Transform roomListContent; // room list parent
+    [SerializeField] private RoomItemUI roomItemPrefab; // room row prefab
+    [SerializeField] private StageSO[] stages; // stage definitions
+    [SerializeField] private ErrorPopup errorPopup; // error popup
+    [SerializeField] private string inRoomSceneName = "InRoom"; // in-room scene name
 
-    readonly List<RoomItemUI> _spawnedItems = new();
-    Dictionary<string, int> _cachedGameProgress = new();
+    readonly List<RoomItemUI> _spawnedItems = new(); // spawned room rows
+    Dictionary<string, int> _cachedGameProgress = new(); // cached user progress
 
     void Awake()
     {
@@ -31,6 +32,7 @@ public class JoinRoomUI : MonoBehaviour
         if (createRoomUI != null)
             createRoomUI.RoomCreated += OnRoomCreated;
 
+        // show error from previous scene if any
         UserErrorPresenter.ShowPending(errorPopup);
         RefreshRoomListFlow().Forget();
     }
@@ -95,6 +97,7 @@ public class JoinRoomUI : MonoBehaviour
             return;
         }
 
+        // save room session and load in-room lobby scene
         RoomSession.Enter(room, localUserId);
         Debug.Log($"[JoinRoomUI] Entering InRoom roomId={room.roomId} stage={room.stage}");
         SceneManager.LoadScene(inRoomSceneName);
@@ -110,6 +113,7 @@ public class JoinRoomUI : MonoBehaviour
 
         SetBusy(true);
 
+        // fetch rooms and user progress in parallel
         var roomsTask = NetworkManager.Instance.GetOpenRoomsAsync(destroyCancellationToken);
         var meTask = NetworkManager.Instance.GetMeAsync(destroyCancellationToken);
         var (roomsResult, meResult) = await UniTask.WhenAll(roomsTask, meTask);

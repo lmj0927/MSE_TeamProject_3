@@ -1,3 +1,4 @@
+// Owned by MinJun Lee
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,14 +8,13 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 /// <summary>
-/// MSE Server REST API 클라이언트 (<c>docs/API.md</c>). JWT는 로그인 후 메모리에 보관합니다.
-/// 메인 스레드에서 <see cref="UniTask"/>를 호출하세요.
+/// MSE Server REST API client. JWT stored in memory after login.
 /// </summary>
 public class NetworkManager : Singleton<NetworkManager>
 {
-    [SerializeField] private bool useLocal = true;
-    [SerializeField] private string baseUrl = "http://localhost:8080";
-    [SerializeField] private string awsUrl = "https://mse-server.onrender.com";
+    [SerializeField] private bool useLocal = true; // use local server flag
+    [SerializeField] private string baseUrl = "http://localhost:8080"; // local server URL
+    [SerializeField] private string awsUrl = "https://mse-server.onrender.com"; // remote server URL
 
     const string DefaultLocalUrl = "http://localhost:8080";
     const string DefaultAwsUrl = "https://mse-server.onrender.com";
@@ -27,14 +27,11 @@ public class NetworkManager : Singleton<NetworkManager>
         set => baseUrl = string.IsNullOrWhiteSpace(value) ? DefaultLocalUrl : value.TrimEnd('/');
     }
 
-    public string AccessToken { get; private set; }
-
-    public string LocalUserId { get; private set; }
-
+    public string AccessToken { get; private set; } // JWT access token
+    public string LocalUserId { get; private set; } // logged in user id
     public bool HasAccessToken => !string.IsNullOrEmpty(AccessToken);
 
     public void SetAccessToken(string token) => AccessToken = token;
-
     public void SetLocalUserId(string userId) => LocalUserId = userId ?? string.Empty;
 
     public void ClearAccessToken()
@@ -45,6 +42,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
     string Root => ResolveBaseUrl();
 
+    // pick local or aws base URL
     string ResolveBaseUrl()
     {
         if (useLocal)
@@ -62,11 +60,7 @@ public class NetworkManager : Singleton<NetworkManager>
         Debug.Log($"[NetworkManager] useLocal={useLocal} BaseUrl={BaseUrl}");
     }
 
-    /// <summary>
-    /// 요청이 끝날 때까지만 대기합니다.
-    /// UniTask의 <c>SendWebRequest().ToUniTask()</c>는 HTTP 4xx/5xx에서 예외를 던져
-    /// <see cref="ApiResult"/>로 실패를 전달하는 현재 설계와 맞지 않습니다.
-    /// </summary>
+    // wait until web request completes without throwing on HTTP errors
     static async UniTask SendWebRequestAsync(UnityWebRequest request, CancellationToken cancellationToken)
     {
         var op = request.SendWebRequest();
@@ -76,6 +70,7 @@ public class NetworkManager : Singleton<NetworkManager>
         }
         catch (OperationCanceledException)
         {
+            // abort in-flight request on cancel
             if (!op.isDone)
                 request.Abort();
             throw;
@@ -128,7 +123,7 @@ public class NetworkManager : Singleton<NetworkManager>
                || req.result == UnityWebRequest.Result.DataProcessingError;
     }
 
-    /// <summary>POST /api/auth/register — 201이면 성공.</summary>
+    // POST /api/auth/register
     public async UniTask<ApiResult<bool>> RegisterAsync(string userId, string password,
         CancellationToken cancellationToken = default)
     {
@@ -150,7 +145,7 @@ public class NetworkManager : Singleton<NetworkManager>
         return FailureVoid(req, body);
     }
 
-    /// <summary>POST /api/auth/login — 성공 시 <see cref="SetAccessToken"/>은 호출하지 않습니다. 호출부에서 저장하세요.</summary>
+    // POST /api/auth/login — caller stores token
     public async UniTask<ApiResult<string>> LoginAsync(string userId, string password,
         CancellationToken cancellationToken = default)
     {
@@ -169,6 +164,7 @@ public class NetworkManager : Singleton<NetworkManager>
         if (code == 200)
         {
             var login = JsonUtility.FromJson<LoginResponseBody>(body);
+            // reject response without JWT token
             if (login == null || string.IsNullOrEmpty(login.token))
                 return ApiResult<string>.Failure(code, null, "Missing token in response", body);
             return ApiResult<string>.Success(login.token, code, body);
@@ -177,7 +173,7 @@ public class NetworkManager : Singleton<NetworkManager>
         return FailureFromRequest<string>(req, body);
     }
 
-    /// <summary>로그인 성공 후 토큰을 저장합니다.</summary>
+    // login and save token locally
     public async UniTask<ApiResult<string>> LoginAndStoreTokenAsync(string userId, string password,
         CancellationToken cancellationToken = default)
     {
@@ -191,7 +187,7 @@ public class NetworkManager : Singleton<NetworkManager>
         return r;
     }
 
-    /// <summary>GET /api/users/me</summary>
+    // GET /api/users/me
     public async UniTask<ApiResult<UserResponse>> GetMeAsync(CancellationToken cancellationToken = default)
     {
         using var req = UnityWebRequest.Get(Root + "/api/users/me");
@@ -213,7 +209,7 @@ public class NetworkManager : Singleton<NetworkManager>
         return FailureFromRequest<UserResponse>(req, body);
     }
 
-    /// <summary>PATCH /api/users/me</summary>
+    // PATCH /api/users/me
     public async UniTask<ApiResult<UserResponse>> PatchMeAsync(UserPatchRequest patch,
         CancellationToken cancellationToken = default)
     {
@@ -241,10 +237,7 @@ public class NetworkManager : Singleton<NetworkManager>
         return FailureFromRequest<UserResponse>(req, body);
     }
 
-    /// <summary>
-    /// 스테이지 최고 점수를 <c>gameProgress</c>에 반영합니다.
-    /// PATCH가 전체 맵을 덮어쓰므로 GET 후 병합하며, 기존 기록보다 높을 때만 PATCH 합니다.
-    /// </summary>
+    // update stage best score via GET then PATCH merge
     public async UniTask<ApiResult<UserResponse>> UpdateStageBestScoreAsync(int stageNumber, int score,
         CancellationToken cancellationToken = default)
     {
@@ -261,14 +254,16 @@ public class NetworkManager : Singleton<NetworkManager>
 
         var progress = me.Value?.gameProgress ?? new Dictionary<string, int>();
         var key = stageNumber.ToString();
+        // skip PATCH if new score is not higher
         if (progress.TryGetValue(key, out var existing) && score <= existing)
             return me;
 
+        // merge and PATCH full progress map
         var merged = new Dictionary<string, int>(progress) { [key] = score };
         return await PatchMeAsync(new UserPatchRequest { GameProgress = merged }, cancellationToken);
     }
 
-    /// <summary>POST /api/rooms</summary>
+    // POST /api/rooms
     public async UniTask<ApiResult<RoomResponse>> CreateRoomAsync(string title, int stage, int maxPlayers,
         CancellationToken cancellationToken = default)
     {
@@ -299,7 +294,7 @@ public class NetworkManager : Singleton<NetworkManager>
         return FailureFromRequest<RoomResponse>(req, body);
     }
 
-    /// <summary>GET /api/rooms — OPEN 방만, 생성일 내림차순.</summary>
+    // GET /api/rooms — OPEN rooms only
     public async UniTask<ApiResult<RoomResponse[]>> GetOpenRoomsAsync(CancellationToken cancellationToken = default)
     {
         using var req = UnityWebRequest.Get(Root + "/api/rooms");
@@ -321,7 +316,7 @@ public class NetworkManager : Singleton<NetworkManager>
         return FailureFromRequest<RoomResponse[]>(req, body);
     }
 
-    /// <summary>POST /api/rooms/{roomId}/join</summary>
+    // POST /api/rooms/{roomId}/join
     public async UniTask<ApiResult<RoomResponse>> JoinRoomAsync(string roomId,
         CancellationToken cancellationToken = default)
     {
@@ -350,7 +345,7 @@ public class NetworkManager : Singleton<NetworkManager>
         return FailureFromRequest<RoomResponse>(req, body);
     }
 
-    /// <summary>POST /api/rooms/{roomId}/start — Host only. OPEN → IN_PROGRESS.</summary>
+    // POST /api/rooms/{roomId}/start — host only
     public async UniTask<ApiResult<RoomResponse>> StartRoomAsync(string roomId,
         CancellationToken cancellationToken = default)
     {
@@ -379,9 +374,7 @@ public class NetworkManager : Singleton<NetworkManager>
         return FailureFromRequest<RoomResponse>(req, body);
     }
 
-    /// <summary>
-    /// POST /api/rooms/{roomId}/leave — Host: 204 (room deleted). Guest: 200 + updated <see cref="RoomResponse"/>.
-    /// </summary>
+    // POST /api/rooms/{roomId}/leave
     public async UniTask<ApiResult<RoomResponse>> LeaveRoomAsync(string roomId,
         CancellationToken cancellationToken = default)
     {
@@ -404,6 +397,7 @@ public class NetworkManager : Singleton<NetworkManager>
         if (code == 204)
             return ApiResult<RoomResponse>.Success(null, code, body);
 
+        // guest leave returns updated room
         if (code == 200)
         {
             var room = JsonUtility.FromJson<RoomResponse>(body);
@@ -413,7 +407,7 @@ public class NetworkManager : Singleton<NetworkManager>
         return FailureFromRequest<RoomResponse>(req, body);
     }
 
-    /// <summary>GET /actuator/health — 인증 없음.</summary>
+    // GET /actuator/health — no auth
     public async UniTask<ApiResult<string>> GetHealthAsync(CancellationToken cancellationToken = default)
     {
         using var req = UnityWebRequest.Get(Root + "/actuator/health");

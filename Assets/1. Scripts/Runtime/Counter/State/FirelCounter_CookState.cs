@@ -1,18 +1,21 @@
 // Owned by MinJun Lee
 using UnityEngine;
 
+/// <summary>
+/// Active cooking timer state.
+/// </summary>
 public class FireCounter_CookState : BaseState<AFireCounter>
 {
+    private float elapsedTime; // time since cook started
+    private bool finished; // cook complete flag
 
-    private float elapsedTime;
-    private bool finished;
     public FireCounter_CookState(AFireCounter controller) : base(controller)
     {
-
     }
 
     public override void Enter()
     {
+        // show cook progress UI on all clients
         // controller.ShowCookProgress();
         controller.showCookProgress = true; // call callback
         finished = false;
@@ -20,9 +23,11 @@ public class FireCounter_CookState : BaseState<AFireCounter>
 
     public override void UpdateState()
     {
-        if(finished) return;
+        if (finished) return;
 
         elapsedTime += Time.deltaTime;
+
+        // update cook progress bar ratio
         if (controller.CookTime <= 0.001f)
         {
             // controller.SetCookProgress(0);
@@ -30,10 +35,11 @@ public class FireCounter_CookState : BaseState<AFireCounter>
         // } else controller.SetCookProgress(elapsedTime / controller.CookTime);
         } else controller.cookProgress = elapsedTime / controller.CookTime;
 
+        // cook done → apply recipe result and start burn timer
         if (elapsedTime >= controller.CookTime)
         {
             finished = true;
-            if(controller.HasStateAuthority)
+            if (controller.HasStateAuthority)
             {
                 controller.SetDone(true);
                 controller.ApplyCookResult();
@@ -46,5 +52,4 @@ public class FireCounter_CookState : BaseState<AFireCounter>
     {
         elapsedTime = 0f;
     }
-
 }

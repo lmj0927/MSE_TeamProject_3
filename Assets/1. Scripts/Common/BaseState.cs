@@ -1,9 +1,12 @@
 // Owned by MinJun Lee
 using UnityEngine;
 
+/// <summary>
+/// State pattern base class.
+/// </summary>
 public abstract class BaseState<T> : IState
 {
-    protected T controller;
+    protected T controller; // state owner
 
     public BaseState(T controller)
     {

@@ -1,3 +1,4 @@
+// Owned by MinJun Lee
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -7,8 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Room creation popup: <see cref="NetworkManager.CreateRoomAsync"/> with title, stage (dropdown), and max players (2–4).
-/// Unlocked stages only (previous stage cleared with 1-star score).
+/// Room creation popup with title, stage, and max players.
 /// </summary>
 public class CreateRoomUI : BasePopupUI
 {
@@ -19,23 +19,22 @@ public class CreateRoomUI : BasePopupUI
 
     static readonly Regex StageNumberRegex = new(@"\d+", RegexOptions.Compiled);
 
-    [SerializeField] private TMP_InputField titleInputField;
-    [SerializeField] private TMP_Dropdown stageDropdown;
-    [SerializeField] private TMP_InputField maxPlayersInputField;
-    [SerializeField] private Button createRoomButton;
-    [SerializeField] private Button closeButton;
-    [SerializeField] private StageSO[] stages;
-    [SerializeField] private ErrorPopup errorPopup;
-    [SerializeField] private string defaultMaxPlayersText = "4";
+    [SerializeField] private TMP_InputField titleInputField; // room title input
+    [SerializeField] private TMP_Dropdown stageDropdown; // stage selector
+    [SerializeField] private TMP_InputField maxPlayersInputField; // max players input
+    [SerializeField] private Button createRoomButton; // create button
+    [SerializeField] private Button closeButton; // close button
+    [SerializeField] private StageSO[] stages; // stage definitions
+    [SerializeField] private ErrorPopup errorPopup; // error popup
+    [SerializeField] private string defaultMaxPlayersText = "4"; // default max players
 
-    readonly List<int> _allStageNumbers = new();
-    readonly List<string> _allStageLabels = new();
-    readonly List<int> _unlockedStageNumbers = new();
-    Dictionary<string, int> _gameProgress = new();
+    readonly List<int> _allStageNumbers = new(); // all stage numbers
+    readonly List<string> _allStageLabels = new(); // all stage labels
+    readonly List<int> _unlockedStageNumbers = new(); // unlocked stage numbers
+    Dictionary<string, int> _gameProgress = new(); // user game progress
 
-    public event Action<RoomResponse> RoomCreated;
-
-    public RoomResponse LastCreatedRoom { get; private set; }
+    public event Action<RoomResponse> RoomCreated; // room created event
+    public RoomResponse LastCreatedRoom { get; private set; } // last created room
 
     protected override void Awake()
     {
@@ -56,11 +55,13 @@ public class CreateRoomUI : BasePopupUI
             closeButton.onClick.RemoveListener(Hide);
     }
 
+    // collect stage numbers and labels
     void BuildStageCatalog()
     {
         _allStageNumbers.Clear();
         _allStageLabels.Clear();
 
+        // prefer StageSO array over dropdown text
         if (stages != null && stages.Length > 0)
         {
             for (var i = 0; i < stages.Length; i++)
@@ -134,6 +135,7 @@ public class CreateRoomUI : BasePopupUI
         return result.Value?.gameProgress ?? new Dictionary<string, int>();
     }
 
+    // filter dropdown to unlocked stages only
     void ApplyUnlockedStageOptions()
     {
         if (stageDropdown == null)
@@ -149,6 +151,7 @@ public class CreateRoomUI : BasePopupUI
             unlockedLabels.Add(GetLabelForStage(stageNumber));
         }
 
+        // always allow at least stage 1
         if (unlockedLabels.Count == 0)
         {
             _unlockedStageNumbers.Add(MinStage);
@@ -272,6 +275,7 @@ public class CreateRoomUI : BasePopupUI
             return false;
         }
 
+        // double-check unlock in case progress changed
         if (!StageProgressGate.IsStageUnlocked(stage, _gameProgress, stages))
         {
             errorMessage = $"Clear Stage {stage - 1} with at least 1 star before selecting Stage {stage}.";
@@ -281,7 +285,7 @@ public class CreateRoomUI : BasePopupUI
         return true;
     }
 
-    /// <summary>Extracts the last number from option labels such as "Level 1" or "Level 2".</summary>
+    // extract stage number from dropdown label
     static bool TryParseStageNumber(string optionText, out int stage)
     {
         stage = 0;
@@ -292,6 +296,7 @@ public class CreateRoomUI : BasePopupUI
         if (matches.Count == 0)
             return false;
 
+        // use last number in label e.g. "Level 2"
         return int.TryParse(matches[matches.Count - 1].Value, out stage);
     }
 

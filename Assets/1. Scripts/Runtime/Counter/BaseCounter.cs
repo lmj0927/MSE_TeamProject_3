@@ -1,13 +1,13 @@
 // Owned by MinJun Lee
 using UnityEngine;
 
+/// <summary>
+/// General counter for placing and picking up food.
+/// </summary>
 public class BaseCounter : ACounter
 {
-    /// <summary>
-    /// Position offset radius when dropping food down on this.
-    /// </summary>
     [Header("Scatter Settings")]
-    [SerializeField] private float scatterRadius = 0.2f;
+    [SerializeField] private float scatterRadius = 0.2f; // random drop spread
 
     public override void Interact(PlayerController player)
     {
@@ -17,6 +17,7 @@ public class BaseCounter : ACounter
             {
                 if (player.HasFood())
                 {
+                    // place held food with random horizontal offset
                     Debug.Log("Player to counter");
                     float randomX = Random.Range(-scatterRadius, scatterRadius);
                     float randomZ = Random.Range(-scatterRadius, scatterRadius);
@@ -26,6 +27,7 @@ public class BaseCounter : ACounter
                 }
                 else if (CanRemove()) // outer `else` already guarantees !player.HasFood()
                 {
+                    // pick up last food from counter
                     HandoffTo(player, GetLastFood(), Vector3.zero);
                 }
             },

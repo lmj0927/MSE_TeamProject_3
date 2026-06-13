@@ -3,15 +3,19 @@ using System;
 using UnityEngine;
 using DG.Tweening;
 using Fusion;
+
+/// <summary>
+/// Refrigerator counter with ingredient popup and door animation.
+/// </summary>
 public class RefrigeratorCounter : ACounter
 {
-    [SerializeField] private IngredientPopupUI ingredientPopupUI;
-    private PlayerController interactPlayer;
+    [SerializeField] private IngredientPopupUI ingredientPopupUI; // ingredient selection UI
+    private PlayerController interactPlayer; // player using fridge
 
-    [SerializeField] private GameObject[] hinges;
-    [SerializeField] private float openAngle = 40f;
-    [SerializeField] private float doorAnimDuration = 0.5f;
-    private float interactionCooltime = 0.2f;
+    [SerializeField] private GameObject[] hinges; // door hinge objects
+    [SerializeField] private float openAngle = 40f; // door open angle
+    [SerializeField] private float doorAnimDuration = 0.5f; // door tween duration
+    private float interactionCooltime = 0.2f; // reuse cooldown
 
 
     [Networked, OnChangedRender(nameof(OnChangedIsOpen))] private bool isOpen { get; set; }
@@ -27,6 +31,7 @@ public class RefrigeratorCounter : ACounter
     {
         if (interactionCooltime > 0) interactionCooltime -= Time.deltaTime;
 
+        // cancel selection with Escape
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             UnuseReset();
@@ -42,6 +47,7 @@ public class RefrigeratorCounter : ACounter
             {
                 if (!player.HasFood())
                 {
+                    // open popup and freeze player for ingredient pick
                     AuthorityHandler.Barrier();
                     interactPlayer = player;
                     interactPlayer.FreezeMovement(true);
@@ -50,6 +56,7 @@ public class RefrigeratorCounter : ACounter
                 }
                 else if(interactionCooltime <= 0 && player.HasFood())
                 {
+                    // store raw ingredient back into fridge
                     var tmp =  player.HeldFood.Data;
                     if ( tmp.FoodName == "Trash" || tmp.Type != FoodSO.FoodType.Raw) return;
 
@@ -57,6 +64,7 @@ public class RefrigeratorCounter : ACounter
 
                     player.Discard(player.HeldFoodObject, () =>
                     {
+                        // close door shortly after discard animation
                         DOVirtual.DelayedCall(doorAnimDuration * 0.7f, () =>
                         {
                             isOpen = false;
@@ -71,6 +79,7 @@ public class RefrigeratorCounter : ACounter
         );
     }
 
+    // spawn selected ingredient and hand to player
     private void OnIngredientSelected(FoodSO foodSO)
     {
         if (interactPlayer == null)
@@ -91,6 +100,7 @@ public class RefrigeratorCounter : ACounter
         });
     }
 
+    // close UI, unfreeze player, close door
     private void UnuseReset()
     {
         AuthorityHandler.Unbarrier();
@@ -102,6 +112,8 @@ public class RefrigeratorCounter : ACounter
         isOpen = false;
         interactionCooltime = 0.2f;
     }
+
+    // tween door hinges open or closed
     private void SetDoors(bool isOpen)
     {
         hinges[0].transform.DOKill();
@@ -109,6 +121,7 @@ public class RefrigeratorCounter : ACounter
 
         float targetAngle = isOpen ? openAngle : 0f;
 
+        // left and right hinges rotate opposite directions
         hinges[0].transform.DOLocalRotate(new Vector3(0, targetAngle, 0), doorAnimDuration)
             .SetEase(Ease.OutQuad);
 

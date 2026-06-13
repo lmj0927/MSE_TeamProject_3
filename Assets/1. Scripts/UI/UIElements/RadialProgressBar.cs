@@ -3,11 +3,14 @@ using Fusion;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Radial fill progress bar using Image fillAmount.
+/// </summary>
 public class RadialProgressBar : MonoBehaviour
 {
     [Range(0, 1)]
-    [SerializeField] private float progressValue;
-    [SerializeField] private Image fillImage;
+    [SerializeField] private float progressValue; // current progress 0-1
+    [SerializeField] private Image fillImage; // radial fill image
 
     public void SetProgress(float value)
     {
@@ -28,6 +31,7 @@ public class RadialProgressBar : MonoBehaviour
             return;
         }
 
+        // radial Image type uses fillAmount 0-1
         fillImage.fillAmount = progressValue;
     }
 }

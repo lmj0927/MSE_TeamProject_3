@@ -2,6 +2,9 @@
 using Fusion;
 using UnityEngine;
 
+/// <summary>
+/// Counter that discards held food.
+/// </summary>
 public class TrashCounter : ACounter
 {
     public override void Interact(PlayerController player)
@@ -9,6 +12,7 @@ public class TrashCounter : ACounter
         if(!player.HasStateAuthority) return;
         if (!player.HasFood()) return;
 
+        // discard held food then play trash sound on all clients
         player.Discard(player.HeldFoodObject, () => RPC_PlayTrash());
     }
 

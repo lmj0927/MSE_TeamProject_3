@@ -1,15 +1,19 @@
+// Owned by MinJun Lee
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Sign up popup UI.
+/// </summary>
 public class SignUpUI : BasePopupUI
 {
-    [SerializeField] private TMP_InputField idInputField;
-    [SerializeField] private TMP_InputField passwordInputField;
-    [SerializeField] private Button signUpButton;
-    [SerializeField] private Button closeButton;
-    [SerializeField] private ErrorPopup errorPopup;
+    [SerializeField] private TMP_InputField idInputField; // user id input
+    [SerializeField] private TMP_InputField passwordInputField; // password input
+    [SerializeField] private Button signUpButton; // sign up button
+    [SerializeField] private Button closeButton; // close button
+    [SerializeField] private ErrorPopup errorPopup; // error popup
 
     protected override void Awake()
     {
@@ -63,6 +67,7 @@ public class SignUpUI : BasePopupUI
             return;
         }
 
+        // client-side length check before API call
         if (userId.Length < 3)
         {
             UserErrorPresenter.Show(errorPopup, "Sign up", "User ID must be 3–64 characters.");

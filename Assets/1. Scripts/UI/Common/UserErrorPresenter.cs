@@ -1,11 +1,12 @@
+// Owned by MinJun Lee
 using UnityEngine;
 
 /// <summary>
-/// Maps API/client failures to short English user messages and shows <see cref="ErrorPopup"/>.
+/// Maps API errors to user-friendly messages and shows ErrorPopup.
 /// </summary>
 public static class UserErrorPresenter
 {
-    public static string PendingMessage { get; private set; }
+    public static string PendingMessage { get; private set; } // message to show on next scene
 
     public static void SetPending(string message) => PendingMessage = message;
 
@@ -50,6 +51,7 @@ public static class UserErrorPresenter
 
     static string FormatApiFailure(string context, int statusCode, string errorCode, string serverMessage)
     {
+        // prefer mapped error code message
         var detail = MapErrorCode(errorCode, serverMessage);
         if (!string.IsNullOrEmpty(detail))
             return Format(context, detail);
@@ -57,12 +59,14 @@ public static class UserErrorPresenter
         if (statusCode == 0 || errorCode == "NETWORK")
             return Format(context, "Cannot reach the server. Check your connection and try again.");
 
+        // fallback to raw server message
         if (!string.IsNullOrWhiteSpace(serverMessage))
             return Format(context, serverMessage);
 
         return Format(context, "Something went wrong. Please try again.");
     }
 
+    // map server error code to user message
     static string MapErrorCode(string errorCode, string serverMessage)
     {
         if (string.IsNullOrEmpty(errorCode))
@@ -95,6 +99,7 @@ public static class UserErrorPresenter
         }
     }
 
+    // parse validation error text into friendly message
     static string MapValidationMessage(string serverMessage)
     {
         if (string.IsNullOrWhiteSpace(serverMessage))

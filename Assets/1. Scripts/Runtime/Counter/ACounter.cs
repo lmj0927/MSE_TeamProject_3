@@ -5,9 +5,12 @@ using UnityEngine;
 using System.Linq;
 using Fusion;
 
+/// <summary>
+/// Base counter that holds food on a network.
+/// </summary>
 public abstract class ACounter : FoodHolder, IInteractable
 {
-    [SerializeField] protected Transform foodPoint;
+    [SerializeField] protected Transform foodPoint; // food placement point
 
     public Transform FoodPoint => foodPoint;
 
@@ -19,7 +22,7 @@ public abstract class ACounter : FoodHolder, IInteractable
 
 
 
-    [SerializeField] private Transform outlineRoot;
+    [SerializeField] private Transform outlineRoot; // outline highlight root
 
     public Transform OutlineRoot => outlineRoot;
 
@@ -35,15 +38,18 @@ public abstract class ACounter : FoodHolder, IInteractable
 
     protected List<FoodSO> GetFoodSOs()
     {
+        // resolve each networked food id to FoodSO
         return foods.Select(f => Runner.FindObject(f).GetComponent<Food>().Data).ToList();
     }
 
     protected NetworkObject GetLastFood()
     {
         if(foods.Count == 0) return null;
+        // last item in linked list is top of stack
         return Runner.FindObject(foods.Last());
     }
 
+    // side and beverage are not accepted
     protected virtual bool AcceptsFood(FoodSO foodData)
     {
         if (foodData.Type == FoodSO.FoodType.Side || foodData.Type == FoodSO.FoodType.Beverage) return false;
@@ -142,6 +148,7 @@ public abstract class ACounter : FoodHolder, IInteractable
     /// <param name="onDone">Callback after removing all foods it has.</param>
     public override void ClearAll(Action onDone = null)
     {
+        // copy list before modifying during discard
         var snapshot = foods.Select(fid => Runner.FindObject(fid)).Where(f => f != null).ToList();
         if (snapshot.Count == 0)
         {
@@ -149,6 +156,7 @@ public abstract class ACounter : FoodHolder, IInteractable
             return;
         }
 
+        // invoke callback after all discards finish
         int remaining = snapshot.Count;
         foreach (var food in snapshot)
         {
