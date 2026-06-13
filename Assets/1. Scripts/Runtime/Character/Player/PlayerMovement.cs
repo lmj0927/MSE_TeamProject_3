@@ -194,6 +194,7 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
+    // callbacks when the networked fields are changed.
     void IsMovingChanged()
     {
         animator.SetBool(isMovingParam, isMoving);

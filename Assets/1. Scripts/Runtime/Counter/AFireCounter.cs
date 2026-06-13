@@ -23,10 +23,12 @@ public abstract class AFireCounter : ACounter
     public FireCounter_BurnState BurnState { get; private set; }
     public enum FireState : byte { None, Cook, Burn }
 
+    // sync currest state (nont, cook, burn)
     [Networked, OnChangedRender(nameof(OnChangedCurrentState))] public FireState currentState { get; set; }
 
     private StateMachine stateMachine;
 
+    // Sync fields of cook progress
     [Networked, OnChangedRender(nameof(OnChangedShowCookProgress))] public bool showCookProgress { get; set; }
     [Networked, OnChangedRender(nameof(SetCookProgress))] public float cookProgress { get; set; }
     [Networked, OnChangedRender(nameof(SetBurnProgress))] public float burnProgress { get; set; }

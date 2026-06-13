@@ -7,16 +7,32 @@ using UnityEngine;
 // Controls player's food holding mechanics and stage-based movement freezing
 public class PlayerController : FoodHolder
 {
+    /// <summary>
+    /// Data for the food object which player is holding.
+    /// </summary>
     [Header("Food")]
     [Networked] public NetworkObject HeldFoodObject { get; set; }
+    /// <summary>
+    /// Transform to which the food is stick.
+    /// </summary>
     [SerializeField] private Transform holdAnchor;
 
     public Transform HoldAnchor => holdAnchor;
+    
+    /// <summary>
+    /// It just gives a `Food` data of `HeldFoodObject`.
+    /// </summary>
     public Food HeldFood => HeldFoodObject != null ? HeldFoodObject.GetComponent<Food>() : null;
 
 
     public bool HasFood() => HeldFoodObject != null;
 
+    /// <summary>
+    /// Called on spawned.
+    /// Player, at first, is freeze and the `GameManager` manages the unfreezing 
+    /// according to the game status.
+    /// Thus the binding is needed.
+    /// </summary>
     public override void Spawned()
     {
         if (holdAnchor == null)
@@ -28,8 +44,10 @@ public class PlayerController : FoodHolder
             if (GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
             else GameManagerActionsSetup();
         }
-
     }
+    /// <summary>
+    /// Register an player freezing functions according to the status of the game.
+    /// </summary>
     private void GameManagerActionsSetup()
     {
         FreezeMovement(true);
@@ -37,6 +55,9 @@ public class PlayerController : FoodHolder
         GameManager.Instance.OnResult += RPC_HandleStageEnd;
     }
 
+    /// <summary>
+    /// Unregister the freezing functions.
+    /// </summary>
     private void OnDestroy()
     {
         if (GameManager.Instance == null) return;
@@ -45,14 +66,21 @@ public class PlayerController : FoodHolder
         GameManager.Instance.OnResult -= RPC_HandleStageEnd;
     }
 
-    // Lock or unlock player movement input
+    /// <summary>
+    /// Lock or unlock player movement input
+    /// </summary>
+    /// <param name="apply">freeze or not</param>
     public void FreezeMovement(bool apply)
     {
         GetComponent<PlayerMovement>().SetInteracting(apply);
     }
 
 
-    // Sync held food's parent and position across all clients using RPC
+    /// <summary>
+    /// Sync held food's parent and position across all clients using RPC
+    /// </summary>
+    /// <param name="food">Set this `food` as held food visually.</param>
+    /// <param name="pos">Offset from the `holdAnchor`</param>
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_SetParent(NetworkObject food, Vector3 pos)
     {
@@ -69,7 +97,11 @@ public class PlayerController : FoodHolder
         fnt.Teleport(targetWorldPos, targetWorldRot);
     }
 
-    // Triggered when the player successfully picks up food
+    /// <summary>
+    /// Triggered when the player successfully picks up food
+    /// </summary>
+    /// <param name="food">What `food` the player is going to hold.</param>
+    /// <param name="pos">Offset from the `holdAnchor`</param>
     protected override void OnAdded(NetworkObject food, Vector3 pos)
     {
         var foodName = food != null ? food.name : "null";
@@ -95,7 +127,10 @@ public class PlayerController : FoodHolder
         Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] OnAdded done. HeldFoodObject={heldName} food.IsHeld={HeldFood.IsHeld}");
     }
 
-    // Triggered when the player drops or serves the food
+    /// <summary>
+    /// Triggered when the player drops or serves the food
+    /// </summary>
+    /// <param name="food">Remove this `food`</param>
     protected override void OnRemoved(NetworkObject food)
     {
         var foodName = food != null ? food.name : "null";
@@ -105,6 +140,11 @@ public class PlayerController : FoodHolder
         Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] OnRemoved done. HeldFoodObject=null");
     }
 
+    /// <summary>
+    /// Check whether the `food` can be held.
+    /// </summary>
+    /// <param name="food">Check this can be held.</param>
+    /// <returns>can add or not</returns>
     public override bool CanAdd(Food food)
     {
         var ok = food != null && HeldFoodObject == null;
@@ -114,6 +154,10 @@ public class PlayerController : FoodHolder
         return ok;
     }
 
+    /// <summary>
+    /// Check whether the food can be removed from here.
+    /// </summary>
+    /// <returns>can remove or not</returns>
     public override bool CanRemove()
     {
         var ok = HeldFoodObject != null;
@@ -122,6 +166,10 @@ public class PlayerController : FoodHolder
         return ok;
     }
 
+    /// <summary>
+    /// Clear the foods.
+    /// </summary>
+    /// <param name="onDone">Callback after the food remove is done</param>
     public override void ClearAll(Action onDone = null)
     {
         if (HeldFoodObject == null)
@@ -132,7 +180,10 @@ public class PlayerController : FoodHolder
         Discard(HeldFoodObject, onDone);
     }
 
-    // Detach and return the held food object
+    /// <summary>
+    /// Detach and return the held food object
+    /// </summary>
+    /// <returns>HeldFoodObject</returns>
     public NetworkObject ReleaseFood()
     {
         NetworkObject released = HeldFoodObject;
@@ -140,7 +191,9 @@ public class PlayerController : FoodHolder
         return released;
     }
 
-    // Unfreeze player movement when the stage begins
+    /// <summary>
+    /// Unfreeze player movement when the stage begins
+    /// </summary>
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_HandleStageStart()
     {
@@ -149,7 +202,9 @@ public class PlayerController : FoodHolder
         FreezeMovement(false);
     }
 
-    // Freeze player movement when the stage ends (Result screen)
+    /// <summary>
+    /// Freeze player movement when the stage ends (Result screen)
+    /// </summary>
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_HandleStageEnd()
     {

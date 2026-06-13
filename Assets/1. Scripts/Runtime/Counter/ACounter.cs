@@ -31,17 +31,29 @@ public abstract class ACounter : FoodHolder, IInteractable
     // }
     public virtual void Interact(PlayerController player) { }
 
+    /// <summary>
+    /// It checks whether is has food or not.
+    /// </summary>
+    /// <returns>has food or not</returns>
     protected bool HasFood()
     {
         return foods.Count > 0;
     }
 
+    /// <summary>
+    /// Get the list of the food SO from the foods networkid list.
+    /// </summary>
+    /// <returns>list of the food SO it held.</returns>
     protected List<FoodSO> GetFoodSOs()
     {
         // resolve each networked food id to FoodSO
         return foods.Select(f => Runner.FindObject(f).GetComponent<Food>().Data).ToList();
     }
 
+    /// <summary>
+    /// Pickup the last food.
+    /// </summary>
+    /// <returns>network object of the last food</returns>
     protected NetworkObject GetLastFood()
     {
         if(foods.Count == 0) return null;
@@ -49,7 +61,11 @@ public abstract class ACounter : FoodHolder, IInteractable
         return Runner.FindObject(foods.Last());
     }
 
-    // side and beverage are not accepted
+    /// <summary>
+    /// side and beverage are not accepted
+    /// </summary>
+    /// <param name="foodData">Food that can be held by counters.</param>
+    /// <returns>true if mainfood</returns>
     protected virtual bool AcceptsFood(FoodSO foodData)
     {
         if (foodData.Type == FoodSO.FoodType.Side || foodData.Type == FoodSO.FoodType.Beverage) return false;

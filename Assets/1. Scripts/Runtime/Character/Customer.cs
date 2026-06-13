@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-// Customer AI
+// Customer AI, It holds the food.
 public class Customer : FoodHolder, IInteractable
 {
     public enum cState { Entering, GoingSeat, Sitting, GoingTrash, Leaving, StageEnd }
@@ -441,7 +441,11 @@ public class Customer : FoodHolder, IInteractable
         }
     }
 
-    // Triggered when correct food is successfully served
+    /// <summary>
+    /// Triggered when correct food is successfully served
+    /// </summary>
+    /// <param name="served">correct food</param>
+    /// <param name="_">no offset</param>
     protected override void OnAdded(NetworkObject served, Vector3 _)
     {
         if (patienceBar != null) patienceBar.gameObject.SetActive(false);
@@ -464,14 +468,31 @@ public class Customer : FoodHolder, IInteractable
         snt.Teleport(holdAnchor.transform.position, holdAnchor.transform.rotation);
     }
 
+    /// <summary>
+    /// Clear the recieved food
+    /// </summary>
+    /// <param name="served">food I ate</param>
     protected override void OnRemoved(NetworkObject served)
     {
         if (served != null && served == food) food = null;
     }
 
+    /// <summary>
+    /// Can add?
+    /// </summary>
+    /// <param name="f">food to be ate</param>
+    /// <returns>can add or not</returns>
     public override bool CanAdd(Food f) => isWaiting && food == null;
+    /// <summary>
+    /// Can remove?
+    /// </summary>
+    /// <returns>can remove or not</returns>
     public override bool CanRemove() => food != null;
 
+    /// <summary>
+    /// Clear all of the food and execute `onDone` callback
+    /// </summary>
+    /// <param name="onDone">Callback after the clear is done.</param>
     public override void ClearAll(Action onDone = null)
     {
         if (food == null)
@@ -482,7 +503,11 @@ public class Customer : FoodHolder, IInteractable
         Discard(food, onDone);
     }
 
-    // Check if served food matches the customer's order exactly
+    /// <summary>
+    /// Check if served food matches the customer's order exactly
+    /// </summary>
+    /// <param name="served">Food network object which is checked</param>
+    /// <returns></returns>
     private int CheckOrder(NetworkObject served)
     {
         List<FoodSO> orders = new List<FoodSO>();
@@ -538,7 +563,7 @@ public class Customer : FoodHolder, IInteractable
     {
         yield return new WaitForSeconds(0.1f);
         if (!anim.GetCurrentAnimatorStateInfo(0).IsName("wrong"))
-        // Default Stand Scenario [EN] Standard standing animation [KR] ±âº» ÀÏ¾î¼­±â ¾Ö´Ï¸ÞÀÌ¼Ç
+        // Default Stand Scenario [EN] Standard standing animation [KR] ï¿½âº» ï¿½Ï¾î¼­ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½
         {
             RPC_PlayAnim(AnimTrigger.Stand);
             yield return new WaitForSeconds(0.1f);
@@ -546,7 +571,7 @@ public class Customer : FoodHolder, IInteractable
         else
         {
             while (true)
-            // Patience Stand Scenario (Controlled by AnimController) [EN] Wait for angry/wrong animation to finish [KR] ºÐ³ë/¿À´ä ¾Ö´Ï¸ÞÀÌ¼ÇÀÌ ³¡³¯ ¶§±îÁö ´ë±â
+            // Patience Stand Scenario (Controlled by AnimController) [EN] Wait for angry/wrong animation to finish [KR] ï¿½Ð³ï¿½/ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             {
                 if (anim.GetCurrentAnimatorStateInfo(0).IsName("stand")) break;
                 yield return null;
@@ -646,6 +671,10 @@ public class Customer : FoodHolder, IInteractable
         GameManager.Instance.RegisterTask();
     }
 
+    /// <summary>
+    /// Sync the animation to all of the players.
+    /// </summary>
+    /// <param name="trigger">which animation?</param>
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_PlayAnim(AnimTrigger trigger)
     {
@@ -662,6 +691,10 @@ public class Customer : FoodHolder, IInteractable
         }
     }
 
+    /// <summary>
+    /// Make customer walk to all of the players.
+    /// </summary>
+    /// <param name="trash"></param>
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_PlayWalk(bool trash)
     {
@@ -670,13 +703,22 @@ public class Customer : FoodHolder, IInteractable
         anim.SetTrigger("walk");
     }
 
+    /// <summary>
+    /// Sync the patience status changes to all of the players.
+    /// </summary>
+    /// <param name="state"></param>
+    /// <param name="duration"></param>
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_SetPatience(int state, float duration)
     {
         patienceColor?.SetColorState(state, duration);
     }
 
-    // Process serving logic (score, emotion, animations) across all clients
+    /// <summary>
+    /// Process serving logic (score, emotion, animations) across all clients
+    /// </summary>
+    /// <param name="served">Requested food object from any player.</param>
+    /// <param name="points">points</param>
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     private void RPC_Serve(NetworkObject served, int points)
     {
@@ -713,6 +755,10 @@ public class Customer : FoodHolder, IInteractable
         RPC_AttachFood(served);
     }
 
+    /// <summary>
+    /// Set the food's visual position to all of the players.
+    /// </summary>
+    /// <param name="served">Food.</param>
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_AttachFood(NetworkObject served)
     {

@@ -24,11 +24,20 @@ public abstract class NetworkSingleton<T> : NetworkBehaviour where T : Component
     /// It forces the order by register other's initializer into this singleton object.
     /// </summary>
     private static Action initializer;
+
+    /// <summary>
+    /// It assign a new initializer `i` into its `initializer`
+    /// </summary>
+    /// <param name="i">initialzier to be registered</param>
     public static void BindInitializer(Action i)
     {
         initializer += i;
     }
 
+    /// <summary>
+    /// It is called after the network object spawning.
+    /// Set the object as singleton, dontdestoryonload, and call the initializer.
+    /// </summary>
     public override void Spawned()
     {
         if (_instance == null)
@@ -51,12 +60,4 @@ public abstract class NetworkSingleton<T> : NetworkBehaviour where T : Component
         initializer?.Invoke();
         initializer = null;
     }
-    // protected virtual void OnApplicationQuit()
-    // {
-    //     quitting = true;
-    // }
-
-    // protected virtual void Initialize()
-    // {
-    // }
 }

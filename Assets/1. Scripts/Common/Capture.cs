@@ -5,6 +5,10 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using System.IO;
 
+/// <summary>
+/// It gives an image from a 3D prefab.
+/// It can be executed in the Unity Editor.
+/// </summary>
 public class PrefabPreviewCaptureWindow : EditorWindow
 {
     private const int PreviewLayer = 31;
@@ -119,19 +123,19 @@ public class PrefabPreviewCaptureWindow : EditorWindow
 
         Vector3 center = bounds.center;
 
+        // camera setting!!
         GameObject cameraObject = new GameObject("Preview Camera");
         Camera camera = cameraObject.AddComponent<Camera>();
 
         camera.clearFlags = CameraClearFlags.SolidColor;
         camera.backgroundColor = new Color(0f, 0f, 0f, 0f);
         camera.orthographic = true;
-        camera.nearClipPlane = -maxSize * 10f; // 오브젝트가 잘리지 않게 넉넉히
+        camera.nearClipPlane = -maxSize * 10f;
         camera.farClipPlane = maxSize * 20f;
         camera.cullingMask = 1 << PreviewLayer;
         camera.allowMSAA = false;
         camera.aspect = (float)width / height;
 
-        // ⭐ UI에서 설정한 값으로 카메라 위치와 각도 세팅
         Quaternion camRotation = Quaternion.Euler(cameraAngles);
         Vector3 viewDirection = camRotation * Vector3.forward;
         float cameraDistance = maxSize * 3.0f;
@@ -139,13 +143,12 @@ public class PrefabPreviewCaptureWindow : EditorWindow
         cameraObject.transform.rotation = camRotation;
         cameraObject.transform.position = center - viewDirection * cameraDistance;
 
-        // 수동 오프셋(Offset) 적용 (너무 쏠려있을 때 중심을 맞추는 용도)
         cameraObject.transform.position += cameraObject.transform.right * cameraOffset.x;
         cameraObject.transform.position += cameraObject.transform.up * cameraOffset.y;
 
-        // 수동 줌 패딩 적용
         camera.orthographicSize = GetOrthographicSizeForBounds(bounds, camera, zoomPadding);
 
+        // Simple light setting!!!
         AmbientMode previousAmbientMode = RenderSettings.ambientMode;
         Color previousAmbientLight = RenderSettings.ambientLight;
 
@@ -155,7 +158,7 @@ public class PrefabPreviewCaptureWindow : EditorWindow
         GameObject keyLightObject = new GameObject("Preview Soft Key Light");
         Light keyLight = keyLightObject.AddComponent<Light>();
         keyLight.type = LightType.Directional;
-        keyLight.intensity = keyLightIntensity; // UI 값 적용
+        keyLight.intensity = keyLightIntensity;
         keyLight.color = Color.white;
         keyLight.cullingMask = 1 << PreviewLayer;
         keyLightObject.transform.rotation = Quaternion.Euler(45f, -35f, 0f);
@@ -163,7 +166,7 @@ public class PrefabPreviewCaptureWindow : EditorWindow
         GameObject fillLightObject = new GameObject("Preview Soft Fill Light");
         Light fillLight = fillLightObject.AddComponent<Light>();
         fillLight.type = LightType.Directional;
-        fillLight.intensity = fillLightIntensity; // UI 값 적용
+        fillLight.intensity = fillLightIntensity;
         fillLight.color = Color.white;
         fillLight.cullingMask = 1 << PreviewLayer;
         fillLightObject.transform.rotation = Quaternion.Euler(25f, 140f, 0f);
@@ -204,6 +207,7 @@ public class PrefabPreviewCaptureWindow : EditorWindow
         return result;
     }
 
+    // Find the object's bound.
     private Bounds CalculateBounds(GameObject obj)
     {
         Renderer[] renderers = obj.GetComponentsInChildren<Renderer>(true);
@@ -222,6 +226,7 @@ public class PrefabPreviewCaptureWindow : EditorWindow
         return bounds;
     }
 
+    // Find a good cam view size according to the bound of the prefab.
     private float GetOrthographicSizeForBounds(Bounds bounds, Camera camera, float padding)
     {
         Vector3[] corners = GetBoundsCorners(bounds);
@@ -250,6 +255,7 @@ public class PrefabPreviewCaptureWindow : EditorWindow
         return Mathf.Max(sizeByHeight, sizeByWidth) * padding;
     }
 
+    // bound into array of vector3
     private Vector3[] GetBoundsCorners(Bounds bounds)
     {
         Vector3 center = bounds.center;
@@ -268,6 +274,7 @@ public class PrefabPreviewCaptureWindow : EditorWindow
         };
     }
 
+    // set layer to properly even if a prefab composed of several layers.
     private void SetLayerRecursively(GameObject obj, int layer)
     {
         obj.layer = layer;
@@ -277,6 +284,7 @@ public class PrefabPreviewCaptureWindow : EditorWindow
         }
     }
 
+    // set the object as active to render.
     private void SetActiveRecursively(GameObject obj, bool active)
     {
         obj.SetActive(active);
