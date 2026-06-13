@@ -2,6 +2,7 @@
 using Fusion;
 using UnityEngine;
 
+// Handles player movement, stamina consumption, and animation synchronization
 public class PlayerMovement : NetworkBehaviour
 {
     float hAxis;
@@ -20,7 +21,7 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private string isMovingParam = "isMoving";
     [SerializeField] private string isRunningParam = "isRunning";
     [SerializeField] private string isCarryingParam = "isCarrying";
-    
+
     // Networked: synchronized by photon fusion
     // OnchangedRender(nameof(function)): callback when the property value changed
     [Networked, OnChangedRender(nameof(IsMovingChanged))] private bool isMoving { get; set; }
@@ -29,7 +30,7 @@ public class PlayerMovement : NetworkBehaviour
 
     [Header("Stamina")]
     [SerializeField] private Stamina stamina;
-    [SerializeField] private GameObject staminaUI; // ⭐ 추가: 스태미나 게이지 UI 오브젝트
+    [SerializeField] private GameObject staminaUI; // ⭐ 추가: 스태미나 게이지 UI 오브젝트 (Stamina gauge UI object)
 
     CharacterController playerController;
     float cachedSpeed;
@@ -50,7 +51,6 @@ public class PlayerMovement : NetworkBehaviour
             Camera = Camera.main;
             Debug.Log("Camera " + ((Camera == null) ? "not found" : "found"));
             Camera.GetComponent<FollowCamera>().target = transform;
-
 
             playerController = GetComponent<CharacterController>();
 
@@ -81,7 +81,7 @@ public class PlayerMovement : NetworkBehaviour
             _predictionApplied = false;
         }
 
-        // ⭐ 추가: UI 표시 로직을 위해 wantsRun 변수를 밖으로 빼냈습니다.
+        // Extracted wantsRun for UI logic
         bool wantsRun = false;
 
         if (!isFreezing)
@@ -95,6 +95,7 @@ public class PlayerMovement : NetworkBehaviour
             isMoving = moveVec.sqrMagnitude > 0.0001f;
             wantsRun = isMoving && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
 
+            // Drain stamina if running, or regenerate if walking/idle
             bool canRun = wantsRun;
             if (wantsRun && stamina != null)
             {
@@ -116,13 +117,14 @@ public class PlayerMovement : NetworkBehaviour
             isRunning = canRun;
             cachedSpeed = speed * (isRunning ? runMultiplier : 1f);
 
-            // no need to change here because it will be managed via callbacks
             // if (animator != null)
             // {
             //     animator.SetBool(isCarryingParam, isCarrying);
             //     animator.SetBool(isMovingParam, isMoving);
             //     animator.SetBool(isRunningParam, isRunning);
             // }
+
+            // Handle character rotation and apply movement
 
             if (isMoving)
             {
@@ -142,9 +144,10 @@ public class PlayerMovement : NetworkBehaviour
         }
         else
         {
+            // Player is frozen (interacting/stunned); stop movement but allow stamina regen
             if (stamina != null)
                 stamina.RegenWhileIdle(Runner.DeltaTime);
-            
+
             isMoving = false;
             isRunning = false;
 
@@ -156,13 +159,11 @@ public class PlayerMovement : NetworkBehaviour
             playerController.Move(velocity * Runner.DeltaTime);
         }
 
-        // ⭐ 추가: UI 표시 제어 로직 (Update의 마지막에 처리)
+        // Control Stamina UI visibility based on usage or recovery state
         if (stamina != null && staminaUI != null)
         {
-            // 스태미나가 꽉 차 있지 않으면 회복 중인 상태입니다.
             bool isRecovering = stamina.Current < stamina.Max;
 
-            // 달리기 시도 중이거나, 회복 중일 때만 UI를 띄웁니다.
             shouldShowUI = wantsRun || isRecovering;
         }
 
@@ -174,6 +175,7 @@ public class PlayerMovement : NetworkBehaviour
     {
         base.Render();
 
+        // Client-side visual prediction for smooth movement between network ticks
         if (HasStateAuthority && !isFreezing && playerController != null)
         {
             float h = Input.GetAxisRaw("Horizontal");
@@ -186,7 +188,6 @@ public class PlayerMovement : NetworkBehaviour
             }
         }
 
-        // 매 프레임 SetActive가 불리는 걸 막기 위해 상태가 다를 때만 호출합니다.
         if (staminaUI.activeSelf != shouldShowUI)
         {
             staminaUI.SetActive(shouldShowUI);

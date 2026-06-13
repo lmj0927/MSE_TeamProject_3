@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
+// Handles color transitions for UI
 public class StateChanger : MonoBehaviour
 {
     [SerializeField] private Image[] targetImages;
@@ -14,6 +15,7 @@ public class StateChanger : MonoBehaviour
         TryInitialize();
     }
 
+    // Cache original colors
     private void TryInitialize()
     {
         if (originalColors != null) return;
@@ -25,6 +27,7 @@ public class StateChanger : MonoBehaviour
         }
     }
 
+    // Hue shifting with tween
     public void SetColorState(int state, float duration = 0.5f)
     {
         if (targetImages == null || originalColors == null) return;
@@ -51,6 +54,7 @@ public class StateChanger : MonoBehaviour
         }
     }
 
+    // Get Hue value difference
     public float GetCurrentHueShift()
     {
         TryInitialize();
@@ -62,7 +66,7 @@ public class StateChanger : MonoBehaviour
 
         float shift = currentH - originalH;
 
-        // 3. 순환(Wrap-around) 보정
+        // Correction
         if (shift > 0.5f) shift -= 1f;
         else if (shift < -0.5f) shift += 1f;
 

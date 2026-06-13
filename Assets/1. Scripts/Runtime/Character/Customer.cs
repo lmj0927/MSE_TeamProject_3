@@ -9,10 +9,11 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
+// Customer AI
 public class Customer : FoodHolder, IInteractable
 {
     public enum cState { Entering, GoingSeat, Sitting, GoingTrash, Leaving, StageEnd }
-    public enum Emotion { Happy, Boring, Angry}
+    public enum Emotion { Happy, Boring, Angry }
 
     [SerializeField]
     private GameObject hat;
@@ -43,7 +44,7 @@ public class Customer : FoodHolder, IInteractable
     private int seatNum = -1;
     private float dragChair = 0.25f;
 
-    [Networked] private bool isDecided { get; set; }= false;
+    [Networked] private bool isDecided { get; set; } = false;
     [Networked] public bool isWaiting { get; private set; } = false;
     [Networked] public float sitTimer { get; private set; } = 60.0f;
     [Networked] private float maxSit { get; set; }
@@ -55,7 +56,7 @@ public class Customer : FoodHolder, IInteractable
     private Vector2 pitchRange = new Vector2(0.8f, 2f);
     private float pitch;
 
-    [Networked] private bool isEating { get; set; }= false;
+    [Networked] private bool isEating { get; set; } = false;
     [Networked] private bool hasEaten { get; set; } = false;
 
     private float mealTimer = 10.0f;
@@ -115,7 +116,8 @@ public class Customer : FoodHolder, IInteractable
 
     public override void FixedUpdateNetwork()
     {
-        if(!HasStateAuthority) return;
+        if (!HasStateAuthority) return;
+
         // Arrival Triggers
         if (agent.enabled && !arriveHandled && IsArrived())
         {
@@ -133,7 +135,7 @@ public class Customer : FoodHolder, IInteractable
                 patienceBar.SetProgress(sitTimer / maxSit);
             }
 
-            if (sitTimer <= 0 )
+            if (sitTimer <= 0)
             {
                 faceIdx = 2;
                 isWaiting = false;
@@ -141,7 +143,8 @@ public class Customer : FoodHolder, IInteractable
                 Stand();
                 Discard(food);
 
-            } else if (emotion == Emotion.Boring && sitTimer <= angry)
+            }
+            else if (emotion == Emotion.Boring && sitTimer <= angry)
             {
                 emotion = Emotion.Angry;
 
@@ -194,6 +197,7 @@ public class Customer : FoodHolder, IInteractable
 
     // Basic Functions:
 
+    // Iinitialize for a new customer
     private void InitializeStats()
     {
         // Random Appearance (sync via Networked + costumeVersion bump triggers ApplyCostume on all)
@@ -250,7 +254,7 @@ public class Customer : FoodHolder, IInteractable
         // Apply locally on master (OnChangedRender on authority isn't guaranteed same-tick)
         OnCostumeChanged();
     }
-    
+
     private void SetMenuImg(RecipeSO r, int idx)
     {
         if (r == null)
@@ -262,6 +266,7 @@ public class Customer : FoodHolder, IInteractable
         menuImages[idx].gameObject.SetActive(true);
         menuImages[idx].sprite = r.Result.Sprite;
     }
+
     // OnChangedRender callbacks: replicate appearance to all clients
     private void OnFaceChanged() => SetFace(faceIdx);
 
@@ -298,25 +303,9 @@ public class Customer : FoodHolder, IInteractable
         portrait = PreviewGenerator.TakeLiveSnapshot(this.gameObject, 512, 512, false);
     }
 
-    // h = Hat type
-    // 0 is nothing
-    // 1 is fedora
-    // 2 is party hat
-    // 3 is clown hat
-    // 4 is advebture hat
-    // 5 is bunny hat
-
-    // g = Glasses type
-    // 0 is nothing
-    // 1 is fedora
-    // 2 is party hat
-    // 3 is clown nose
-
-    // m = Mouth type
-    // 0 is nothing
-    // 1 is mustache_1
-    // 2 is mustache_2
-    // 3 is pacifier
+    // h = Hat type (0: nothing, 1: fedora, 2: party hat, 3: clown hat, 4: adventure hat, 5: bunny hat)
+    // g = Glasses type (0: nothing, 1: fedora(error in comment?), 2: party hat, 3: clown nose)
+    // m = Mouth type (0: nothing, 1: mustache_1, 2: mustache_2, 3: pacifier)
     private void SetCostume(int h, int g, int m)
     {
         if (hat == null || glasses == null || mouth == null) return;
@@ -324,8 +313,7 @@ public class Customer : FoodHolder, IInteractable
 
         for (int i = 0; i < hMax; i++)
         {
-            hat.transform.GetChild(i).gameObject.SetActive(i == (h-1));
-
+            hat.transform.GetChild(i).gameObject.SetActive(i == (h - 1));
         }
 
         int gMax = glasses.transform.childCount;
@@ -333,7 +321,6 @@ public class Customer : FoodHolder, IInteractable
         for (int i = 0; i < gMax; i++)
         {
             glasses.transform.GetChild(i).gameObject.SetActive(i == (g - 1));
-
         }
 
         int mMax = mouth.transform.childCount;
@@ -341,7 +328,6 @@ public class Customer : FoodHolder, IInteractable
         for (int i = 0; i < mMax; i++)
         {
             mouth.transform.GetChild(i).gameObject.SetActive(i == (m - 1));
-
         }
     }
 
@@ -429,7 +415,7 @@ public class Customer : FoodHolder, IInteractable
     private void Sit()
     {
         agent.enabled = false;
-        
+
         transform.rotation = Quaternion.LookRotation(destination.forward);
 
         transform.position = destination.GetChild(0).position + (-transform.forward * 0.1f);
@@ -455,6 +441,7 @@ public class Customer : FoodHolder, IInteractable
         }
     }
 
+    // Triggered when correct food is successfully served
     protected override void OnAdded(NetworkObject served, Vector3 _)
     {
         if (patienceBar != null) patienceBar.gameObject.SetActive(false);
@@ -471,10 +458,9 @@ public class Customer : FoodHolder, IInteractable
 
         served.GetComponent<Food>().SetHeld();
         served.transform.SetParent(holdAnchor, true);
-        // served.transform.localPosition = Vector3.zero;
-        // served.transform.localRotation = Quaternion.identity;
+
         NetworkTransform snt = served.GetComponent<NetworkTransform>();
-        if(snt == null) return;
+        if (snt == null) return;
         snt.Teleport(holdAnchor.transform.position, holdAnchor.transform.rotation);
     }
 
@@ -496,11 +482,12 @@ public class Customer : FoodHolder, IInteractable
         Discard(food, onDone);
     }
 
+    // Check if served food matches the customer's order exactly
     private int CheckOrder(NetworkObject served)
     {
         List<FoodSO> orders = new List<FoodSO>();
         int points = 0;
-        
+
         orders.Add(mainOrder.Result);
         if (drinkOrder != null) orders.Add(drinkOrder.Result);
         if (sideOrder != null) orders.Add(sideOrder.Result);
@@ -523,7 +510,7 @@ public class Customer : FoodHolder, IInteractable
 
         float weight = 1f;
 
-        switch(emotion)
+        switch (emotion)
         {
             case Emotion.Boring: weight = 0.75f; break;
             case Emotion.Angry: weight = 0.5f; break;
@@ -532,6 +519,7 @@ public class Customer : FoodHolder, IInteractable
         return Mathf.RoundToInt(points * weight);
     }
 
+    // Leave after eating or losing patience
     private void Stand()
     {
         if (alreadyStand) return;
@@ -543,20 +531,22 @@ public class Customer : FoodHolder, IInteractable
         Discard(food);
 
         StartCoroutine(StandRoutine());
-        
+
     }
 
     IEnumerator StandRoutine()
     {
         yield return new WaitForSeconds(0.1f);
-        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("wrong"))   // Default Stand Scenario
+        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("wrong"))
+        // Default Stand Scenario [EN] Standard standing animation [KR] 기본 일어서기 애니메이션
         {
             RPC_PlayAnim(AnimTrigger.Stand);
             yield return new WaitForSeconds(0.1f);
         }
         else
         {
-            while(true)     // Patience Stand Scenario (Controlled by AnimController)
+            while (true)
+            // Patience Stand Scenario (Controlled by AnimController) [EN] Wait for angry/wrong animation to finish [KR] 분노/오답 애니메이션이 끝날 때까지 대기
             {
                 if (anim.GetCurrentAnimatorStateInfo(0).IsName("stand")) break;
                 yield return null;
@@ -569,18 +559,15 @@ public class Customer : FoodHolder, IInteractable
         if (current != cState.StageEnd) current = cState.Leaving;
 
         agent.enabled = true;
-        
+
         if (hasEaten)
         {
             tray = Runner.Spawn(trayPrefab);
 
             tray.transform.SetParent(holdAnchor, true);
-            
-            // tray.transform.localPosition = Vector3.zero;
-            // tray.transform.localRotation = Quaternion.identity;
 
             NetworkTransform tnt = tray.GetComponent<NetworkTransform>();
-            if(tnt != null) tnt.Teleport(holdAnchor.transform.position, holdAnchor.transform.rotation);
+            if (tnt != null) tnt.Teleport(holdAnchor.transform.position, holdAnchor.transform.rotation);
 
             var rb = tray.GetComponent<Rigidbody>();
             rb.linearVelocity = Vector3.zero;
@@ -613,7 +600,8 @@ public class Customer : FoodHolder, IInteractable
 
     public bool HasEaten() => hasEaten;
 
-    public void SetPath(cState state, Transform pos, Transform next = null)     // next is for special case(successful meal)
+    // next is for special case(successful meal) 
+    public void SetPath(cState state, Transform pos, Transform next = null)
     {
         current = state;
         arriveHandled = false;
@@ -631,6 +619,7 @@ public class Customer : FoodHolder, IInteractable
             RPC_PlayWalk(next != null);
         }
     }
+
     public float GetPatienceHueShift()
     {
         if (patienceColor != null) return patienceColor.GetCurrentHueShift(); ;
@@ -687,6 +676,7 @@ public class Customer : FoodHolder, IInteractable
         patienceColor?.SetColorState(state, duration);
     }
 
+    // Process serving logic (score, emotion, animations) across all clients
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     private void RPC_Serve(NetworkObject served, int points)
     {
@@ -728,9 +718,9 @@ public class Customer : FoodHolder, IInteractable
     {
         if (served == null) return;
         served.transform.SetParent(holdAnchor, true);
-        
+
         NetworkTransform snt = served.GetComponent<NetworkTransform>();
-        if(snt == null) return;
+        if (snt == null) return;
         snt.Teleport(holdAnchor.transform.position, holdAnchor.transform.rotation);
     }
 }

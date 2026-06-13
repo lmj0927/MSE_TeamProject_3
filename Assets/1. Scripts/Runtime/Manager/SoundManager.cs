@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Singleton manager for sound
 public class SoundManager : Singleton<SoundManager>
 {
     [Header("BGM")]
@@ -37,14 +38,14 @@ public class SoundManager : Singleton<SoundManager>
     [SerializeField]
     private AudioClip angry;
 
-
+    // Object pool for playing multiple overlapping SFXs
     private List<AudioSource> pool = new List<AudioSource>();
 
     private void Start()
     {
         ChangeBGM(0);
-        
-        if(GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionSetup);
+
+        if (GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionSetup);
         else GameManagerActionSetup();
     }
 
@@ -52,19 +53,19 @@ public class SoundManager : Singleton<SoundManager>
     {
         GameManager.Instance.OnStageStart += () => ChangeBGM(2);
         GameManager.Instance.OnStageEnd += StopAllSFX;
-        bgm.loop = true;  
+        bgm.loop = true;
     }
 
     // 0 is main
     // 1 is lobby
     // 2 is InGame
-    // 3 is HurryUp(InGame pitch up)
+    // 3 is HurryUp(InGame pitch up) 
     public void ChangeBGM(int index)
     {
         bgm.Stop();
         bgm.volume = 0f;
         Pitch(1f);
-        
+
         switch (index)
         {
             case 0: Main(); break;
@@ -76,12 +77,15 @@ public class SoundManager : Singleton<SoundManager>
 
     }
 
-    private void Main()             // 메인~방선택 전 bgm
+    // BGM for Main menu
+    private void Main()
     {
         bgm.clip = main;
         BGMStart();
     }
-    private void Lobby()            // 방 생성 + 팀원 모집중 bgm
+
+    // BGM for Room creation
+    private void Lobby()
     {
         bgm.clip = lobby;
         BGMStart();
@@ -90,7 +94,7 @@ public class SoundManager : Singleton<SoundManager>
     private void InGame()
     {
         bgm.clip = playing;
-        BGMStart(maxVol:0.8f);   
+        BGMStart(maxVol: 0.8f);
     }
 
     private void HurryUp()
@@ -100,15 +104,18 @@ public class SoundManager : Singleton<SoundManager>
         Pitch(1.25f);
     }
 
+    // Adjust BGM pitch (absolute or additive)
     private void Pitch(float val, bool isAdd = false)
     {
         if (isAdd)
         {
             bgm.pitch += val;
-        } else bgm.pitch = val;
+        }
+        else bgm.pitch = val;
 
     }
 
+    // Play BGM with fade-in 
     private void BGMStart(float duration = 1.5f, float maxVol = 1f)
     {
         bgm.DOKill();
@@ -121,6 +128,7 @@ public class SoundManager : Singleton<SoundManager>
         });
     }
 
+    // Get an available AudioSource from the pool or create a new one
     private AudioSource GetSource()
     {
         foreach (AudioSource source in pool)
@@ -134,7 +142,7 @@ public class SoundManager : Singleton<SoundManager>
             }
         }
 
-        GameObject obj = new GameObject("SFX_" + (pool.Count+1));
+        GameObject obj = new GameObject("SFX_" + (pool.Count + 1));
         obj.transform.SetParent(transform);
 
         AudioSource audio = obj.AddComponent<AudioSource>();
@@ -143,12 +151,13 @@ public class SoundManager : Singleton<SoundManager>
         return audio;
 
     }
+
     public void Order()
     {
         GetSource().PlayOneShot(order);
     }
 
-    public void Slice()         
+    public void Slice()
     {
         GetSource().PlayOneShot(slice);
     }
@@ -158,7 +167,8 @@ public class SoundManager : Singleton<SoundManager>
         GetSource().PlayOneShot(trash);
     }
 
-    public void GrillStart(GrillCounter c) 
+    // Play continuous grill SFX with binding stop action
+    public void GrillStart(GrillCounter c)
     {
         AudioSource audio = GetSource();
 
@@ -177,6 +187,7 @@ public class SoundManager : Singleton<SoundManager>
         c.OnCookFinished += StopAudio;
     }
 
+    // Play timed fry SFX with automatic fade-out and finish trigger
     public void FryStart(FrierCounter c)
     {
         AudioSource audio = GetSource();
@@ -229,6 +240,7 @@ public class SoundManager : Singleton<SoundManager>
     public void Boring(Customer c, float p) => PlayEmotion(c, boring, p);
     public void Angry(Customer c, float p) => PlayEmotion(c, angry, p);
 
+    // Play pitched emotion SFX
     private void PlayEmotion(Customer c, AudioClip clip, float p)
     {
         AudioSource audio = GetSource();
@@ -257,6 +269,7 @@ public class SoundManager : Singleton<SoundManager>
         });
     }
 
+    // Stop SFX with fade-out
     private void SFXEnd(AudioSource audio, float duration = 0.25f)
     {
         audio.DOKill();
@@ -267,9 +280,10 @@ public class SoundManager : Singleton<SoundManager>
             audio.loop = false;
             audio.clip = null;
             audio.volume = 1f;
-        });   
+        });
     }
 
+    // Stop all SFXs for stage end
     private void StopAllSFX()
     {
         foreach (var source in pool)

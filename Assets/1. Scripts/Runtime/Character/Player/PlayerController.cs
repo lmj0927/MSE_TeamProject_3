@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
+// Controls player's food holding mechanics and stage-based movement freezing
 public class PlayerController : FoodHolder
 {
     [Header("Food")]
@@ -24,7 +25,7 @@ public class PlayerController : FoodHolder
         if (HasStateAuthority)
         {
             HeldFoodObject = null;
-            if(GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
+            if (GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
             else GameManagerActionsSetup();
         }
 
@@ -44,12 +45,14 @@ public class PlayerController : FoodHolder
         GameManager.Instance.OnResult -= RPC_HandleStageEnd;
     }
 
+    // Lock or unlock player movement input
     public void FreezeMovement(bool apply)
     {
         GetComponent<PlayerMovement>().SetInteracting(apply);
     }
 
 
+    // Sync held food's parent and position across all clients using RPC
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_SetParent(NetworkObject food, Vector3 pos)
     {
@@ -62,16 +65,17 @@ public class PlayerController : FoodHolder
         food.transform.SetParent(holdAnchor, true);
 
         NetworkTransform fnt = food.GetComponent<NetworkTransform>();
-        if(fnt == null) return;
+        if (fnt == null) return;
         fnt.Teleport(targetWorldPos, targetWorldRot);
     }
 
+    // Triggered when the player successfully picks up food
     protected override void OnAdded(NetworkObject food, Vector3 pos)
     {
         var foodName = food != null ? food.name : "null";
         Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] OnAdded called. food={foodName} pos={pos} HasFoodAuth={(food != null && food.HasStateAuthority)} HasPlayerAuth={HasStateAuthority}");
 
-        // Side menu check
+        // Automatically transform raw ingredients into side menus upon pickup if recipes match
         List<FoodSO> holding = new List<FoodSO>();
         holding.Add(food.GetComponent<Food>().Data);
         var recipe = RecipeManager.Instance.Cook(holding, RecipeType.Side);
@@ -83,7 +87,7 @@ public class PlayerController : FoodHolder
         }
         else Debug.Log("[PlayerController OnAdded] not side menu");
 
-        // Hold
+        // Assign food to anchor and update states
         HeldFoodObject = food;
         RPC_SetParent(HeldFoodObject, pos);
         HeldFood.SetHeld();
@@ -91,6 +95,7 @@ public class PlayerController : FoodHolder
         Debug.Log($"[Player/P{Object.StateAuthority.PlayerId}] OnAdded done. HeldFoodObject={heldName} food.IsHeld={HeldFood.IsHeld}");
     }
 
+    // Triggered when the player drops or serves the food
     protected override void OnRemoved(NetworkObject food)
     {
         var foodName = food != null ? food.name : "null";
@@ -127,6 +132,7 @@ public class PlayerController : FoodHolder
         Discard(HeldFoodObject, onDone);
     }
 
+    // Detach and return the held food object
     public NetworkObject ReleaseFood()
     {
         NetworkObject released = HeldFoodObject;
@@ -134,15 +140,20 @@ public class PlayerController : FoodHolder
         return released;
     }
 
+    // Unfreeze player movement when the stage begins
     [Rpc(RpcSources.All, RpcTargets.All)]
-    private void RPC_HandleStageStart() {
-        if(!HasStateAuthority) return;
+    private void RPC_HandleStageStart()
+    {
+        if (!HasStateAuthority) return;
         Debug.Log("[PlayerController HandleStageStart] called to unfreeze player.");
         FreezeMovement(false);
     }
+
+    // Freeze player movement when the stage ends (Result screen)
     [Rpc(RpcSources.All, RpcTargets.All)]
-    private void RPC_HandleStageEnd() {
-        if(!HasStateAuthority) return;
+    private void RPC_HandleStageEnd()
+    {
+        if (!HasStateAuthority) return;
         FreezeMovement(true);
     }
 }

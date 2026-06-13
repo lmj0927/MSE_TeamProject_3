@@ -2,10 +2,14 @@
 using Fusion;
 using UnityEngine;
 
+// etworked stamina system
 public class Stamina : NetworkBehaviour
 {
     [SerializeField] private float maxStamina = 100f;
+
+    // Current stamina value
     [Networked] private float currentStamina { get; set; }
+
     [SerializeField] private float drainPerSecond = 20f;
     [SerializeField] private float regenPerSecond = 15f;
 
@@ -21,6 +25,7 @@ public class Stamina : NetworkBehaviour
         currentStamina = maxStamina;
     }
 
+    // Drain stamina during running and return availability
     public bool TryDrainForRunning(float deltaTime)
     {
         if (deltaTime <= 0f)
@@ -34,6 +39,7 @@ public class Stamina : NetworkBehaviour
         return HasStamina;
     }
 
+    // Regenerate stamina over time
     public void RegenWhileIdle(float deltaTime)
     {
         if (deltaTime <= 0f || regenPerSecond <= 0f || maxStamina <= 0f)
@@ -42,4 +48,3 @@ public class Stamina : NetworkBehaviour
         currentStamina = Mathf.Min(maxStamina, currentStamina + regenPerSecond * deltaTime);
     }
 }
-

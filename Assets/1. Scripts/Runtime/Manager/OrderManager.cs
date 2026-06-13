@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine.UIElements.Experimental;
 using Fusion;
 
+// Singleton manager for order, stage timer, and score
 public class OrderManager : NetworkSingleton<OrderManager>
 {
     [SerializeField] private GameObject orderUI;
@@ -16,6 +17,8 @@ public class OrderManager : NetworkSingleton<OrderManager>
     [SerializeField] private GameManager starParent;
 
     private bool isPlaying = false;
+
+    // Track active orders and animation states
     private List<Customer> orders = new List<Customer>();
     private HashSet<Customer> animatedCustomers = new HashSet<Customer>();
 
@@ -27,10 +30,11 @@ public class OrderManager : NetworkSingleton<OrderManager>
         timerUI.gameObject.SetActive(false);
         point.gameObject.SetActive(false);
 
-        if(GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
+        if (GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
         else GameManagerActionsSetup();
     }
 
+    // Bind event handlers for stage state and point updates
     private void GameManagerActionsSetup()
     {
         GameManager.Instance.OnStageStart += RPC_HandleStageStart;
@@ -45,6 +49,8 @@ public class OrderManager : NetworkSingleton<OrderManager>
 
         float total = GameManager.Instance.StageT;
         if (total <= 0f) return;
+
+        // Update stage timer
         timerUI.SetProgress(GameManager.Instance.stageTimer / total);
     }
     private void OnDestroy()
@@ -88,6 +94,7 @@ public class OrderManager : NetworkSingleton<OrderManager>
         if (isPlaying) Resort();
     }
 
+    // Sort orders by shortest patience and update up to 4 UI slots
     public void Resort()
     {
         var waitingOrders = orders
@@ -130,6 +137,7 @@ public class OrderManager : NetworkSingleton<OrderManager>
     public void ShowOrder() => orderUI.SetActive(true);
     public void CloseOrder() => orderUI.SetActive(false);
 
+    // Initialize UI elements 
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_HandleStageStart()
     {
@@ -141,6 +149,8 @@ public class OrderManager : NetworkSingleton<OrderManager>
         point.text = "Point: 0";
         isPlaying = true;
     }
+
+    // Reset UI and clear active orders 
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_HandleStageEnd()
     {
@@ -157,6 +167,7 @@ public class OrderManager : NetworkSingleton<OrderManager>
         }
     }
 
+    // Update point and star grade UI
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_UpdatePoint(int p, int grade)
     {
