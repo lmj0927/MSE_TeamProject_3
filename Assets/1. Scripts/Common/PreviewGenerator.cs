@@ -4,23 +4,28 @@ using UnityEngine.Rendering;
 using System.Collections.Generic;
 using System.IO;
 
+// This script is based on Capture.cs
+// Utility class to generate 2D UI sprites from 3D live objects using a temporary camera
 public class PreviewGenerator
 {
-    private const int PreviewLayer = 31; 
+    private const int PreviewLayer = 31;
 
     public static Sprite TakeLiveSnapshot(GameObject liveObject, int width = 256, int height = 256, bool saveToDisk = false)
     {
         if (liveObject == null) return null;
 
+        // Temporarily change layer to isolate the object for rendering
         Dictionary<GameObject, int> layerBackup = new Dictionary<GameObject, int>();
         SetLayerRecursivelyWithBackup(liveObject, PreviewLayer, layerBackup);
 
         Bounds bounds = CalculateBounds(liveObject);
         Vector3 center = liveObject.transform.position + Vector3.up * 1.0f;
 
+        // Set up a temporary orthographic camera
         GameObject cameraObject = new GameObject("Snapshot Camera");
         Camera camera = cameraObject.AddComponent<Camera>();
-        camera.enabled = false; // manual Render only; avoid end-of-frame display leak
+
+        camera.enabled = false;
         camera.clearFlags = CameraClearFlags.SolidColor;
 
         Color bgColor = new Color(0f, 0f, 0f, 0f);
@@ -28,12 +33,12 @@ public class PreviewGenerator
 
         camera.orthographic = true;
         camera.nearClipPlane = 0.01f;
-        camera.farClipPlane = 50f; 
+        camera.farClipPlane = 50f;
         camera.cullingMask = 1 << PreviewLayer;
         camera.aspect = (float)width / height;
 
         Vector3 cameraDir = (liveObject.transform.forward + Vector3.up * 0.3f).normalized;
-        float cameraDistance = 5f; 
+        float cameraDistance = 5f;
 
         cameraObject.transform.position = center + cameraDir * cameraDistance;
         cameraObject.transform.LookAt(center);
@@ -45,6 +50,7 @@ public class PreviewGenerator
         RenderSettings.ambientMode = AmbientMode.Flat;
         RenderSettings.ambientLight = new Color(0.6f, 0.6f, 0.6f, 1f);
 
+        // Set up a temporary soft key light
         GameObject keyLightObject = new GameObject("Preview Soft Key Light");
         Light keyLight = keyLightObject.AddComponent<Light>();
         keyLight.type = LightType.Directional;
@@ -54,8 +60,11 @@ public class PreviewGenerator
         keyLightObject.transform.rotation = Quaternion.Euler(30f, cameraObject.transform.eulerAngles.y - 30f, 0f);
 
         RenderTexture renderTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.ARGB32);
-        renderTexture.antiAliasing = 1; // URP/hardware may not support 8; mismatch crashes the blit
 
+        // URP/hardware may not support antiAliasing 8; mismatch crashes the blit
+        renderTexture.antiAliasing = 1;
+
+        // Render to temporary texture and extract pixels to Texture2D
         camera.targetTexture = renderTexture;
         RenderTexture previousRT = RenderTexture.active;
         RenderTexture.active = renderTexture;
@@ -67,6 +76,7 @@ public class PreviewGenerator
         result.ReadPixels(new Rect(0, 0, width, height), 0, 0);
         result.Apply();
 
+        // Restore original layers and clean up temporary objects to prevent memory leaks
         foreach (var kvp in layerBackup)
         {
             if (kvp.Key != null) kvp.Key.layer = kvp.Value;
@@ -95,6 +105,7 @@ public class PreviewGenerator
             Debug.Log($"<color=cyan>[Captured]</color> Saved as Png: {filePath}");
         }
 
+        // Create and return a UI sprite from the captured texture
         Rect rect = new Rect(0, 0, width, height);
         Vector2 pivot = new Vector2(0.5f, 0.5f);
         Sprite sprite = Sprite.Create(result, rect, pivot, 100f, 0, SpriteMeshType.FullRect);
@@ -103,11 +114,12 @@ public class PreviewGenerator
         return sprite;
     }
 
+    // Back up current layer and apply target layer to all child objects
     private static void SetLayerRecursivelyWithBackup(GameObject obj, int newLayer, Dictionary<GameObject, int> backup)
     {
         if (obj == null) return;
         backup[obj] = obj.layer;
-        obj.layer = newLayer;   
+        obj.layer = newLayer;
 
         foreach (Transform child in obj.transform)
         {
@@ -115,6 +127,7 @@ public class PreviewGenerator
         }
     }
 
+    // Calculate total bounds including all child renderers for proper camera framing
     private static Bounds CalculateBounds(GameObject obj)
     {
         Renderer[] renderers = obj.GetComponentsInChildren<Renderer>(true);

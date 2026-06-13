@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
+// Manages customer spawning, pooling, and seating
 public class CustomerManager : NetworkBehaviour
 {
     [Networked] private bool isPlaying { get; set; } = false;
@@ -19,10 +20,11 @@ public class CustomerManager : NetworkBehaviour
     [Tooltip("Parent of Spawnpoints")]
     [SerializeField] private Transform outsideParent;
 
+    // Object pool for customer
     private Queue<Customer> pool = new Queue<Customer>();
 
     [SerializeField] private Transform[] waitingPoint;
-    private bool[] kioskState;      // Each kiosk's use state
+    private bool[] kioskState;      // Each kiosk's use state 
     private Customer[] kCustomers;
 
     [Tooltip("Parent of all chairs")]
@@ -45,6 +47,8 @@ public class CustomerManager : NetworkBehaviour
 
     [Tooltip("Probability of ordering wiht sidemenu (0.0 ~ 1.0)")]
     [SerializeField] private float sideRatio = 0.5f;
+
+    // Initialize arrays and set up event bindings
     public override void Spawned()
     {
         kioskState = new bool[waitingPoint.Length];
@@ -59,7 +63,7 @@ public class CustomerManager : NetworkBehaviour
         useState = new bool[chairs.Length];
         customers = new Customer[chairs.Length];
 
-        if(GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
+        if (GameManager.Instance == null) GameManager.BindInitializer(GameManagerActionsSetup);
         else GameManagerActionsSetup();
     }
 
@@ -69,12 +73,14 @@ public class CustomerManager : NetworkBehaviour
         GameManager.Instance.OnStageStart += RPC_HandleStageStart;
         GameManager.Instance.OnStageEnd += RPC_HandleStageEnd;
     }
+
     public override void FixedUpdateNetwork()
     {
-        if(!HasStateAuthority) return;
+        if (!HasStateAuthority) return;
 
         if (!isPlaying) return;
 
+        // If empty points are found, spawn customer
         int emptyK = GetEmptyKiosk();
 
         if (emptyK != -1)
@@ -94,6 +100,7 @@ public class CustomerManager : NetworkBehaviour
             }
         }
 
+        // Move ready customers to available chair
         for (int i = 0; i < waitingPoint.Length; i++)
         {
             if (kioskState[i] && kCustomers[i] != null)
@@ -140,6 +147,8 @@ public class CustomerManager : NetworkBehaviour
         return outsideParent.GetChild(ran);
 
     }
+
+    // Get customer from the pool(or create new)
     private Customer GetCustomer()
     {
         Customer c;
@@ -189,10 +198,14 @@ public class CustomerManager : NetworkBehaviour
         }
         return -1;
     }
+
+    // Return customer to the object pool
     private void AddToPool(Customer c)
     {
         pool.Enqueue(c);
     }
+
+    // Handle customer exit route
     private void HandleGetout(int idx)
     {
         if (customers[idx] == null) return;
@@ -210,18 +223,22 @@ public class CustomerManager : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
-    private void RPC_HandleStageStart() {
-        if(!HasStateAuthority) return;
+    private void RPC_HandleStageStart()
+    {
+        if (!HasStateAuthority) return;
         isPlaying = true;
         Debug.Log($"[CustomerManager RPC_HandleStageStart] isPlaying = {isPlaying}");
     }
 
+    // Force method for stage end
     [Rpc(RpcSources.All, RpcTargets.All)]
-    private void RPC_HandleStageEnd() {
-        if(!HasStateAuthority) return;
+    private void RPC_HandleStageEnd()
+    {
+        if (!HasStateAuthority) return;
         isPlaying = false;
 
-        foreach(var kC in kCustomers) {
+        foreach (var kC in kCustomers)
+        {
             if (kC == null) continue;
 
             Transform outside = GetOutside();

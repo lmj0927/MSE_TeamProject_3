@@ -5,14 +5,15 @@ using TMPro;
 using System.Linq;
 using DG.Tweening;
 
+// UI component for displaying a single order
 public class OrderItem : MonoBehaviour
 {
     [System.Serializable]
     public struct IngredientSlot
     {
-        public GameObject root;  
-        public Image icon;   
-        public TextMeshProUGUI text; 
+        public GameObject root;
+        public Image icon;
+        public TextMeshProUGUI text;
     }
 
     [SerializeField] private Image customerPortrait;
@@ -23,27 +24,29 @@ public class OrderItem : MonoBehaviour
     private Color originalColor;
     private float lastHueShift = -1f;
 
-
     private void Awake()
     {
+        // Default background color for patience hue shifting
         if (bg != null) originalColor = bg.color;
     }
 
     private void Update()
     {
-        if(current == null || bg == null) return;
+        if (current == null || bg == null) return;
 
+        // Update background color based on customer's patience level
         float targetHueShift = current.GetPatienceHueShift();
 
         if (!Mathf.Approximately(lastHueShift, targetHueShift))
         {
             lastHueShift = targetHueShift;
-
+            
+            // Hue shifting
             Color.RGBToHSV(originalColor, out float h, out float s, out float v);
             h = Mathf.Repeat(h + targetHueShift, 1f);
 
             Color newColor = Color.HSVToRGB(h, s, v);
-            newColor.a = originalColor.a; 
+            newColor.a = originalColor.a;
 
             bg.color = newColor;
         }
@@ -53,16 +56,20 @@ public class OrderItem : MonoBehaviour
     {
         transform.DOKill();
     }
+
+    // Setup order UI with customer data
     public void SetOrder(Customer customer)
     {
         lastHueShift = -1f;
         current = customer;
+
         customerPortrait.sprite = customer.portrait;
         menuImages[0].sprite = customer.mainOrder.Result.Sprite;
 
         SetMenuImg(customer.drinkOrder, 1);
         SetMenuImg(customer.sideOrder, 2);
 
+        // Count ingredients item(ignore duplication)
         var grouped = customer.mainOrder.Ingredients
             .GroupBy(i => i)
             .Select(g => new { Food = g.Key, Count = g.Count() })
@@ -75,6 +82,7 @@ public class OrderItem : MonoBehaviour
                 slots[i].root.SetActive(true);
                 slots[i].icon.sprite = grouped[i].Food.Sprite;
 
+                // If more than two
                 if (grouped[i].Count > 1)
                 {
                     slots[i].text.gameObject.SetActive(true);
@@ -92,6 +100,7 @@ public class OrderItem : MonoBehaviour
         }
     }
 
+    // Side/Beverage UI
     private void SetMenuImg(RecipeSO r, int idx)
     {
         if (r == null)

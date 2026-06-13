@@ -2,8 +2,8 @@
 using UnityEngine;
 
 /// <summary>
-/// E 키로 주변 <see cref="IInteractable"/> (MinJun 카운터 등)과 상호작용합니다.
-/// 대상을 바라볼 때 Linework Lite를 이용해 아웃라인을 표시합니다.
+/// Interacts with nearby <see cref="IInteractable"/> objects (e.g., counters) using the E key.
+/// Displays an outline on the looked-at target using Linework Lite.
 /// </summary>
 public class PlayerInteractInput : MonoBehaviour
 {
@@ -29,6 +29,7 @@ public class PlayerInteractInput : MonoBehaviour
     {
         UpdateTargetAndOutline();
 
+        // Trigger interaction when the interact key is pressed
         if (Input.GetKeyDown(interactKey))
         {
             if (currentTarget != null)
@@ -38,12 +39,14 @@ public class PlayerInteractInput : MonoBehaviour
         }
     }
 
+    // Public method to force interaction (e.g., for UI buttons)
     public void Interact()
     {
         if (currentTarget != null)
             currentTarget.Interact(counterPlayer);
     }
 
+    // Find the closest valid interactable object within viewing angle
     private void UpdateTargetAndOutline()
     {
         if (counterPlayer == null) return;
@@ -77,7 +80,7 @@ public class PlayerInteractInput : MonoBehaviour
             Vector3 flatForward = new Vector3(transform.forward.x, 0, transform.forward.z);
             Vector3 flatToTarget = new Vector3(toTarget.x, 0, toTarget.z).normalized;
 
-
+            // Filter out objects outside the forward view cone
             float dot = Vector3.Dot(flatForward, flatToTarget);
             if (dot < minForwardDot) continue;
 
@@ -88,6 +91,7 @@ public class PlayerInteractInput : MonoBehaviour
             }
         }
 
+        // Update outline rendering state if the target has changed
         if (currentTarget != best)
         {
             if (currentTarget != null)
@@ -109,7 +113,7 @@ public class PlayerInteractInput : MonoBehaviour
         if (interactable is MonoBehaviour mb)
         {
             Transform outlineT = mb.transform;
-            
+
             if (mb is ACounter ac && ac.OutlineRoot != null)
             {
                 outlineT = ac.OutlineRoot;
@@ -121,6 +125,7 @@ public class PlayerInteractInput : MonoBehaviour
 
             foreach (var r in renderers)
             {
+                // Exclude held food items from being outlined
                 if (r.GetComponentInParent<Food>() != null) continue;
 
                 if (show)

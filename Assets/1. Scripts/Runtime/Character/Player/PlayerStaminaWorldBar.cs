@@ -1,6 +1,7 @@
 // Owned by JunYoung Park
 using UnityEngine;
 
+// World-space UI controller for player stamina bar
 [DefaultExecutionOrder(40)]
 public class PlayerStaminaWorldBar : MonoBehaviour
 {
@@ -39,6 +40,7 @@ public class PlayerStaminaWorldBar : MonoBehaviour
         _cam = Camera.main ?? Object.FindFirstObjectByType<Camera>();
         SetupCanvas();
 
+        // Prevent unwanted scaling/rotation inherited from player
         _canvasRect.SetParent(null, false);
         _detached = true;
 
@@ -64,6 +66,7 @@ public class PlayerStaminaWorldBar : MonoBehaviour
         if (_cam == null)
             _cam = Camera.main ?? Object.FindFirstObjectByType<Camera>();
 
+        // Sync position after all player movements are done
         SyncWorldTransform();
         progressBar.SetProgress(stamina.Normalized);
     }
@@ -74,6 +77,7 @@ public class PlayerStaminaWorldBar : MonoBehaviour
             Destroy(_canvasRect.gameObject);
     }
 
+    // Updating UI position and facing camera
     private void SyncWorldTransform()
     {
         if (followRoot == null || _canvasRect == null)
@@ -124,6 +128,7 @@ public class PlayerStaminaWorldBar : MonoBehaviour
 
 
 #if UNITY_EDITOR
+    // Editor preview for UI offset positioning
     private void OnValidate()
     {
         if (Application.isPlaying)
