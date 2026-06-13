@@ -9,21 +9,23 @@ public class PrefabPreviewCaptureWindow : EditorWindow
 {
     private const int PreviewLayer = 31;
 
-    // 조절 가능한 옵션들
+    // Camera options
     private int resolution = 512;
     private float zoomPadding = 1.1f;
     private Vector3 cameraAngles = new Vector3(19f, 149f, 0f);
     private Vector2 cameraOffset = Vector2.zero;
 
+    // lighting
     private float keyLightIntensity = 0.23f;
     private float fillLightIntensity = 0.1f;
 
+    // show editor window
     [MenuItem("Tools/Prefab Preview Capturer")]
     public static void ShowWindow()
     {
-        // 에디터 윈도우 띄우기
         GetWindow<PrefabPreviewCaptureWindow>("Preview Capturer");
     }
+
 
     private void OnGUI()
     {
@@ -33,11 +35,8 @@ public class PrefabPreviewCaptureWindow : EditorWindow
 
         GUILayout.Space(10);
         GUILayout.Label("Camera Settings", EditorStyles.boldLabel);
-        // 줌 조절 (숫자가 작을수록 확대됨)
         zoomPadding = EditorGUILayout.Slider("Zoom Padding (크기 조절)", zoomPadding, 0.1f, 5f);
-        // 상하좌우 미세 조정
         cameraOffset = EditorGUILayout.Vector2Field("Camera Offset (위치 조정)", cameraOffset);
-        // 카메라 각도 조절
         cameraAngles = EditorGUILayout.Vector3Field("Camera Rotation (각도)", cameraAngles);
 
         GUILayout.Space(10);
@@ -53,6 +52,7 @@ public class PrefabPreviewCaptureWindow : EditorWindow
         }
     }
 
+    // Save a selected prefab into a rendered image. -> used into the food's sprite
     private void CaptureSelectedPrefab()
     {
         GameObject selectedPrefab = Selection.activeGameObject;
@@ -99,6 +99,7 @@ public class PrefabPreviewCaptureWindow : EditorWindow
         Debug.Log($"Sprite preview saved: {assetPath}");
     }
 
+    // Render a prefab into an image
     private Texture2D RenderPrefabToTexture(GameObject prefab, int width, int height)
     {
         GameObject instance = Instantiate(prefab);
