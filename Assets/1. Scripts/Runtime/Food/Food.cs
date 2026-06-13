@@ -2,8 +2,15 @@
 using Fusion;
 using UnityEngine;
 
+/// <summary>
+/// `Food` object which have corresponding `FoodSO`.
+/// It is basically a game object but synchronized to the whole players.
+/// </summary>
 public class Food : NetworkBehaviour
 {
+    /// <summary>
+    /// whether the food is held.
+    /// </summary>
     [Networked, OnChangedRender(nameof(SyncPhysicalState))] private bool isHeld { get; set; }
     public bool IsHeld => isHeld;
 
@@ -13,6 +20,7 @@ public class Food : NetworkBehaviour
     public void SetHeld() => isHeld = true;
     public void SetDrop() => isHeld = false;
 
+    // not used.
     private ChangeDetector _cd;
 
     public override void Spawned()
@@ -21,6 +29,7 @@ public class Food : NetworkBehaviour
         SyncPhysicalState();
     }
 
+    // set the physical state according to the held state.
     private void SyncPhysicalState()
     {
         if(IsHeld)

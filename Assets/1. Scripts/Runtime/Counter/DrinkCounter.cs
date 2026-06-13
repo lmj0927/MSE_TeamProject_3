@@ -26,6 +26,7 @@ public class DrinkCounter : ACounter
     private float maxTimingRange;
     private float interactingTiming;
 
+    // The pouring amount should be sync.
     [Networked] private float current { get; set; }
     private RecipeSO recipe;
 
@@ -81,7 +82,7 @@ public class DrinkCounter : ACounter
                 else if (player == currentUser)
                 {
                     // [EN] Calculate success based on timing tolerance
-                    // [KR] Çã¿ë ¿ÀÂ÷ ¹üÀ§ ³»¿¡¼­ Å¸ÀÌ¹Ö ¼º°ø ¿©ºÎ °è»ê
+                    // [KR] ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                     float tolerance = maxTimingRange * acceptableRatio;
                     bool isSuccess = Mathf.Abs(current - interactingTiming) <= tolerance;
 
@@ -211,6 +212,7 @@ public class DrinkCounter : ACounter
         }
     }
 
+    // Below is for playing sound!
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_PlaySound()
     {

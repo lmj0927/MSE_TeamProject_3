@@ -124,6 +124,9 @@ public abstract class AFireCounter : ACounter
         cookProgressBar.gameObject.SetActive(showCookProgress);
     }
 
+    /// <summary>
+    /// Proceed cook progress
+    /// </summary>
     public void SetCookProgress()
     {
         if (cookProgressBar == null)
@@ -134,6 +137,9 @@ public abstract class AFireCounter : ACounter
         cookProgressBar.SetProgress(cookProgress);
     }
 
+    /// <summary>
+    /// Proceed burn progress
+    /// </summary>
     public void SetBurnProgress()
     {
         if (burnProgressBar == null)
@@ -144,6 +150,10 @@ public abstract class AFireCounter : ACounter
         burnProgressBar.SetProgress(burnProgress);
     }
 
+    /// <summary>
+    /// It change the food object following to the state.
+    /// </summary>
+    /// <param name="resultFood"></param>
     public void AddResultFood(FoodSO resultFood)
     {
         if (resultFood == null) return;

@@ -12,6 +12,7 @@ public class BaseCounter : ACounter
     public override void Interact(PlayerController player)
     {
         if(!player.HasStateAuthority) return;
+        // Base counter can hold the food. just holding.
         AuthorityHandler.RequestStateAuthority(
             onAuthorized: () =>
             {

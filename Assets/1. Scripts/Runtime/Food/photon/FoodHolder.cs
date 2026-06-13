@@ -5,8 +5,12 @@ using UnityEngine;
 
 public abstract class FoodHolder : NetworkBehaviour
 {
+    /// <summary>
+    /// It assume that the object to which this is attached is also have `AuthorityHandler` component.
+    /// </summary>
     public AuthorityHandler AuthorityHandler => GetComponent<AuthorityHandler>();
 
+    // some abstract methods below.
     public abstract bool CanAdd(Food food);
     public abstract bool CanRemove();
 
@@ -15,6 +19,12 @@ public abstract class FoodHolder : NetworkBehaviour
 
     public abstract void ClearAll(Action onDone = null);
 
+    /// <summary>
+    /// Place the object from `FoodSO`
+    /// </summary>
+    /// <param name="foodSO">what food you want to spawn?</param>
+    /// <param name="pos">spawn position</param>
+    /// <param name="onDone">callback after the creation</param>
     public void Place(FoodSO foodSO, Vector3 pos, Action<NetworkObject> onDone = null)
     {
         if (foodSO == null)
@@ -48,6 +58,11 @@ public abstract class FoodHolder : NetworkBehaviour
         onDone?.Invoke(food);
     }
 
+    /// <summary>
+    /// Discard the `food`
+    /// </summary>
+    /// <param name="food">food you want to despawn</param>
+    /// <param name="onDone">Callback after despawning</param>
     public void Discard(NetworkObject food, Action onDone = null)
     {
         if (food == null)
@@ -71,6 +86,13 @@ public abstract class FoodHolder : NetworkBehaviour
         );
     }
 
+    /// <summary>
+    /// Handoff one food from me to `to` holder.
+    /// </summary>
+    /// <param name="to">Other foodholder</param>
+    /// <param name="food">food network object I have</param>
+    /// <param name="pos">new position</param>
+    /// <param name="onDone">Callback after hand-off</param>
     public void HandoffTo(FoodHolder to, NetworkObject food, Vector3 pos, Action onDone = null)
     {
         if (food == null)
@@ -113,6 +135,13 @@ public abstract class FoodHolder : NetworkBehaviour
         );
     }
 
+    /// <summary>
+    /// Replace `old` food I have to new food from `newSO`
+    /// </summary>
+    /// <param name="old">despawn this</param>
+    /// <param name="newSO">spawn this</param>
+    /// <param name="pos">position</param>
+    /// <param name="onDone">Callback after replacement</param>
     public void Replace(NetworkObject old, FoodSO newSO, Vector3 pos, Action<NetworkObject> onDone = null)
     {
         if (old == null)

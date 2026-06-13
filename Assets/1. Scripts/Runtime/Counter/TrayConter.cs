@@ -7,6 +7,8 @@ using UnityEngine;
 // Counter that combines main food, sides, and beverages onto a single tray
 public class TrayCounter : ACounter
 {
+    // Tray's food management is little different from ACounter.
+    // Its own management fields.
     [Networked] private NetworkObject mainFood { get; set; }
     [Networked] private NetworkObject currentTray { get; set; }
 
@@ -84,13 +86,13 @@ public class TrayCounter : ACounter
     {
         if (food == null) return;
         var data = food.GetComponent<Food>().Data;
-        if (data.Type == FoodSO.FoodType.Main) mainFood = food;
+        if (data.Type == FoodSO.FoodType.Main) mainFood = food; // set into its own field too.
         base.OnAdded(food, offset);
     }
 
     protected override void OnRemoved(NetworkObject food)
     {
-        if (food != null && food == mainFood) mainFood = null;
+        if (food != null && food == mainFood) mainFood = null; // clear also
         base.OnRemoved(food);
     }
 

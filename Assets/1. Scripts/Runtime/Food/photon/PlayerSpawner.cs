@@ -2,6 +2,9 @@
 using Fusion;
 using UnityEngine;
 
+/// <summary>
+/// It manages the spawning of the player connected to the Photon
+/// </summary>
 public class PlayerSpawner : NetworkBehaviour, IPlayerJoined
 {
     public GameObject PlayerPrefab;

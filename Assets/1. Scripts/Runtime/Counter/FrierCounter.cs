@@ -42,10 +42,10 @@ public class FrierCounter : AFireCounter
         if (!player.HasStateAuthority) return;
 
         // Double authority check to sync both paired frier baskets safely
-        AuthorityHandler.RequestStateAuthority(
+        AuthorityHandler.RequestStateAuthority( // interacted(this) one
             onAuthorized: () =>
             {
-                otherside.AuthorityHandler.RequestStateAuthority(
+                otherside.AuthorityHandler.RequestStateAuthority( // and the other one
                     onAuthorized: () =>
                     {
                         if (!isBasketDown && CanAdd(player.HeldFood))

@@ -100,7 +100,7 @@ public class RefrigeratorCounter : ACounter
         });
     }
 
-    // close UI, unfreeze player, close door
+    // unbarrier, close UI, unfreeze player, close door
     private void UnuseReset()
     {
         AuthorityHandler.Unbarrier();
@@ -131,6 +131,7 @@ public class RefrigeratorCounter : ACounter
 
     private void OnChangedIsOpen() => SetDoors(isOpen);
 
+    // Unneccesary check in the refrigerator since it is the exceptional case which does not hold a food but is a counter.
     public override bool CanAdd(Food food) => true;
     public override bool CanRemove() => true;
 

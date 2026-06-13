@@ -1,6 +1,9 @@
 // Owned by YongKyu Lee
 using UnityEngine;
 
+/// <summary>
+/// Food data
+/// </summary>
 [CreateAssetMenu]
 public class FoodSO : ScriptableObject
 {

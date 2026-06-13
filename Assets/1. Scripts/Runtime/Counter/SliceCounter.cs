@@ -10,6 +10,7 @@ public class SliceCounter : ACounter
     [Networked] private int sliceCount { get; set; } = 5;
     [SerializeField] private ProgressBar progressBar; // slice progress UI
 
+    // Slicing status should be sync
     [Networked, OnChangedRender(nameof(OnIsSlicingChanged))] private bool isSlicing { get; set; }
     [Networked, OnChangedRender(nameof(OnSlicingCountChanged))] private int currentSliceCount { get; set; }
 

@@ -2,6 +2,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// Recipe data
+/// </summary>
 [CreateAssetMenu]
 public class RecipeSO : ScriptableObject
 {
